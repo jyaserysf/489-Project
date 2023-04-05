@@ -29,7 +29,7 @@ body {
     color: rgba(0, 0, 0, 0.7);
   }
 
-  .active{
+  .nav-link.activ{
     background-color: #A0BCC2;
     color: white;
   }
