@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap');
+
+body{
+    background-color: #FEFBE7;
+}
+
+.content{
+    padding: 25%, 10%;
+}
+
+.courseSem{
+    padding: 20%, 10%;
+}
+
