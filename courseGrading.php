@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Grading</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <link rel="stylesheet" href="courseGrading.css">
+    <link rel="stylesheet" href="css/courseGrading.css">
 </head>
 <body>
-    <?php include 'Home.html'; ?>
+    <?php include 'sidebar-2.html'; ?>
    
-    <div class="content px-5 py-4">
+    <div class="content px-5 py-4" id="page-content-wrapper">
      <div class="header mx-3 my-3" style="background-color= #F9EBC8; width: 20% "> anything </div>
        <h1 class=" px-4 py-4">Course Grading</h1>
        <div class="grading lg-px-5 lg-py-4">

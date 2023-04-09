@@ -10867,8 +10867,11 @@ textarea.form-control-lg {
   width: 15rem;
 }
 
-#page-content-wrapper {
+#page-header-wrapper {
   min-width: 100vw;
+  height: 10%;
+
+  
 }
 
 body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
@@ -10879,11 +10882,27 @@ body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
   #sidebar-wrapper {
     margin-left: 0;
   }
-  #page-content-wrapper {
+  #page-header-wrapper {
     min-width: 0;
     width: 100%;
   }
   body.sb-sidenav-toggled #wrapper #sidebar-wrapper {
     margin-left: -15rem;
   }
+
+
+}
+
+#logoimg {
+  width: 17%;
+  margin-left: 3%;
+  margin-right: 2%;
+}
+
+#header{
+  width: 15rem;
+}
+
+svg.list-group-item {
+  margin-left: 5%;
 }
