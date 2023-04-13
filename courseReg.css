@@ -1,0 +1,22 @@
+
+body{
+    background-color: #FEFBE7;
+}
+
+.content-page{
+    padding: 25%, 10%;
+}
+
+h2{
+    padding: 10%,10%;
+}
+
+#selectcourse{
+   width: 90%;
+}
+
+#selectsection{
+    padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+    background-color: #F9EBC8;
+    width: 90%;
+}
