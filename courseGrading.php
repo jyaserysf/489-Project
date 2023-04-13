@@ -12,7 +12,7 @@
     <?php include 'Home.html'; ?>
    
     <div class="content px-5 py-4">
-     <div class="header mx-3 my-3" style="background-color= #F9EBC8; width: 20% "> anything </div>
+     <div class="header mx-3 my-3" style="background-color :#F9EBC8; width: 20% "> anything </div>
        <h1 class=" px-4 py-4">Course Grading</h1>
        <div class="grading lg-px-5 lg-py-4">
             <form action="" method="get" >
