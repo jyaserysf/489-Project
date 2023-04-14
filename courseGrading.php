@@ -18,12 +18,23 @@
         
 </head>
 <body>
-    <div class="wrapper-content ">
-       <!-- <div class="content-1" id="wrapper">
-            <?php #include 'sidebar.html'; ?>
-        </div> -->
+    <div class="wrapper-content d-flex " id="wrapper">
+        <div class="content"  >
+            <?php include 'sidebarv1.html'; ?>
+        </div> 
+        <div class="row flex-fill" id="page-content" >
+            <div class="col-1" id="page-header-wrapper">
+            <!-- Top navigation-->
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <div class="container-fluid">
+                    <button class="btn btn-outline-secondary" id="sidebarToggle"> <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"  class="bi bi-list" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+                    </svg></button>  
+                </div>
+            </nav>
+            </div>
    
-    <div class="content-2 px-5 py-4" >
+        <div class="content-2 px-5 py-4 col">
      
        <h1 class=" px-4 py-4">Course Grading</h1>
        <div class="grading lg-px-5 lg-py-4">
@@ -74,8 +85,10 @@
                 </table> </form>
             </div>
         
+        </div>
     </div>
-</div>
+    
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js" integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
     <!-- Bootstrap core JS-->
