@@ -12,6 +12,15 @@
     right: 25px;
     font-size: 36px;
     margin-left: 50px;
+    margin-bottom: 5%;
+}
+
+#sidenav-head a {
+    display: block;
+    color: rgba(0, 0, 0, 0.7);
+    text-decoration: none;
+    font-family: "Poppins", sans-serif;
+    transition: 0.3s;   
 }
 
 /* The side navigation menu */
@@ -24,7 +33,7 @@
     left: 0;
     background-color: #DAE5D0; 
     overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 60px; /* Place content 60px from the top */
+   /* padding-top: 60px;  Place content 60px from the top */
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
     white-space: nowrap; /* fix the animation problem*/
 }
@@ -33,27 +42,33 @@
 .logo {
     display: flex;
     align-items: center;
-    padding-bottom: 4%;
+    padding-bottom: 2%;
     padding-top: 4%;
+    height: 10%;
 }
   
 /* Logo image */
 .logo img{
-    width: 25px;
+    width: 8%;
     margin-left: 21%;
 }
   
 /* Logo text */
 .logo h4 {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     font-weight: 600;
     letter-spacing: -0.5px;
     font-family: "Poppins", sans-serif;
     padding-left: 2%;
 }
+
+#sidenav-head{
+    display: flex;
+    flex-direction: column;
+}
   
 /* The navigation menu links */
-.sidenav a {
+.sideElement a, #sidenav-footer a {
     display: block;
     color: rgba(0, 0, 0, 0.7);
     padding: 8px 8px 8px 32px;
@@ -114,22 +129,28 @@
     .sidenav a {font-size: 18px;}
 }
   
+#spacing{
+    height: 35%;
+}
 
 /* Footer */
-.footer {
+#sidenav-footer {
     display: flex;
     flex-direction: column;
     height: fit-content;
-    margin-top: 5%;
+    
+    left: 1%;
+    bottom: 2%;
+    
 }
   
 /* Footer links*/
-.footer a {
+#sidenav-footer a {
     font-size: 0.75rem;
     padding: 2% 10%;
 }
   
-.footer a:hover {
+#sidenav-footer a:hover {
     color: #A0BCC2;
 }
   

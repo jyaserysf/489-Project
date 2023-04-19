@@ -6,6 +6,7 @@ light green: '#DAE5D0'   pale yellow: '#FEFBE7'  turquoise: '#A0BCC2'  beige: '#
 
 ## Font
 https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap
+font color: rgba(0, 0, 0, 0.7) 
 
 ## Important Links 
 [Git Tutorial](https://youtu.be/RGOj5yH7evk), 
