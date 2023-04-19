@@ -136,7 +136,7 @@
 }
   
 #spacing{
-    height: 35%;
+    height: 27%;
 }
 
 /* Footer */
@@ -190,7 +190,7 @@ html {
       margin-left: 250px; /* Push content to the right */
     }
   
-    .sidenav .closebtn {
+    #sidenav-head .closebtn {
       display: none; /* Hide close button */
     }
 }
@@ -200,4 +200,7 @@ html {
 @media screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
+    #spacing{
+        height: 19%;
+    }
 }
