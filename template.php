@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     
-    <link rel="stylesheet" href="css/sidenav.css">
+    <link rel="stylesheet" href="generalstyling.css">
     
 </head>
 <body>
@@ -15,7 +15,10 @@
             <?php include 'sidenav-only.html'; ?>
         </div>
         <div class="pagecontent-wrapper" id="main">
-            <h2>Welcome</h2>
+            <div class="title" >
+                <h2>Welcome</h2>
+            </div>
+            
         </div>
     </div>
        <!-- Javascript file -->
