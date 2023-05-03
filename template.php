@@ -16,7 +16,7 @@
         </div>
         <div class="pagecontent-wrapper" id="main">
             <div class="title" >
-                <h2>Welcome</h2>
+                <h2>Welcome</h2> 
             </div>
             
         </div>
