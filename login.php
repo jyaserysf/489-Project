@@ -1,3 +1,28 @@
+<?php
+session_start();
+// if (isset($_SESSION['activeUser']))
+//     session_unset(); 
+
+if (isset($_COOKIE['remember_me'])){
+    $arr = explode('#', $_COOKIE['remember_me']);
+    try {
+        require('Database/connection.php');
+        $sql = "select * from students where StudentID ='" . $arr[0] . "'";
+        $result = $db->query($sql);
+        if ($row = $result->fetch()){
+            if ( $arr[1] == $row['Password']) {
+                $_SESSION['activeUser'] = $arr[0];                   
+                header('location:Home.php');
+                die();
+            }
+        $db=null;
+        }
+    }
+    catch(PDOException $e){
+    die($e->getMessage());
+    }
+}
+?>
  <!DOCTYPE html>
  <html lang="en">
  <head>
@@ -5,9 +30,44 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Form</title>
-    <link rel="stylesheet" href="css/Login_style.css">
+    <link rel="stylesheet" href="Login_style.css">
  </head>
  <body>
+
+    <?php
+    if (isset($_POST['submit'])){
+        $uname = $_POST['username'];
+        $pass = $_POST['password'];
+        //Validation will be kept for you as an exercise
+        try {
+            require('Database/connection.php');
+            $sql = "select * from students where StudentID = '$uname'";
+            $result = $db->query($sql);
+            if ($row = $result->fetch()){
+                if (password_verify($pass, $row['Password'])) {
+                    $_SESSION['activeUser'] = $uname;
+                    if (isset($_POST['remember_me'])) {
+                        setcookie('remember_me', "$uname#" . $row['Password'], time()+(60*5));
+                    }                     
+                    header('location: Home.php');
+                    die();
+                }
+                else {
+                    // TODO: Invalid Password
+                    echo "Invalid Password";
+                }
+            }
+            else {
+                // TODO: Invalid Username
+                echo "Invalid Username";
+            }
+            $db=null;
+        }
+        catch(PDOException $e){
+        die($e->getMessage());
+        }
+    }
+    ?>
    
     <main> 
         <!-- Outer Box -->
@@ -17,7 +77,7 @@
                 <!-- Form Area -->
                 <div class="forms-area">
                     <!-- The Login Form -->
-                    <form action="Login.html" autocomplete="off" class="login-form">
+                    <form action="Login.php" method="post" autocomplete="off" class="login-form">
                         
                         <div class="logo"><img src="./img/logo.png" alt="University"><h4>University</h4></div>
     
@@ -28,6 +88,7 @@
                             <div class="input-area">
                                 <input
                                     type="text"
+                                    name="username"
                                     minlength="4"
                                     class="input-field"
                                     autocomplete="off"
@@ -39,6 +100,7 @@
                             <div class="input-area">
                                 <input
                                     type="password"
+                                    name="password"
                                     minlength="4"
                                     class="input-field"
                                     autocomplete="off"
@@ -50,6 +112,7 @@
                             <div class="input-area">
                                 <input
                                     type="checkbox"
+                                    name="remember_me"
                                     minlength="4"
                                     class="input-field-checkbox"
                                     autocomplete="off"
@@ -57,7 +120,7 @@
                                 <label class="label_rememberme">Remember me</label>
                             </div>
     
-                            <input type="submit" value="Login" class="login-btn">
+                            <input type="submit" name="submit" value="Login" class="login-btn">
     
                             <p class="text">
                                 Forgotten your password?
@@ -110,6 +173,6 @@
     </main>
     
     <!-- Javascript file -->
-    <script src="js/Login_app.js"></script>
+    <script src="Login_app.js"></script>
  </body>
  </html>
