@@ -7,16 +7,46 @@ if (isset($_COOKIE['remember_me'])){
     $arr = explode('#', $_COOKIE['remember_me']);
     try {
         require('Database/connection.php');
-        $sql = "select * from students where StudentID ='" . $arr[0] . "'";
-        $result = $db->query($sql);
-        if ($row = $result->fetch()){
+
+        $sql_student = "select * from students where StudentID ='" . $arr[0] . "'";
+        $student = $db->query($sql_student);
+
+        $sql_instructor = "select * from instructors where EmailAddress ='" . $arr[0] . "'";
+        $instructor = $db->query($sql_instructor);
+
+        $sql_admin = "select * from administrators where EmailAddress ='" . $arr[0] . "'";
+        $admin = $db->query($sql_admin);
+
+        if ($row = $student->fetch()) {
             if ( $arr[1] == $row['Password']) {
                 $_SESSION['activeUser'] = $arr[0];                   
                 //header('location:#');
+                echo "student";
                 die();
             }
-        $db=null;
+            $db=null;
         }
+
+        elseif($row = $instructor->fetch()) {
+            if ( $arr[1] == $row['Password']) {
+                $_SESSION['activeUser'] = $arr[0];                   
+                //header('location:#');
+                echo "instructor";
+                die();
+            }
+            $db=null;
+        }
+
+        elseif($row = $admin->fetch()) {
+            if ( $arr[1] == $row['Password']) {
+                $_SESSION['activeUser'] = $arr[0];                   
+                //header('location:#');
+                echo "admin";
+                die();
+            }
+            $db=null;
+        }
+
     }
     catch(PDOException $e){
     die($e->getMessage());
@@ -41,15 +71,23 @@ if (isset($_COOKIE['remember_me'])){
         //Validation will be kept for you as an exercise
         try {
             require('Database/connection.php');
-            $sql = "select * from students where StudentID = '$uname'";
-            $result = $db->query($sql);
-            if ($row = $result->fetch()){
+
+            $sql_student = "select * from students where StudentID = '$uname'";
+            $sql_instructor = "select * from instructors where EmailAddress = '$uname'";
+            $sql_admin = "select * from administrators where EmailAddress = '$uname'";
+
+            $result_student = $db->query($sql_student);
+            $result_instructor = $db->query($sql_instructor);
+            $result_admin = $db->query($sql_admin);
+
+            if ($row = $result_student->fetch()){
                 if (password_verify($pass, $row['Password'])) {
                     $_SESSION['activeUser'] = $uname;
                     if (isset($_POST['remember_me'])) {
                         setcookie('remember_me', "$uname#" . $row['Password'], time()+(60*5));
                     }                     
                     //header('location:#');
+                    echo "student";
                     die();
                 }
                 else {
@@ -57,13 +95,45 @@ if (isset($_COOKIE['remember_me'])){
                     echo "Invalid Password";
                 }
             }
+
+            elseif ($row = $result_instructor->fetch()) {
+                if (password_verify($pass, $row['Password'])) {
+                    $_SESSION['activeUser'] = $uname;
+                    if (isset($_POST['remember_me'])) {
+                        setcookie('remember_me', "$uname#" . $row['Password'], time()+(60*5));
+                    }                     
+                    //header('location:#');
+                    echo "instructor";
+                    die();
+                }
+                else {
+                    // TODO: Invalid Password
+                    echo "Invalid Password";
+                }
+            }
+
+            elseif ($row = $result_admin->fetch($sql_admin)) {
+                if (password_verify($pass, $row['Password'])) {
+                    $_SESSION['activeUser'] = $uname;
+                    if (isset($_POST['remember_me'])) {
+                        setcookie('remember_me', "$uname#" . $row['Password'], time()+(60*5));
+                    }                     
+                    //header('location:#');
+                    echo "admin";
+                    die();
+                }
+                else {
+                    // TODO: Invalid Password
+                    echo "Invalid Password";
+                }
+            }
+
             else {
-                // TODO: Invalid Username
                 echo "Invalid Username";
             }
             $db=null;
         }
-        catch(PDOException $e){
+        catch(PDOException $e) {
         die($e->getMessage());
         }
     }

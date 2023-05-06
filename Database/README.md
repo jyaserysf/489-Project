@@ -8,4 +8,13 @@
 
 # Login Credentials
 
-1 - ID: 202007602   Password: abc123<br>
+## Students
+1 - Username: 202007602   Password: abc123 <br>
+2 - Username: 202010691   Password: xyz123 <br>
+
+## Instructors
+1- Username: tsaleh@mt.edu   Password: Taher@123 <br>
+2- Username: aeid@mt.edu   Password: Aali10 <br>
+
+## Admin
+1- Username: bhamza@mt.edu   Password: Bbaq123 <br>
