@@ -12,7 +12,7 @@ if (isset($_COOKIE['remember_me'])){
         if ($row = $result->fetch()){
             if ( $arr[1] == $row['Password']) {
                 $_SESSION['activeUser'] = $arr[0];                   
-                header('location:Home.php');
+                //header('location:#');
                 die();
             }
         $db=null;
@@ -49,7 +49,7 @@ if (isset($_COOKIE['remember_me'])){
                     if (isset($_POST['remember_me'])) {
                         setcookie('remember_me', "$uname#" . $row['Password'], time()+(60*5));
                     }                     
-                    header('location: Home.php');
+                    //header('location:#');
                     die();
                 }
                 else {
