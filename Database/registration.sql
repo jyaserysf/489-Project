@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 13, 2023 at 11:46 PM
+-- Generation Time: May 12, 2023 at 03:30 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -40,9 +40,7 @@ CREATE TABLE `administrators` (
 --
 
 INSERT INTO `administrators` (`AdminID`, `FullName`, `PhoneNumber`, `EmailAddress`, `Password`) VALUES
-(1, 'Fatima Hussain', '39787899', 'fahussain@mt.edu', 'Fa@tii3223'),
-(2, 'Baqer Hamza', '32321111', 'bhamza@mt.edu', 'BbaqerB3467'),
-(3, 'Younis Ahmed', '66668888', 'yahmed@mt.edu', 'YyYyahmed34');
+(2, 'Baqer Hamza', '32321111', 'bhamza@mt.edu', '$2y$10$xkvn5DP47wv568iTqhj6IeQXkn3LN2NctI/3xjklfdBQaGobJR/RW');
 
 -- --------------------------------------------------------
 
@@ -164,9 +162,9 @@ CREATE TABLE `instructors` (
 --
 
 INSERT INTO `instructors` (`InstructorID`, `FullName`, `PhoneNumber`, `EmailAddress`, `Password`, `DepartmentID`) VALUES
-(1, 'Dr. Taher Saleh', '34343434', 'tsaleh@mt.edu', 'Taher@123', 1),
+(1, 'Dr. Taher Saleh', '34343434', 'tsaleh@mt.edu', '$2y$10$2AQSyYaIOVfkQzJrDcB3iuT8taac/Chrb/b./VzYP7.QK1uqymy3K', 1),
 (2, 'Mr. Adnan Ali', '38999920', 'aali@mt.edu', 'Adnan345', 2),
-(3, 'Dr. Ali Eid', '66666699', 'aeid@mt.edu', 'Aali@!0', 3),
+(3, 'Dr. Ali Eid', '66666699', 'aeid@mt.edu', '$2y$10$foy1ZyzKI6QdHfu6.SxHGu3.23HHkpp23wmYFl2J8bFh2DJpF7a/2', 3),
 (4, 'Dr. Salah Mohammed', '32132328', 'smohd@mt.edu', 'Mosalah10', 4),
 (5, 'Dr. Abdulla Zuhair', '31567652', 'azuhair@mt.edu', 'Ab00d981', 1),
 (6, 'Dr. Abrar Isa', '32455677', 'aisa@mt.edu', 'AsSSWQDSWdwsd45656^%$', 7),
@@ -225,11 +223,8 @@ CREATE TABLE `students` (
 --
 
 INSERT INTO `students` (`StudentID`, `FullName`, `PhoneNumber`, `EmailAddress`, `StudyProgram`, `EnrollmentStatus`, `CreditsPassed`, `CGPA`, `GPA`, `Balance`, `Password`) VALUES
-(20189292, 'Hajar Hasan', '36111166', '20189292@mt.edu', 'BSc. in Biology', 'Suspended', 34, 1.80, 2.89, 0, 'H@123h'),
-(202002622, 'Ali Majeed', '32327878', '202002622@mt.edu', 'BSc. in Computer Science', 'Enrolled', 71, 3.80, 3.60, 24, 'Ali321'),
-(202002920, 'Muneera Jaber', '66999966', '202002920@mt.edu', 'BSc. in Computer Science', 'Enrolled', 68, 3.77, 3.52, 0, 'Mun33ra'),
-(202007602, 'Sayed Ahmed Khalaf', '32222223', '202007602@mt.edu', 'BSc. in Computer Science', 'Enrolled', 86, 3.90, 4.00, 0, 'Ahmed123'),
-(202010691, 'Jood Yaser', '33336666', '202010691@mt.edu', 'BSc. in Computer Science', 'Enrolled', 81, 3.88, 4.00, 0, 'Jood819');
+(202007602, 'Sayed Ahmed Khalaf', '32222223', '202007602@mt.edu', 'BSc. in Computer Science', 'Enrolled', 86, 3.90, 4.00, 0, '$2y$10$DFJpUHgcJqV9X0R3RhXfm.hI4UTvTIKhvzgnFumYWLJ5u1dfOHwK2'),
+(202010691, 'Jood Yaser', '33336666', '202010691@mt.edu', 'BSc. in Computer Science', 'Enrolled', 81, 3.88, 4.00, 0, '$2y$10$S/eq/RGqgn8TvTnB7WVY.eVcqDglyCn2MnA0EGu5lDRjs/k1qk0Ze');
 
 --
 -- Indexes for dumped tables
