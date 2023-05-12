@@ -1,3 +1,11 @@
+<?php 
+    try{
+        require('Database/connection.php');
+    }
+    catch(PDOException $e){
+        die($e->getMessage());
+        }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +24,17 @@
         </div>
         <div class="pagecontent-wrapper" id="main">
             <div class="title" >
-                <h1>Welcome</h1> 
+                <h1>Welcome Student Name</h1> 
+            </div>
+            <div class="student-sched">
+                <div class="semester-no">
+                    Your semester number Schedule
+                </div>
+                <div class="sched">
+                    <?php 
+                    require('schedule.php');
+                    schedule();?>
+                </div>
             </div>
             
         </div>

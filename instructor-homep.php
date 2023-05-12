@@ -12,12 +12,23 @@
 <body>
     <div class="wrapper">
         <div class="sidebar-wrapper">
-            <?php include 'sidenav-only.html'; ?>
+            <?php include 'sidenav/instr-sidenav.html'; ?>
         </div>
         <div class="pagecontent-wrapper" id="main">
-            <div class="title" >
-                <h2>Welcome</h2> 
+        <div class="title" >
+                <h1>Welcome Instructor Name</h1> 
             </div>
+            <div class="instr-sched">
+                <div class="semester-no">
+                    Your semester number Schedule
+                </div>
+                <div class="sched">
+                    <?php 
+                    require('schedule.php');
+                    schedule();?>
+                </div>
+            </div>
+            
             
         </div>
     </div>
