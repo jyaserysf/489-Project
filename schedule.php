@@ -3,6 +3,7 @@
 
 // can be used for student and instructor
 // match $days value to course days (split days into single characters)
+// should add parameters to get specific user data or create another function then call it in this one
 function schedule(){ 
     $days=['1'=>'U', '2'=>'M', '3'=>'T','4'=>'W','5'=>'H'];
     echo '<table>'; 
