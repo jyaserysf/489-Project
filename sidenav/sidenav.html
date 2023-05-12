@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="sidenavstyle.css">
+</head>
+<body>
+    <div id="mySidenav" class="sidenav">
+        <div id="sidenav-head"  > 
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        
+        <div class="logo"><img src="./img/logo.png" alt="University">
+            <h4>University</h4>
+        </div>
+        </div>
+          
+        <div class="sideElement" id="active">
+            <img id="icon" src="icons/house.svg" alt="">
+            <a href="#home">Home</a>
+        </div>
+
+        <div class="sideElement">
+            <img id="icon" src="icons/calendar-plus.svg" alt="">
+            <a href="#">Course Registration</a>
+        </div>
+        
+        <div class="sideElement">
+            <img id="icon" src="icons/exam.svg" alt="">
+            <a href="#">Grades</a>
+        </div>
+       
+        <div class="sideElement">
+            <img id="icon" src="icons/user.svg" alt="">
+            <a href="#">Attendance</a>
+        </div>
+        
+        <div class="sideElement">
+            <img id="icon" src="icons/calendar-blank.svg">
+            <a href="#">Schedule Planner</a>
+        </div>
+        
+        <div class="sideElement">
+            <img id="icon" src="icons/calculator.svg" alt="">
+            <a href="#">GPA Calculater</a>
+        </div>
+        
+        <div class="sideElement">
+            <img id="icon" src="icons/tray.svg" alt="">
+            <a href="#">Requests</a>
+        </div>
+        <div id="spacing">
+
+        </div>
+
+        <div id="sidenav-footer"><a href="#">Help</a><a href="#">Contact Us</a></div>
+    </div>
+      
+    <!-- Use any element to open the sidenav -->
+    <button onclick="openNav()" id="openbtn">  <img id="icon" src="icons/house.svg" alt=""> </button>
+      
+    <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+    <div id="main">
+        ...
+    </div>
+
+    <!-- Javascript file -->
+    <script src="js/sidenav_updated.js"></script>
+</body>
+</html>
