@@ -22,6 +22,9 @@
     <!-- Page content -->
 
     <div class="pagecontent-wrapper" id="main">
+            <div class="title" >
+                <h1>Student Attendance</h1> 
+            </div>
         
             <div class="row row-col-6 ">
                 <div class="col-4">
