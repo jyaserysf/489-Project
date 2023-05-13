@@ -21,6 +21,9 @@
         <!-- Page content -->
 
         <div class="pagecontent-wrapper" id="main">
+        <div class="title" >
+                <h1>GPA Calculator</h1> 
+            </div>
             <form action="" method="get">
                 <div class="row row-col-6 ">
                     <div class="col-4">
@@ -50,18 +53,10 @@
                                                 <select class="form-select border-secondary-subtle w-75 me-1 light-select"
                                                     aria-label="Default select example">
                                                     <br>
-                                                    <option selected> Grade</option>
-                                                    <option value="1"> A</option>
-                                                    <option value="2">A-</option>
-                                                    <option value="3">B+</option>
-                                                    <option value="4"> B</option>
-                                                    <option value="5">B-</option>
-                                                    <option value="6">C+</option>
-                                                    <option value="7"> C</option>
-                                                    <option value="8">C-</option>
-                                                    <option value="9">D+</option>
-                                                    <option value="10">D</option>
-                                                    <option value="11">F</option>
+                                                    <?php 
+                                                        require 'gradesfunc.php';
+                                                        selectGrade();
+                                                    ?>
 
                                                 </select>
                                             </td>

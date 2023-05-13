@@ -24,7 +24,20 @@
         </div>
         <div class="pagecontent-wrapper" id="main">
             <div class="title" >
-                <h1> Attendance </h1> 
+                <h1> Course Attendance </h1> 
+            </div>
+            <div class="attend-table">
+                <table>
+                    <tr> 
+                        <th>Course Code</th><th>Course Name</th><th>Absence No.</th> <th>Absence %</th> <th>Excused Absence No.</th> <th>Excused Absence %</th> <th>Warning No.</th> 
+                    </tr>
+                    <?php 
+                        // add rows for every absence, get from  enrollments table after instructor has assigned an absence
+                        echo '<tr>
+                                <td> </td>
+                        </tr>';
+                    ?>
+                </table>
             </div>
             
         </div>

@@ -24,7 +24,7 @@
         </div>
         <div class="pagecontent-wrapper" id="main">
             <div class="title" >
-                <h1>Welcome</h1> 
+                <h1>Schedule Planner</h1> 
             </div>
             
         </div>

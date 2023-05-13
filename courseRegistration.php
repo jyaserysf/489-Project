@@ -26,7 +26,7 @@
         </div>
         <div class="pagecontent-wrapper" id="main">
             <div class="title" >
-                <h2>Welcome</h2> 
+                <h1>Course Registeration</h1> 
             </div>
             <div class="" id="student-info">
             <?php  echo
