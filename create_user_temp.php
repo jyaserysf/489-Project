@@ -15,7 +15,7 @@
     try {
         require('Database/connection.php');
         $hps = password_hash($pass, PASSWORD_DEFAULT);
-        $sql = "UPDATE administrators SET Password='$hps' WHERE EmailAddress='$uname'";
+        $sql = "UPDATE students SET Password='$hps' WHERE StudentID='$uname'";
         $result = $db->exec($sql);
         if ($result === 1)
             echo "Successful Registeration - <a href='Login.php'>Click here to login</a>";

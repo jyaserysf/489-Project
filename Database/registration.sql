@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 12, 2023 at 03:30 PM
+-- Generation Time: May 17, 2023 at 07:07 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -24,23 +24,24 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `administrators`
+-- Table structure for table `admins`
 --
 
-CREATE TABLE `administrators` (
-  `AdminID` int(11) NOT NULL,
-  `FullName` varchar(100) NOT NULL,
-  `PhoneNumber` varchar(20) NOT NULL,
-  `EmailAddress` varchar(100) NOT NULL,
-  `Password` varchar(255) NOT NULL
+CREATE TABLE `admins` (
+  `ID` int(11) NOT NULL,
+  `username` varchar(30) NOT NULL,
+  `fullName` varchar(100) NOT NULL,
+  `phoneNumber` varchar(20) NOT NULL,
+  `emailAddress` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `administrators`
+-- Dumping data for table `admins`
 --
 
-INSERT INTO `administrators` (`AdminID`, `FullName`, `PhoneNumber`, `EmailAddress`, `Password`) VALUES
-(2, 'Baqer Hamza', '32321111', 'bhamza@mt.edu', '$2y$10$xkvn5DP47wv568iTqhj6IeQXkn3LN2NctI/3xjklfdBQaGobJR/RW');
+INSERT INTO `admins` (`ID`, `username`, `fullName`, `phoneNumber`, `emailAddress`, `password`) VALUES
+(1, 'bhamza', 'Baqer Hamza', '32321111', 'bhamza@mt.edu', '$2y$10$xkvn5DP47wv568iTqhj6IeQXkn3LN2NctI/3xjklfdBQaGobJR/RW');
 
 -- --------------------------------------------------------
 
@@ -49,23 +50,46 @@ INSERT INTO `administrators` (`AdminID`, `FullName`, `PhoneNumber`, `EmailAddres
 --
 
 CREATE TABLE `courses` (
-  `CourseID` varchar(20) NOT NULL,
-  `CourseName` varchar(50) NOT NULL,
-  `CreditHours` int(11) NOT NULL,
-  `PreRequisites` varchar(100) DEFAULT NULL,
-  `CourseDepartment` int(11) NOT NULL
+  `ID` int(11) NOT NULL,
+  `courseCode` varchar(20) NOT NULL,
+  `courseName` varchar(50) NOT NULL,
+  `creditHours` int(11) NOT NULL,
+  `preRequisites` varchar(100) DEFAULT NULL,
+  `courseDepartment` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `courses`
 --
 
-INSERT INTO `courses` (`CourseID`, `CourseName`, `CreditHours`, `PreRequisites`, `CourseDepartment`) VALUES
-('ITCE250', 'Digital Logic', 3, NULL, 4),
-('ITCS333', 'Internet Software Development', 3, 'ITCS214,ITCS285', 1),
-('ITCS489', 'Software Engineering 2', 3, 'ITCS285', 1),
-('MATHS211', 'Linear Algebra', 3, 'MATHS102', 3),
-('PHYCS101', 'Introduction To Physics', 4, NULL, 2);
+INSERT INTO `courses` (`ID`, `courseCode`, `courseName`, `creditHours`, `preRequisites`, `courseDepartment`) VALUES
+(2, 'ITCS333', 'Internet Software Development', 3, 'ITCS214,ITCS285', 1),
+(3, 'ITCS489', 'Software Engineering 2', 3, 'ITCS285', 1),
+(6, 'ITCS113', 'Computer Programming 1', 3, NULL, 1),
+(7, 'ITCS114', 'Computer Programming 2', 3, 'ITCS113', 1),
+(8, 'ITCS214', 'Data Structures', 3, 'ITCS114', 1),
+(9, 'ITCS254', 'Discrete Structures 1', 3, 'ITCS113', 1),
+(10, 'ITCS255', 'Discrete Structures 2', 3, 'ITCS254', 1),
+(11, 'ITCS285', 'Databse Management Systems', 3, 'ITCS214', 1),
+(12, 'ITCS316', 'Human-Computer Interaction', 3, 'ITCS214', 1),
+(13, 'ITCS347', 'Analysis and Design of Algorithms', 3, 'ITCS214,ITCS255', 1),
+(14, 'ITCS321', 'Computer Organization and Assembly Language', 3, 'ITCS114', 1),
+(15, 'ITCS389', 'Software Engineering 1', 3, 'ITCS285', 1),
+(16, 'ITCS396', 'Professional Issues and Ethics', 3, NULL, 1),
+(17, 'ITCS317', 'Formal Languages and Automata', 3, 'ITCS214,ITCS255', 1),
+(18, 'ITCS325', 'Operating Systems', 3, 'ITCS214,ITCS321', 1),
+(19, 'ITCS440', 'Intelligent Systems ', 3, 'ITCS347', 1),
+(20, 'ITCS498', 'Senior Project', 3, 'ITCS396', 1),
+(21, 'ITCS411', 'Cryptoigraphy and Computer Security', 3, 'ITCS347', 1),
+(22, 'ITCS441', 'Parallel and Distributed Systems', 3, 'ITCS325', 1),
+(23, 'ITSE201', 'Introduction to Software Engineering', 3, 'ITCS114', 1),
+(24, 'ITSE220', 'Software Requirements Engineering', 3, 'ITSE201', 1),
+(25, 'ITCS222', 'Computer Organization', 3, 'ITCS214', 1),
+(26, 'ITSE301', 'Software Project Management', 3, 'ITSE201', 1),
+(27, 'ITSE302', 'Software Design and Architecture', 3, 'ITSE220', 1),
+(28, 'ITSE305', 'Software Engineering Project', 3, 'ITSE301,ITSE302', 1),
+(29, 'ITSE403', 'Software Testing and Quality Assurance', 3, 'ITSE305', 1),
+(30, 'ITSE498', 'Software Engineering Senior Project', 3, 'ITCS396,ITSE305', 1);
 
 -- --------------------------------------------------------
 
@@ -74,30 +98,31 @@ INSERT INTO `courses` (`CourseID`, `CourseName`, `CreditHours`, `PreRequisites`,
 --
 
 CREATE TABLE `course_sections` (
-  `SectionID` int(11) NOT NULL,
-  `SectionNumber` int(11) NOT NULL,
-  `SectionStart` time NOT NULL,
-  `SectionEnd` time NOT NULL,
-  `SectionDays` varchar(5) NOT NULL,
-  `SectionRoom` varchar(10) NOT NULL,
-  `FinalDate` date DEFAULT NULL,
-  `CourseID` varchar(20) DEFAULT NULL,
-  `SemesterID` int(10) DEFAULT NULL,
-  `SectionInstructor` int(11) NOT NULL
+  `ID` int(11) NOT NULL,
+  `semesterID` int(11) DEFAULT NULL,
+  `courseID` int(11) DEFAULT NULL,
+  `sectionNumber` int(11) NOT NULL,
+  `startTime` time NOT NULL,
+  `endTime` time NOT NULL,
+  `days` varchar(5) NOT NULL,
+  `room` varchar(10) NOT NULL,
+  `availableSeats` int(11) NOT NULL DEFAULT 25,
+  `finalDate` date DEFAULT NULL,
+  `instructorID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `course_sections`
 --
 
-INSERT INTO `course_sections` (`SectionID`, `SectionNumber`, `SectionStart`, `SectionEnd`, `SectionDays`, `SectionRoom`, `FinalDate`, `CourseID`, `SemesterID`, `SectionInstructor`) VALUES
-(1, 1, '08:00:00', '08:50:00', 'UTH', 'S40-1086', NULL, 'ITCE250', 2, 4),
-(2, 1, '09:30:00', '10:45:00', 'MW', 'S40-049', NULL, 'ITCS333', 2, 5),
-(3, 1, '11:00:00', '11:50:00', 'UTH', 'S40-2060', NULL, 'ITCS489', 2, 1),
-(4, 2, '13:00:00', '14:15:00', 'MW', 'S40-2049', NULL, 'ITCS489', 2, 1),
-(5, 1, '10:00:00', '10:50:00', 'UTH', 'S41-1088', NULL, 'MATHS211', 2, 3),
-(6, 2, '08:00:00', '08:50:00', 'UTH', 'S41-1088', NULL, 'MATHS211', 2, 3),
-(7, 1, '08:00:00', '09:15:00', 'MW', 'S41-1089', NULL, 'PHYCS101', 2, 2);
+INSERT INTO `course_sections` (`ID`, `semesterID`, `courseID`, `sectionNumber`, `startTime`, `endTime`, `days`, `room`, `availableSeats`, `finalDate`, `instructorID`) VALUES
+(8, 1, 2, 1, '08:00:00', '08:50:00', 'UTH', '1046', 25, '2024-01-01', 9),
+(9, 1, 2, 2, '08:00:00', '09:15:00', 'MW', '1046', 25, '2024-01-01', 9),
+(10, 1, 6, 1, '09:00:00', '09:50:00', 'UTH', '1046', 25, '2023-12-31', 1),
+(11, 1, 7, 1, '08:00:00', '08:50:00', 'UTH', '1047', 25, '2023-12-31', 1),
+(12, 1, 8, 1, '08:00:00', '09:15:00', 'MW', '2046', 25, '2024-01-03', 12),
+(13, 1, 8, 2, '09:30:00', '10:45:00', 'MW', '2047', 25, '2024-01-03', 12),
+(14, 1, 23, 1, '12:00:00', '12:50:00', 'UTH', '2049', 25, '2024-01-08', 16);
 
 -- --------------------------------------------------------
 
@@ -106,24 +131,18 @@ INSERT INTO `course_sections` (`SectionID`, `SectionNumber`, `SectionStart`, `Se
 --
 
 CREATE TABLE `departments` (
-  `DepartmentID` int(11) NOT NULL,
-  `DepartmentName` varchar(50) NOT NULL,
-  `DepartmentCollege` varchar(50) NOT NULL,
-  `DepartmentHead` int(11) NOT NULL
+  `ID` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `college` varchar(50) NOT NULL,
+  `departmentHead` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `departments`
 --
 
-INSERT INTO `departments` (`DepartmentID`, `DepartmentName`, `DepartmentCollege`, `DepartmentHead`) VALUES
-(1, 'Computer Science', 'Information Technology', 5),
-(2, 'Physics', 'Science', 2),
-(3, 'Maths', 'Science', 3),
-(4, 'Computer Engineering', 'Information Technology', 4),
-(5, 'Information Systems', 'Information Technology', 8),
-(6, 'Chemistry', 'Science', 7),
-(7, 'Biology', 'Science', 6);
+INSERT INTO `departments` (`ID`, `name`, `college`, `departmentHead`) VALUES
+(1, 'Computer Science', 'Information Technology', 1);
 
 -- --------------------------------------------------------
 
@@ -132,14 +151,14 @@ INSERT INTO `departments` (`DepartmentID`, `DepartmentName`, `DepartmentCollege`
 --
 
 CREATE TABLE `enrollments` (
-  `EnrollmentID` int(11) NOT NULL,
+  `ID` int(11) NOT NULL,
+  `StudentID` int(11) NOT NULL,
+  `SectionID` int(11) NOT NULL,
   `Grade` varchar(2) NOT NULL,
   `Absence` int(11) NOT NULL,
   `ExcusedAbsence` int(11) NOT NULL,
   `Paid` tinyint(1) NOT NULL,
-  `CourseEvaluation` float NOT NULL,
-  `StudentID` int(11) NOT NULL,
-  `SectionID` int(11) NOT NULL
+  `CourseEvaluation` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -150,6 +169,7 @@ CREATE TABLE `enrollments` (
 
 CREATE TABLE `instructors` (
   `InstructorID` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
   `FullName` varchar(100) NOT NULL,
   `PhoneNumber` varchar(20) NOT NULL,
   `EmailAddress` varchar(100) NOT NULL,
@@ -161,15 +181,95 @@ CREATE TABLE `instructors` (
 -- Dumping data for table `instructors`
 --
 
-INSERT INTO `instructors` (`InstructorID`, `FullName`, `PhoneNumber`, `EmailAddress`, `Password`, `DepartmentID`) VALUES
-(1, 'Dr. Taher Saleh', '34343434', 'tsaleh@mt.edu', '$2y$10$2AQSyYaIOVfkQzJrDcB3iuT8taac/Chrb/b./VzYP7.QK1uqymy3K', 1),
-(2, 'Mr. Adnan Ali', '38999920', 'aali@mt.edu', 'Adnan345', 2),
-(3, 'Dr. Ali Eid', '66666699', 'aeid@mt.edu', '$2y$10$foy1ZyzKI6QdHfu6.SxHGu3.23HHkpp23wmYFl2J8bFh2DJpF7a/2', 3),
-(4, 'Dr. Salah Mohammed', '32132328', 'smohd@mt.edu', 'Mosalah10', 4),
-(5, 'Dr. Abdulla Zuhair', '31567652', 'azuhair@mt.edu', 'Ab00d981', 1),
-(6, 'Dr. Abrar Isa', '32455677', 'aisa@mt.edu', 'AsSSWQDSWdwsd45656^%$', 7),
-(7, 'Dr.Maryam Ali', '32342222', 'mali@mt.edu', 'SDsdsd12#@1287', 6),
-(8, 'Dr. Amine Mohammed', '34564321', 'amohd@mt.edu', 'AShjghvg12456$gh23', 5);
+INSERT INTO `instructors` (`InstructorID`, `username`, `FullName`, `PhoneNumber`, `EmailAddress`, `Password`, `DepartmentID`) VALUES
+(1, 'tsaleh', 'Dr. Taher Saleh', '34343434', 'tsaleh@mt.edu', '$2y$10$2AQSyYaIOVfkQzJrDcB3iuT8taac/Chrb/b./VzYP7.QK1uqymy3K', 1),
+(9, 'aahmed', 'Ali Ahmed', '32321122', 'aahmed@mt.edu', '$2y$10$4u7/4kpwFP09YB8Y35KZSutAIliVWAEgb6GxRsOggEXHM8jES3Gny', 1),
+(10, 'mmohammed', 'Mansoor Mohammed', '39991213', 'mmohammed@mt.edu', '$2y$10$..1Pnrk09cKWRRoPzYLH.uCNnHb7vWs6UniHDq8G30w8A6pEMguOq', 1),
+(11, 'hhassan', 'Hanan Hassan', '34321111', 'hhassan@mt.edu', '$2y$10$jcAfBF1U7osauCethwWlyeMCrkAmDFveiF6d8KZIN74A0fKF8aXCe', 1),
+(12, 'risa', 'Reeman Isa', '31319089', 'risa@mt.edu', '$2y$10$UNuSLCPdpkZ8KTs1xrECX.0N/mz1CYfxTkshsCzxd4v14fYYNBb1S', 1),
+(13, 'zzuhair', 'Zainab Zuhair', '36612131', 'zzuhair@mt.edu', '$2y$10$4cYJlk8JkAFfuS9rYd3cmuoXwlsILUn5tGweEQSpblwA5UUBzVHw.', 1),
+(14, 'ffallah', 'Fawaz Fallah', '32329089', 'ffallah@mt.edu', '$2y$10$.5kW8W6ti3Kti/QpcxiIaOPIPotspaqQwsJOTNVpFU6.GSc8cGMrO', 1),
+(15, 'qamire', 'Qassim Amir', '32111123', 'qamire@mt.edu', '$2y$10$KHmeb54EyM6lSusv.XW.D.k1rtv8P5GCwBc5qxdMsRhgBN3OJOWv.', 1),
+(16, 'aabdulla', 'Aysha Abdulla', '36361122', 'aabdulla@mt.edu', '$2y$10$6eGXuTPQR41svIOScENcHOJRojnsUDg.nOl0/BkR/ZrQl1RgyZSj2', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `programs`
+--
+
+CREATE TABLE `programs` (
+  `ID` int(11) NOT NULL,
+  `Name` varchar(150) NOT NULL,
+  `Year` year(4) NOT NULL,
+  `Department` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `programs`
+--
+
+INSERT INTO `programs` (`ID`, `Name`, `Year`, `Department`) VALUES
+(1, 'Computer Science', '2022', 1),
+(2, 'Software Engineering', '2022', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `program_courses`
+--
+
+CREATE TABLE `program_courses` (
+  `ID` int(11) NOT NULL,
+  `courseID` int(11) NOT NULL,
+  `programID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `program_courses`
+--
+
+INSERT INTO `program_courses` (`ID`, `courseID`, `programID`) VALUES
+(1, 6, 1),
+(2, 7, 1),
+(3, 8, 1),
+(4, 9, 1),
+(5, 10, 1),
+(6, 11, 1),
+(7, 12, 1),
+(8, 17, 1),
+(9, 14, 1),
+(10, 18, 1),
+(11, 2, 1),
+(12, 13, 1),
+(13, 15, 1),
+(14, 16, 1),
+(15, 21, 1),
+(16, 19, 1),
+(17, 22, 1),
+(18, 3, 1),
+(19, 20, 1),
+(20, 6, 2),
+(21, 7, 2),
+(22, 8, 2),
+(23, 25, 2),
+(24, 9, 2),
+(25, 10, 2),
+(26, 11, 2),
+(27, 12, 2),
+(28, 18, 2),
+(29, 2, 2),
+(30, 13, 2),
+(31, 16, 2),
+(32, 21, 2),
+(33, 22, 2),
+(34, 23, 2),
+(35, 24, 2),
+(36, 26, 2),
+(37, 27, 2),
+(38, 28, 2),
+(39, 29, 2),
+(40, 30, 2);
 
 -- --------------------------------------------------------
 
@@ -178,7 +278,7 @@ INSERT INTO `instructors` (`InstructorID`, `FullName`, `PhoneNumber`, `EmailAddr
 --
 
 CREATE TABLE `semester` (
-  `SemesterID` int(10) NOT NULL,
+  `SemesterID` int(11) NOT NULL,
   `SemesterYear` varchar(4) NOT NULL,
   `SemesterNumber` varchar(1) NOT NULL,
   `SemesterBegin` date DEFAULT NULL,
@@ -193,10 +293,7 @@ CREATE TABLE `semester` (
 --
 
 INSERT INTO `semester` (`SemesterID`, `SemesterYear`, `SemesterNumber`, `SemesterBegin`, `SemesterEnd`, `ModifyStart`, `ModifyEnd`, `DropEnd`) VALUES
-(1, '2022', '1', NULL, NULL, '2022-09-01', '2022-09-15', '2022-11-15'),
-(2, '2022', '2', NULL, NULL, '2023-01-02', '2023-01-16', '2023-04-15'),
-(3, '2022', '3', NULL, NULL, '2023-06-15', '2023-06-30', '2023-07-31'),
-(6, '2023', '1', '2023-09-17', '2024-01-10', '2023-09-09', '2023-09-20', '2023-11-22');
+(1, '2023', '1', '2023-09-17', '2024-01-10', '2023-05-23', '2023-08-31', '2023-11-22');
 
 -- --------------------------------------------------------
 
@@ -205,11 +302,12 @@ INSERT INTO `semester` (`SemesterID`, `SemesterYear`, `SemesterNumber`, `Semeste
 --
 
 CREATE TABLE `students` (
-  `StudentID` int(11) NOT NULL,
+  `ID` int(11) NOT NULL,
+  `StudentID` varchar(10) NOT NULL,
   `FullName` varchar(100) NOT NULL,
   `PhoneNumber` varchar(20) NOT NULL,
   `EmailAddress` varchar(100) NOT NULL,
-  `StudyProgram` varchar(100) NOT NULL,
+  `StudyProgram` int(11) NOT NULL,
   `EnrollmentStatus` varchar(20) NOT NULL,
   `CreditsPassed` int(11) NOT NULL,
   `CGPA` decimal(3,2) NOT NULL,
@@ -222,48 +320,53 @@ CREATE TABLE `students` (
 -- Dumping data for table `students`
 --
 
-INSERT INTO `students` (`StudentID`, `FullName`, `PhoneNumber`, `EmailAddress`, `StudyProgram`, `EnrollmentStatus`, `CreditsPassed`, `CGPA`, `GPA`, `Balance`, `Password`) VALUES
-(202007602, 'Sayed Ahmed Khalaf', '32222223', '202007602@mt.edu', 'BSc. in Computer Science', 'Enrolled', 86, 3.90, 4.00, 0, '$2y$10$DFJpUHgcJqV9X0R3RhXfm.hI4UTvTIKhvzgnFumYWLJ5u1dfOHwK2'),
-(202010691, 'Jood Yaser', '33336666', '202010691@mt.edu', 'BSc. in Computer Science', 'Enrolled', 81, 3.88, 4.00, 0, '$2y$10$S/eq/RGqgn8TvTnB7WVY.eVcqDglyCn2MnA0EGu5lDRjs/k1qk0Ze');
+INSERT INTO `students` (`ID`, `StudentID`, `FullName`, `PhoneNumber`, `EmailAddress`, `StudyProgram`, `EnrollmentStatus`, `CreditsPassed`, `CGPA`, `GPA`, `Balance`, `Password`) VALUES
+(1, '202010691', 'Jood Yaser', '33336666', '202010691@mt.edu', 1, 'Enrolled', 0, 0.00, 0.00, 0, '$2y$10$S/eq/RGqgn8TvTnB7WVY.eVcqDglyCn2MnA0EGu5lDRjs/k1qk0Ze'),
+(2, '202007602', 'Sayed Ahmed Khalaf', '32222223', '202007602@mt.edu', 1, 'Enrolled', 0, 0.00, 0.00, 0, '$2y$10$DFJpUHgcJqV9X0R3RhXfm.hI4UTvTIKhvzgnFumYWLJ5u1dfOHwK2'),
+(3, '202002622', 'Ali Majeed', '32321131', '202002622@mt.edu', 2, 'Enrolled', 0, 0.00, 0.00, 0, '$2y$10$6zCfj5VCmiRSfbBmSM/iKOn/yUoUnRd1ZA/LZcO8DOWCKrH8u5jwW'),
+(4, '202002920', 'Muneera Jaber', '31311133', '202002920@mt.edu', 2, 'Enrolled', 0, 0.00, 0.00, 0, '$2y$10$JLtpxZaYZ7Q8g0LrZcsWeO0OUUAD22amkSbRMrA56OJcXHkmmf/5K');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `administrators`
+-- Indexes for table `admins`
 --
-ALTER TABLE `administrators`
-  ADD PRIMARY KEY (`AdminID`);
+ALTER TABLE `admins`
+  ADD PRIMARY KEY (`ID`),
+  ADD UNIQUE KEY `emailAddress` (`emailAddress`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `phoneNumber` (`phoneNumber`);
 
 --
 -- Indexes for table `courses`
 --
 ALTER TABLE `courses`
-  ADD PRIMARY KEY (`CourseID`),
-  ADD KEY `CourseDepartment` (`CourseDepartment`);
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `CourseDepartment` (`courseDepartment`);
 
 --
 -- Indexes for table `course_sections`
 --
 ALTER TABLE `course_sections`
-  ADD PRIMARY KEY (`SectionID`),
-  ADD KEY `SectionInstructor` (`SectionInstructor`),
-  ADD KEY `CourseID` (`CourseID`),
-  ADD KEY `SemesterID` (`SemesterID`);
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `SectionInstructor` (`instructorID`),
+  ADD KEY `CourseID` (`courseID`),
+  ADD KEY `SemesterID` (`semesterID`);
 
 --
 -- Indexes for table `departments`
 --
 ALTER TABLE `departments`
-  ADD PRIMARY KEY (`DepartmentID`),
-  ADD KEY `DepartmentHead` (`DepartmentHead`);
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `DepartmentHead` (`departmentHead`);
 
 --
 -- Indexes for table `enrollments`
 --
 ALTER TABLE `enrollments`
-  ADD PRIMARY KEY (`EnrollmentID`),
+  ADD PRIMARY KEY (`ID`),
   ADD KEY `SectionID` (`SectionID`),
   ADD KEY `StudentID` (`StudentID`);
 
@@ -272,7 +375,26 @@ ALTER TABLE `enrollments`
 --
 ALTER TABLE `instructors`
   ADD PRIMARY KEY (`InstructorID`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `EmailAddress` (`EmailAddress`),
+  ADD UNIQUE KEY `PhoneNumber` (`PhoneNumber`),
   ADD KEY `DepartmentID` (`DepartmentID`);
+
+--
+-- Indexes for table `programs`
+--
+ALTER TABLE `programs`
+  ADD PRIMARY KEY (`ID`),
+  ADD UNIQUE KEY `Name` (`Name`),
+  ADD KEY `Department` (`Department`);
+
+--
+-- Indexes for table `program_courses`
+--
+ALTER TABLE `program_courses`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `courseID` (`courseID`),
+  ADD KEY `programID` (`programID`);
 
 --
 -- Indexes for table `semester`
@@ -284,47 +406,74 @@ ALTER TABLE `semester`
 -- Indexes for table `students`
 --
 ALTER TABLE `students`
-  ADD PRIMARY KEY (`StudentID`);
+  ADD PRIMARY KEY (`ID`),
+  ADD UNIQUE KEY `StudentID` (`StudentID`),
+  ADD UNIQUE KEY `EmailAddress` (`EmailAddress`),
+  ADD KEY `StudyProgram` (`StudyProgram`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `administrators`
+-- AUTO_INCREMENT for table `admins`
 --
-ALTER TABLE `administrators`
-  MODIFY `AdminID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `admins`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `courses`
+--
+ALTER TABLE `courses`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `course_sections`
 --
 ALTER TABLE `course_sections`
-  MODIFY `SectionID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `departments`
 --
 ALTER TABLE `departments`
-  MODIFY `DepartmentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `enrollments`
 --
 ALTER TABLE `enrollments`
-  MODIFY `EnrollmentID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `instructors`
 --
 ALTER TABLE `instructors`
-  MODIFY `InstructorID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `InstructorID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `programs`
+--
+ALTER TABLE `programs`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `program_courses`
+--
+ALTER TABLE `program_courses`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `semester`
 --
 ALTER TABLE `semester`
-  MODIFY `SemesterID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `SemesterID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `students`
+--
+ALTER TABLE `students`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
@@ -334,34 +483,41 @@ ALTER TABLE `semester`
 -- Constraints for table `courses`
 --
 ALTER TABLE `courses`
-  ADD CONSTRAINT `courses_ibfk_1` FOREIGN KEY (`CourseDepartment`) REFERENCES `departments` (`DepartmentID`);
+  ADD CONSTRAINT `courses_ibfk_1` FOREIGN KEY (`CourseDepartment`) REFERENCES `departments` (`ID`);
 
 --
 -- Constraints for table `course_sections`
 --
 ALTER TABLE `course_sections`
-  ADD CONSTRAINT `course_sections_ibfk_1` FOREIGN KEY (`SectionInstructor`) REFERENCES `instructors` (`InstructorID`),
-  ADD CONSTRAINT `course_sections_ibfk_2` FOREIGN KEY (`CourseID`) REFERENCES `courses` (`CourseID`),
-  ADD CONSTRAINT `course_sections_ibfk_3` FOREIGN KEY (`SemesterID`) REFERENCES `semester` (`SemesterID`);
-
---
--- Constraints for table `departments`
---
-ALTER TABLE `departments`
-  ADD CONSTRAINT `departments_ibfk_1` FOREIGN KEY (`DepartmentHead`) REFERENCES `instructors` (`InstructorID`);
+  ADD CONSTRAINT `course_sections_ibfk_3` FOREIGN KEY (`semesterID`) REFERENCES `semester` (`SemesterID`),
+  ADD CONSTRAINT `course_sections_ibfk_4` FOREIGN KEY (`courseID`) REFERENCES `courses` (`ID`),
+  ADD CONSTRAINT `course_sections_ibfk_5` FOREIGN KEY (`instructorID`) REFERENCES `instructors` (`InstructorID`);
 
 --
 -- Constraints for table `enrollments`
 --
 ALTER TABLE `enrollments`
-  ADD CONSTRAINT `enrollments_ibfk_1` FOREIGN KEY (`SectionID`) REFERENCES `course_sections` (`SectionID`),
-  ADD CONSTRAINT `enrollments_ibfk_2` FOREIGN KEY (`StudentID`) REFERENCES `students` (`StudentID`);
+  ADD CONSTRAINT `enrollments_ibfk_1` FOREIGN KEY (`SectionID`) REFERENCES `course_sections` (`ID`),
+  ADD CONSTRAINT `enrollments_ibfk_2` FOREIGN KEY (`StudentID`) REFERENCES `students` (`ID`);
 
 --
--- Constraints for table `instructors`
+-- Constraints for table `programs`
 --
-ALTER TABLE `instructors`
-  ADD CONSTRAINT `instructors_ibfk_1` FOREIGN KEY (`DepartmentID`) REFERENCES `departments` (`DepartmentID`);
+ALTER TABLE `programs`
+  ADD CONSTRAINT `programs_ibfk_1` FOREIGN KEY (`Department`) REFERENCES `departments` (`ID`);
+
+--
+-- Constraints for table `program_courses`
+--
+ALTER TABLE `program_courses`
+  ADD CONSTRAINT `program_courses_ibfk_1` FOREIGN KEY (`courseID`) REFERENCES `courses` (`ID`),
+  ADD CONSTRAINT `program_courses_ibfk_2` FOREIGN KEY (`programID`) REFERENCES `programs` (`ID`);
+
+--
+-- Constraints for table `students`
+--
+ALTER TABLE `students`
+  ADD CONSTRAINT `students_ibfk_1` FOREIGN KEY (`StudyProgram`) REFERENCES `programs` (`ID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
