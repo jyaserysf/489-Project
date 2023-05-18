@@ -1,52 +1,57 @@
 <?php
 session_start();
-// if (isset($_SESSION['activeUser']))
-//     session_unset(); 
+if (isset($_SESSION['activeUser']))
+    session_unset(); 
 
+//TODO: Modify sessions so that they store the unique key
 if (isset($_COOKIE['remember_me'])){
-    $arr = explode('#', $_COOKIE['remember_me']);
+    $data = json_decode($_COOKIE['remember_me'], true);
     try {
         require('Database/connection.php');
 
-        $sql_student = "select * from students where StudentID ='" . $arr[0] . "'";
+        $sql_student = "select * from students where studentID ='" . $data['username'] . "'";
         $student = $db->query($sql_student);
 
-        $sql_instructor = "select * from instructors where EmailAddress ='" . $arr[0] . "'";
+        $sql_instructor = "select * from instructors where username ='" . $data['username'] . "'";
         $instructor = $db->query($sql_instructor);
 
-        $sql_admin = "select * from administrators where EmailAddress ='" . $arr[0] . "'";
+        $sql_admin = "select * from admins where username ='" . $data['username'] . "'";
         $admin = $db->query($sql_admin);
 
         if ($row = $student->fetch()) {
-            if ( $arr[1] == $row['Password']) {
-                $_SESSION['activeUser'] = $arr[0];                   
-                //header('location:#');
-                echo "student";
+            if ( $data['password'] == $row['password']) {
+                $_SESSION['activeUser'][$data['username']] = $data['role'];                   
+                header('location:student-homep.php');
                 die();
             }
-            $db=null;
+            else {
+                echo "Incorret Password";
+            }
         }
 
         elseif($row = $instructor->fetch()) {
-            if ( $arr[1] == $row['Password']) {
-                $_SESSION['activeUser'] = $arr[0];                   
-                //header('location:#');
-                echo "instructor";
+            if ( $data['password'] == $row['password']) {
+                $_SESSION['activeUser'][$data['usernmae']] = $data['role'];                   
+                header('location:instructor-homep.php');
                 die();
             }
-            $db=null;
+            else {
+                echo "Incorrect Password";
+            }
         }
 
         elseif($row = $admin->fetch()) {
-            if ( $arr[1] == $row['Password']) {
-                $_SESSION['activeUser'] = $arr[0];                   
+            if ( $data['password'] == $row['password']) {
+                $_SESSION['activeUser'][$data['username']] = $data['role'];              
                 //header('location:#');
                 echo "admin";
                 die();
             }
-            $db=null;
+            else {
+                echo "Incorrect Password";
+            }
         }
-
+        $db=null;
     }
     catch(PDOException $e){
     die($e->getMessage());
@@ -60,7 +65,7 @@ if (isset($_COOKIE['remember_me'])){
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Form</title>
-    <link rel="stylesheet" href="Login_style.css">
+    <link rel="stylesheet" href="css/Login_style.css">
  </head>
  <body>
 
@@ -68,62 +73,59 @@ if (isset($_COOKIE['remember_me'])){
     if (isset($_POST['submit'])){
         $uname = $_POST['username'];
         $pass = $_POST['password'];
-        //Validation will be kept for you as an exercise
         try {
             require('Database/connection.php');
 
-            $sql_student = "select * from students where StudentID = '$uname'";
-            $sql_instructor = "select * from instructors where EmailAddress = '$uname'";
-            $sql_admin = "select * from administrators where EmailAddress = '$uname'";
+            $sql_student = "select * from students where studentID = '$uname'";
+            $sql_instructor = "select * from instructors where username = '$uname'";
+            $sql_admin = "select * from admins where username = '$uname'";
 
             $result_student = $db->query($sql_student);
             $result_instructor = $db->query($sql_instructor);
             $result_admin = $db->query($sql_admin);
 
             if ($row = $result_student->fetch()){
-                if (password_verify($pass, $row['Password'])) {
-                    $_SESSION['activeUser'] = $uname;
+                if (password_verify($pass, $row['password'])) {
+                    $_SESSION['activeUser'][$row['studentID']] = "student";
                     if (isset($_POST['remember_me'])) {
-                        setcookie('remember_me', "$uname#" . $row['Password'], time()+(60*5));
+                        $cookie = ["username"=>$row['studentID'], "password"=>$row['password'], "role"=>"student"]; 
+                        setcookie('remember_me', json_encode($cookie), time()+(5*60));
                     }                     
-                    //header('location:#');
-                    echo "student";
+                    header('location:student-homep.php');
                     die();
                 }
                 else {
-                    // TODO: Invalid Password
                     echo "Invalid Password";
                 }
             }
 
             elseif ($row = $result_instructor->fetch()) {
-                if (password_verify($pass, $row['Password'])) {
-                    $_SESSION['activeUser'] = $uname;
+                if (password_verify($pass, $row['password'])) {
+                    $_SESSION['activeUser'][$row['ID']] = "instructor";
                     if (isset($_POST['remember_me'])) {
-                        setcookie('remember_me', "$uname#" . $row['Password'], time()+(60*5));
+                        $cookie = ["username"=>$row['username'], "password"=>$row['password'], "role"=>"instructor"];
+                        setcookie('remember_me', json_encode($cookie), time()+(5*60));
                     }                     
-                    //header('location:#');
-                    echo "instructor";
+                    header('location:instructor-homep.php');
                     die();
                 }
                 else {
-                    // TODO: Invalid Password
                     echo "Invalid Password";
                 }
             }
 
-            elseif ($row = $result_admin->fetch($sql_admin)) {
-                if (password_verify($pass, $row['Password'])) {
-                    $_SESSION['activeUser'] = $uname;
+            elseif ($row = $result_admin->fetch()) {
+                if (password_verify($pass, $row['password'])) {
+                    $_SESSION['activeUser'][$row['ID']] = "admin";
                     if (isset($_POST['remember_me'])) {
-                        setcookie('remember_me', "$uname#" . $row['Password'], time()+(60*5));
+                        $cookie = ["username"=>$row['username'], "password"=>$row['password'], "role"=>"admin"];
+                        setcookie('remember_me', json_encode($cookie), time()+(5*60));
                     }                     
-                    //header('location:#');
+                    //header('location:');
                     echo "admin";
                     die();
                 }
                 else {
-                    // TODO: Invalid Password
                     echo "Invalid Password";
                 }
             }
@@ -137,6 +139,9 @@ if (isset($_COOKIE['remember_me'])){
         die($e->getMessage());
         }
     }
+    elseif(isset($_POST['resetbtn'])) {
+        
+    }
     ?>
    
     <main> 
@@ -147,7 +152,7 @@ if (isset($_COOKIE['remember_me'])){
                 <!-- Form Area -->
                 <div class="forms-area">
                     <!-- The Login Form -->
-                    <form action="Login.php" method="post" autocomplete="off" class="login-form">
+                    <form action="login.php" method="post" autocomplete="off" class="login-form">
                         
                         <div class="logo"><img src="./img/logo.png" alt="University"><h4>University</h4></div>
     
@@ -220,7 +225,7 @@ if (isset($_COOKIE['remember_me'])){
                                 <label>Email Address</label>
                             </div>
     
-                            <input type="submit" value="Reset Password" class="resetPassword-btn">
+                            <input type="submit" name="forgetbtn" value="Reset Password" class="resetPassword-btn">
 
                             <a href="#" class="toggle">
                                 <input type="submit" value="Back to Login" class="backToLogin-btn">
@@ -243,6 +248,6 @@ if (isset($_COOKIE['remember_me'])){
     </main>
     
     <!-- Javascript file -->
-    <script src="Login_app.js"></script>
+    <script src="js/Login_app.js"></script>
  </body>
  </html>

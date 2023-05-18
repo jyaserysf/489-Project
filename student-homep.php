@@ -1,4 +1,15 @@
-<?php 
+<?php
+    session_start();
+    if(isset($_SESSION['activeUser'])) {
+        if($_SESSION['activeUser'] == "instructor")
+            header('location: instructor-homep.php');
+        elseif($_SESSION['activeUser'] == "admin")
+            //header('location:');
+            echo "admin";
+    }
+    else {
+        header('location: login.php');
+    }
     try{
         require('Database/connection.php');
     }

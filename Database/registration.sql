@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 17, 2023 at 07:07 PM
+-- Generation Time: May 18, 2023 at 10:02 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -152,13 +152,13 @@ INSERT INTO `departments` (`ID`, `name`, `college`, `departmentHead`) VALUES
 
 CREATE TABLE `enrollments` (
   `ID` int(11) NOT NULL,
-  `StudentID` int(11) NOT NULL,
-  `SectionID` int(11) NOT NULL,
-  `Grade` varchar(2) NOT NULL,
-  `Absence` int(11) NOT NULL,
-  `ExcusedAbsence` int(11) NOT NULL,
-  `Paid` tinyint(1) NOT NULL,
-  `CourseEvaluation` float NOT NULL
+  `studentID` int(11) NOT NULL,
+  `sectionID` int(11) NOT NULL,
+  `grade` varchar(2) NOT NULL,
+  `absence` int(11) NOT NULL,
+  `excusedAbsence` int(11) NOT NULL,
+  `paid` tinyint(1) NOT NULL,
+  `courseEvaluation` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -168,20 +168,20 @@ CREATE TABLE `enrollments` (
 --
 
 CREATE TABLE `instructors` (
-  `InstructorID` int(11) NOT NULL,
+  `ID` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
-  `FullName` varchar(100) NOT NULL,
-  `PhoneNumber` varchar(20) NOT NULL,
-  `EmailAddress` varchar(100) NOT NULL,
-  `Password` varchar(255) NOT NULL,
-  `DepartmentID` int(11) NOT NULL
+  `fullName` varchar(100) NOT NULL,
+  `phoneNumber` varchar(20) NOT NULL,
+  `emailAddress` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `departmentID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `instructors`
 --
 
-INSERT INTO `instructors` (`InstructorID`, `username`, `FullName`, `PhoneNumber`, `EmailAddress`, `Password`, `DepartmentID`) VALUES
+INSERT INTO `instructors` (`ID`, `username`, `fullName`, `phoneNumber`, `emailAddress`, `password`, `departmentID`) VALUES
 (1, 'tsaleh', 'Dr. Taher Saleh', '34343434', 'tsaleh@mt.edu', '$2y$10$2AQSyYaIOVfkQzJrDcB3iuT8taac/Chrb/b./VzYP7.QK1uqymy3K', 1),
 (9, 'aahmed', 'Ali Ahmed', '32321122', 'aahmed@mt.edu', '$2y$10$4u7/4kpwFP09YB8Y35KZSutAIliVWAEgb6GxRsOggEXHM8jES3Gny', 1),
 (10, 'mmohammed', 'Mansoor Mohammed', '39991213', 'mmohammed@mt.edu', '$2y$10$..1Pnrk09cKWRRoPzYLH.uCNnHb7vWs6UniHDq8G30w8A6pEMguOq', 1),
@@ -200,16 +200,16 @@ INSERT INTO `instructors` (`InstructorID`, `username`, `FullName`, `PhoneNumber`
 
 CREATE TABLE `programs` (
   `ID` int(11) NOT NULL,
-  `Name` varchar(150) NOT NULL,
-  `Year` year(4) NOT NULL,
-  `Department` int(11) NOT NULL
+  `name` varchar(150) NOT NULL,
+  `year` year(4) NOT NULL,
+  `departmentID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `programs`
 --
 
-INSERT INTO `programs` (`ID`, `Name`, `Year`, `Department`) VALUES
+INSERT INTO `programs` (`ID`, `name`, `year`, `departmentID`) VALUES
 (1, 'Computer Science', '2022', 1),
 (2, 'Software Engineering', '2022', 1);
 
@@ -278,21 +278,21 @@ INSERT INTO `program_courses` (`ID`, `courseID`, `programID`) VALUES
 --
 
 CREATE TABLE `semester` (
-  `SemesterID` int(11) NOT NULL,
-  `SemesterYear` varchar(4) NOT NULL,
-  `SemesterNumber` varchar(1) NOT NULL,
-  `SemesterBegin` date DEFAULT NULL,
-  `SemesterEnd` date DEFAULT NULL,
-  `ModifyStart` date DEFAULT NULL,
-  `ModifyEnd` date DEFAULT NULL,
-  `DropEnd` date DEFAULT NULL
+  `ID` int(11) NOT NULL,
+  `year` varchar(4) NOT NULL,
+  `number` varchar(1) NOT NULL,
+  `beginDate` date DEFAULT NULL,
+  `endDate` date DEFAULT NULL,
+  `modifyStart` date DEFAULT NULL,
+  `modifyEnd` date DEFAULT NULL,
+  `dropEnd` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `semester`
 --
 
-INSERT INTO `semester` (`SemesterID`, `SemesterYear`, `SemesterNumber`, `SemesterBegin`, `SemesterEnd`, `ModifyStart`, `ModifyEnd`, `DropEnd`) VALUES
+INSERT INTO `semester` (`ID`, `year`, `number`, `beginDate`, `endDate`, `modifyStart`, `modifyEnd`, `dropEnd`) VALUES
 (1, '2023', '1', '2023-09-17', '2024-01-10', '2023-05-23', '2023-08-31', '2023-11-22');
 
 -- --------------------------------------------------------
@@ -303,24 +303,24 @@ INSERT INTO `semester` (`SemesterID`, `SemesterYear`, `SemesterNumber`, `Semeste
 
 CREATE TABLE `students` (
   `ID` int(11) NOT NULL,
-  `StudentID` varchar(10) NOT NULL,
-  `FullName` varchar(100) NOT NULL,
-  `PhoneNumber` varchar(20) NOT NULL,
-  `EmailAddress` varchar(100) NOT NULL,
-  `StudyProgram` int(11) NOT NULL,
-  `EnrollmentStatus` varchar(20) NOT NULL,
-  `CreditsPassed` int(11) NOT NULL,
+  `studentID` varchar(10) NOT NULL,
+  `fullName` varchar(100) NOT NULL,
+  `phoneNumber` varchar(20) NOT NULL,
+  `emailAddress` varchar(100) NOT NULL,
+  `studyProgram` int(11) NOT NULL,
+  `enrollmentStatus` varchar(20) NOT NULL,
+  `creditsPassed` int(11) NOT NULL,
   `CGPA` decimal(3,2) NOT NULL,
   `GPA` decimal(3,2) NOT NULL,
-  `Balance` float NOT NULL,
-  `Password` varchar(255) NOT NULL
+  `balance` float NOT NULL,
+  `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `students`
 --
 
-INSERT INTO `students` (`ID`, `StudentID`, `FullName`, `PhoneNumber`, `EmailAddress`, `StudyProgram`, `EnrollmentStatus`, `CreditsPassed`, `CGPA`, `GPA`, `Balance`, `Password`) VALUES
+INSERT INTO `students` (`ID`, `studentID`, `fullName`, `phoneNumber`, `emailAddress`, `studyProgram`, `enrollmentStatus`, `creditsPassed`, `CGPA`, `GPA`, `balance`, `password`) VALUES
 (1, '202010691', 'Jood Yaser', '33336666', '202010691@mt.edu', 1, 'Enrolled', 0, 0.00, 0.00, 0, '$2y$10$S/eq/RGqgn8TvTnB7WVY.eVcqDglyCn2MnA0EGu5lDRjs/k1qk0Ze'),
 (2, '202007602', 'Sayed Ahmed Khalaf', '32222223', '202007602@mt.edu', 1, 'Enrolled', 0, 0.00, 0.00, 0, '$2y$10$DFJpUHgcJqV9X0R3RhXfm.hI4UTvTIKhvzgnFumYWLJ5u1dfOHwK2'),
 (3, '202002622', 'Ali Majeed', '32321131', '202002622@mt.edu', 2, 'Enrolled', 0, 0.00, 0.00, 0, '$2y$10$6zCfj5VCmiRSfbBmSM/iKOn/yUoUnRd1ZA/LZcO8DOWCKrH8u5jwW'),
@@ -367,26 +367,26 @@ ALTER TABLE `departments`
 --
 ALTER TABLE `enrollments`
   ADD PRIMARY KEY (`ID`),
-  ADD KEY `SectionID` (`SectionID`),
-  ADD KEY `StudentID` (`StudentID`);
+  ADD KEY `SectionID` (`sectionID`),
+  ADD KEY `StudentID` (`studentID`);
 
 --
 -- Indexes for table `instructors`
 --
 ALTER TABLE `instructors`
-  ADD PRIMARY KEY (`InstructorID`),
+  ADD PRIMARY KEY (`ID`),
   ADD UNIQUE KEY `username` (`username`),
-  ADD UNIQUE KEY `EmailAddress` (`EmailAddress`),
-  ADD UNIQUE KEY `PhoneNumber` (`PhoneNumber`),
-  ADD KEY `DepartmentID` (`DepartmentID`);
+  ADD UNIQUE KEY `EmailAddress` (`emailAddress`),
+  ADD UNIQUE KEY `PhoneNumber` (`phoneNumber`),
+  ADD KEY `DepartmentID` (`departmentID`);
 
 --
 -- Indexes for table `programs`
 --
 ALTER TABLE `programs`
   ADD PRIMARY KEY (`ID`),
-  ADD UNIQUE KEY `Name` (`Name`),
-  ADD KEY `Department` (`Department`);
+  ADD UNIQUE KEY `Name` (`name`),
+  ADD KEY `Department` (`departmentID`);
 
 --
 -- Indexes for table `program_courses`
@@ -400,16 +400,16 @@ ALTER TABLE `program_courses`
 -- Indexes for table `semester`
 --
 ALTER TABLE `semester`
-  ADD PRIMARY KEY (`SemesterID`);
+  ADD PRIMARY KEY (`ID`);
 
 --
 -- Indexes for table `students`
 --
 ALTER TABLE `students`
   ADD PRIMARY KEY (`ID`),
-  ADD UNIQUE KEY `StudentID` (`StudentID`),
-  ADD UNIQUE KEY `EmailAddress` (`EmailAddress`),
-  ADD KEY `StudyProgram` (`StudyProgram`);
+  ADD UNIQUE KEY `StudentID` (`studentID`),
+  ADD UNIQUE KEY `EmailAddress` (`emailAddress`),
+  ADD KEY `StudyProgram` (`studyProgram`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -449,7 +449,7 @@ ALTER TABLE `enrollments`
 -- AUTO_INCREMENT for table `instructors`
 --
 ALTER TABLE `instructors`
-  MODIFY `InstructorID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `programs`
@@ -467,7 +467,7 @@ ALTER TABLE `program_courses`
 -- AUTO_INCREMENT for table `semester`
 --
 ALTER TABLE `semester`
-  MODIFY `SemesterID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `students`
@@ -489,9 +489,9 @@ ALTER TABLE `courses`
 -- Constraints for table `course_sections`
 --
 ALTER TABLE `course_sections`
-  ADD CONSTRAINT `course_sections_ibfk_3` FOREIGN KEY (`semesterID`) REFERENCES `semester` (`SemesterID`),
+  ADD CONSTRAINT `course_sections_ibfk_3` FOREIGN KEY (`semesterID`) REFERENCES `semester` (`ID`),
   ADD CONSTRAINT `course_sections_ibfk_4` FOREIGN KEY (`courseID`) REFERENCES `courses` (`ID`),
-  ADD CONSTRAINT `course_sections_ibfk_5` FOREIGN KEY (`instructorID`) REFERENCES `instructors` (`InstructorID`);
+  ADD CONSTRAINT `course_sections_ibfk_5` FOREIGN KEY (`instructorID`) REFERENCES `instructors` (`ID`);
 
 --
 -- Constraints for table `enrollments`
@@ -504,7 +504,7 @@ ALTER TABLE `enrollments`
 -- Constraints for table `programs`
 --
 ALTER TABLE `programs`
-  ADD CONSTRAINT `programs_ibfk_1` FOREIGN KEY (`Department`) REFERENCES `departments` (`ID`);
+  ADD CONSTRAINT `programs_ibfk_1` FOREIGN KEY (`departmentID`) REFERENCES `departments` (`ID`);
 
 --
 -- Constraints for table `program_courses`
