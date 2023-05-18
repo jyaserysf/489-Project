@@ -140,7 +140,16 @@ if (isset($_COOKIE['remember_me'])){
         }
     }
     elseif(isset($_POST['resetbtn'])) {
-        
+        if(isset($_POST['email'])) {
+            $message = "Please visit the following link to reset your password";
+            if(mail($_POST['email'], "Password Reset", $message, "mt@mt.edu"))
+                echo "Password reset link sent";
+            else   
+                echo "Password reset link could not be sent";
+        }
+        else {
+            echo "Please enter your email";
+        }
     }
     ?>
    
@@ -206,7 +215,7 @@ if (isset($_COOKIE['remember_me'])){
                     </form>
 
                     <!-- Forgot Password Form -->
-                    <form action="Login.html" autocomplete="off" class="forgotPassword-form">
+                    <form action="login.php" method="post" autocomplete="off" class="forgotPassword-form">
                         
                         <div class="logo"><img src="./img/logo.png" alt="University"><h4>University</h4></div>
     
@@ -217,6 +226,7 @@ if (isset($_COOKIE['remember_me'])){
                             <div class="input-area">
                                 <input
                                     type="email"
+                                    name="email"
                                     minlength="4"
                                     class="input-field"
                                     autocomplete="off"
