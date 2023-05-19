@@ -1,60 +1,146 @@
 <?php
 session_start();
-if (isset($_SESSION['activeUser']))
-    session_unset(); 
 
-//TODO: Modify sessions so that they store the unique key
-if (isset($_COOKIE['remember_me'])){
+if (isset($_SESSION['activeUser'])) {
+    $role = $_SESSION['activeUser']['role'];
+    header("location: $role-homep.php");
+    die(); 
+}
+    
+elseif (isset($_COOKIE['remember_me'])){
     $data = json_decode($_COOKIE['remember_me'], true);
     try {
         require('Database/connection.php');
+        $role = $data['role'];
+        if($role == "instructor") {
+            $stmt = $db->prepare("SELECT * FROM instructors WHERE username=?");
+            $stmt->execute(array($data['username']));
+        }
+        elseif($role == "admin") {
+            $stmt = $db->prepare("SELECT * FROM admins WHERE username=?");
+            $stmt->execute(array($data['username']));
+        }
+        else {
+            $stmt = $db->prepare("SELECT * FROM students WHERE studentID=?");
+            $stmt->execute(array($data['username']));
+        }
 
-        $sql_student = "select * from students where studentID ='" . $data['username'] . "'";
-        $student = $db->query($sql_student);
-
-        $sql_instructor = "select * from instructors where username ='" . $data['username'] . "'";
-        $instructor = $db->query($sql_instructor);
-
-        $sql_admin = "select * from admins where username ='" . $data['username'] . "'";
-        $admin = $db->query($sql_admin);
-
-        if ($row = $student->fetch()) {
-            if ( $data['password'] == $row['password']) {
-                $_SESSION['activeUser'][$data['username']] = $data['role'];                   
-                header('location:student-homep.php');
+        if ($row = $stmt->fetch()) {
+            if ($data['password'] == $row['password']) {
+                $session_arr = ["username"=>$data['username'], "role"=>$data['role']];
+                $_SESSION['activeUser'] = $session_arr;                   
+                header("location: $role-homep.php");
+                $db=null;
                 die();
             }
             else {
-                echo "Incorret Password";
-            }
-        }
-
-        elseif($row = $instructor->fetch()) {
-            if ( $data['password'] == $row['password']) {
-                $_SESSION['activeUser'][$data['usernmae']] = $data['role'];                   
-                header('location:instructor-homep.php');
+                header('location: login.php');
+                $db=null;
                 die();
             }
-            else {
-                echo "Incorrect Password";
-            }
         }
-
-        elseif($row = $admin->fetch()) {
-            if ( $data['password'] == $row['password']) {
-                $_SESSION['activeUser'][$data['username']] = $data['role'];              
-                //header('location:#');
-                echo "admin";
-                die();
-            }
-            else {
-                echo "Incorrect Password";
-            }
-        }
-        $db=null;
     }
     catch(PDOException $e){
-    die($e->getMessage());
+        die($e->getMessage());
+    }
+}
+
+elseif (isset($_POST['submit'])){
+    if(!isset($_POST['username']) || !isset($_POST['password'])) {
+        echo "Please enter the required information";
+        die();
+    }
+    $uname = $_POST['username'];
+    $pass = $_POST['password'];
+    try {
+        require('Database/connection.php');
+
+        $stmt = $db->prepare("SELECT * FROM students WHERE studentID=?");
+        $stmt->execute(array($uname));
+        if ($row = $stmt->fetch()){
+            if (password_verify($pass, $row['password'])) {
+                $session_arr = ["username"=>$row['studentID'], "role"=>"student"];
+                $_SESSION['activeUser'] = $session_arr;
+                if (isset($_POST['remember_me'])) {
+                    $cookie = ["username"=>$row['studentID'], "password"=>$row['password'], "role"=>"student"]; 
+                    setcookie('remember_me', json_encode($cookie), time()+(5*60));
+                }                     
+                header('location:student-homep.php');
+                $db=null;
+                die();
+            }
+            else {
+                echo "Invalid Password";
+                $db=null;
+                die();
+            }
+        }
+        else {
+            $stmt = $db->prepare("SELECT * FROM instructors WHERE username=?");
+            $stmt->execute(array($uname));
+            if ($row = $stmt->fetch()){
+                if (password_verify($pass, $row['password'])) {
+                    $session_arr = ["username"=>$row['username'], "role"=>"instructor"];
+                    $_SESSION['activeUser'] = $session_arr;
+                    if (isset($_POST['remember_me'])) {
+                        $cookie = ["username"=>$row['username'], "password"=>$row['password'], "role"=>"instructor"]; 
+                        setcookie('remember_me', json_encode($cookie), time()+(5*60));
+                    }                     
+                    header('location:instructor-homep.php');
+                    $db=null;
+                    die();
+                }
+                else {
+                    echo "Invalid Password";
+                    $db=null;
+                    die();
+                }
+            }
+            else {
+                $stmt = $db->prepare("SELECT * FROM admins WHERE username=?");
+                $stmt->execute(array($uname));
+                if ($row = $stmt->fetch()){
+                    if (password_verify($pass, $row['password'])) {
+                        $session_arr = ["username"=>$row['username'], "role"=>"admin"];
+                        $_SESSION['activeUser'] = $session_arr;
+                        if (isset($_POST['remember_me'])) {
+                            $cookie = ["username"=>$row['username'], "password"=>$row['password'], "role"=>"admin"]; 
+                            setcookie('remember_me', json_encode($cookie), time()+(5*60));
+                        }                     
+                        header('location:admin-homep.php');
+                        $db=null;
+                        die();
+                    }
+                    else {
+                        echo "Invalid Password";
+                        $db=null;
+                        die();
+                    }
+                }
+                else {
+                    echo "Invalid Username";
+                    $db=null;
+                    die();
+                }
+            }
+        }
+    }
+
+    catch(PDOException $e) {
+        die($e->getMessage());
+    }
+}
+
+elseif(isset($_POST['resetbtn'])) {
+    if(isset($_POST['email'])) {
+        $message = "Please visit the following link to reset your password";
+        if(mail($_POST['email'], "Password Reset", $message, "mt@mt.edu"))
+            echo "Password reset link sent";
+        else   
+            echo "Password reset link could not be sent";
+    }
+    else {
+        echo "Please enter your email";
     }
 }
 ?>
@@ -68,90 +154,6 @@ if (isset($_COOKIE['remember_me'])){
     <link rel="stylesheet" href="css/Login_style.css">
  </head>
  <body>
-
-    <?php
-    if (isset($_POST['submit'])){
-        $uname = $_POST['username'];
-        $pass = $_POST['password'];
-        try {
-            require('Database/connection.php');
-
-            $sql_student = "select * from students where studentID = '$uname'";
-            $sql_instructor = "select * from instructors where username = '$uname'";
-            $sql_admin = "select * from admins where username = '$uname'";
-
-            $result_student = $db->query($sql_student);
-            $result_instructor = $db->query($sql_instructor);
-            $result_admin = $db->query($sql_admin);
-
-            if ($row = $result_student->fetch()){
-                if (password_verify($pass, $row['password'])) {
-                    $_SESSION['activeUser'][$row['studentID']] = "student";
-                    if (isset($_POST['remember_me'])) {
-                        $cookie = ["username"=>$row['studentID'], "password"=>$row['password'], "role"=>"student"]; 
-                        setcookie('remember_me', json_encode($cookie), time()+(5*60));
-                    }                     
-                    header('location:student-homep.php');
-                    die();
-                }
-                else {
-                    echo "Invalid Password";
-                }
-            }
-
-            elseif ($row = $result_instructor->fetch()) {
-                if (password_verify($pass, $row['password'])) {
-                    $_SESSION['activeUser'][$row['ID']] = "instructor";
-                    if (isset($_POST['remember_me'])) {
-                        $cookie = ["username"=>$row['username'], "password"=>$row['password'], "role"=>"instructor"];
-                        setcookie('remember_me', json_encode($cookie), time()+(5*60));
-                    }                     
-                    header('location:instructor-homep.php');
-                    die();
-                }
-                else {
-                    echo "Invalid Password";
-                }
-            }
-
-            elseif ($row = $result_admin->fetch()) {
-                if (password_verify($pass, $row['password'])) {
-                    $_SESSION['activeUser'][$row['ID']] = "admin";
-                    if (isset($_POST['remember_me'])) {
-                        $cookie = ["username"=>$row['username'], "password"=>$row['password'], "role"=>"admin"];
-                        setcookie('remember_me', json_encode($cookie), time()+(5*60));
-                    }                     
-                    //header('location:');
-                    echo "admin";
-                    die();
-                }
-                else {
-                    echo "Invalid Password";
-                }
-            }
-
-            else {
-                echo "Invalid Username";
-            }
-            $db=null;
-        }
-        catch(PDOException $e) {
-        die($e->getMessage());
-        }
-    }
-    elseif(isset($_POST['resetbtn'])) {
-        if(isset($_POST['email'])) {
-            $message = "Please visit the following link to reset your password";
-            if(mail($_POST['email'], "Password Reset", $message, "mt@mt.edu"))
-                echo "Password reset link sent";
-            else   
-                echo "Password reset link could not be sent";
-        }
-        else {
-            echo "Please enter your email";
-        }
-    }
-    ?>
    
     <main> 
         <!-- Outer Box -->
