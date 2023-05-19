@@ -45,4 +45,48 @@ function schedule(){
           
     //     echo'</tr>';
     //     }
+
+
+
+    // registering logic
+    // add button
+    /** once user presses on '+' section should be added to schedule 
+     * (use php submit or ajax click? php would reload the page and insert into db ajax doesnt reload and can insert but idk how to manipulate other data but in theory it could work?)
+     * check amount of courses enrolled {should not exceed 6 in a semester}
+     * 4. check first for preReq {students needs to have passed the course (check past enrollment exists and grade not fail)}
+     * 5. then check lecture conflict (how to compare time)
+     * 6. then check final conflict (same time and day)
+     * 7. THEN add course section to enrollment 
+     * 8. then decrease available seats in course sections 
+     * how to check if student has payed??? to confirm seat (should be within enrollment period from db)
+     *  */
+
+    // replace course section (seat)
+    /** use UPDATE to sql
+     * user should select course to be replaced first (make course in schedule clickable ((same ajax call as section button)) -> info appears in info box then resubmit again through buttons)
+     * available sections appear in section area
+     * student can select another section
+     * apply steps 4-7 from add
+     * increase original section seat , decrease new section seat
+     * 
+     */
+
+     //delete or drop seat
+     /**
+      * user should select course to be dropped first (make course in schedule clickable ((same ajax call as section button)) -> info appears in info box then resubmit again through buttons)
+      * use DELETE to remove enrollment record
+      * pop up should appear (js console) {are you sure you want to drop this course etc etc}
+      * if yes -> delete record , increase section seat  
+      * if cancel -> break function
+      */
+
+      // general notes
+      /** 
+       *  should add 'approve' button at end to check if student has appropriate amount of courses {3-6}
+       *  how to check if student has payed??? to confirm seat (should be within enrollment period from db)
+       * each of above should be seperate function that is called in courseReg page
+       * each function should call other function that adds course to schedule visually 
+       */
+    
+    
 ?>

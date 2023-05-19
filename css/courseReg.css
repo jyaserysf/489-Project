@@ -12,12 +12,41 @@ h2{
     margin: 20px 10px;
 }
 
+
+
+  
+
+.select{
+    padding: 5px ;
+    color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(236, 232, 221, 0.7);
+    border-color: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    width: 100%; /* set the width to fill the container */
+    
+}
+
+.select:visited{
+    border-color:rgba(0, 0, 0, 0.5)
+}
+
 .select-cs{
     margin: 15px 10px;
 }
 
 .select-cs label{
     margin-right: 5px;
+}
+
+.select-cs button{
+    border-radius: 5px;
+    background-color: rgba(236, 232, 221, 0.7);
+    border-color: rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    margin-right:  8px;
+}
+.select-cs button:hover{
+    color: #A0BCC2;
 }
 
 #course-manage{
@@ -28,13 +57,12 @@ h2{
 .course-info{
     background-color: #F9EBC8;
     padding: 15px 15px;
-    min-height: 170px;
+    max-height: 240px;
     border-radius: 3px;
 }
 
 #c-info{
-    
-    width:89%;
+    width:85%;
     display: flex;
     justify-content: space-between;
     
@@ -48,26 +76,50 @@ h2{
 }
 
 .st-info-lb{
-    margin-bottom: 10px;
+    
 }
 
 #course-toolb{
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    width:3%;
 }
 
-#course-toolb button{
+button{
     background-color: transparent;
-    border:none;
+    border: none;
 }
 
-#course-toolb i:hover{
-    background-color: transparent;
-    
+
+.container i{
+    font-size: medium;
+    color: rgba(0, 0, 0, 0.7);
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0 0 rgba(210, 232, 221, 0.7);
+    transition: box-shadow 0.3s ease-in-out;
 }
 
-#course-toolb i{
-    font-size: 18px;
+.container i:hover{
+    color: #A0BCC2;
+    box-shadow: 0 0 10px rgba(210, 232, 221, 0.7);
+}
+
+#display-sched{
+    margin: 40px 10px;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+#sched{
+    min-width: 85%;
+}
+
+#sched-toolb{
     
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }

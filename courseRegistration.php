@@ -1,6 +1,7 @@
 
 <?php 
 session_start();
+//session_unset();
 
 //print_r( $_SESSION['activeUser']) ;
 ?>
@@ -10,7 +11,7 @@ session_start();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title><link rel="stylesheet" href="css/courseReg.css">
+    <title>Course Registration</title><link rel="stylesheet" href="css/courseReg.css">
     <script src="https://kit.fontawesome.com/8f65530edf.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="generalstyling.css">
     
@@ -123,12 +124,12 @@ session_start();
             </div>
             <div class="3 " id="course-section">
                  
-                     <div class="select-cs">
+                     <div class="select-cs" id="select-container">
                       <?php
                         try{
                             // display courses offered to student via student program 
                             echo "<label>Course: </label>";
-                            echo "<select class='select' id='selectcourse'>
+                            echo "<select class='select' id='selectcourse' >
                                 <option hidden disabled selected value> Select a course </option>";
                                 while ($courses = $programCourses->fetch(PDO::FETCH_ASSOC)) {
                                     echo "<option value='".$courses['ID']."'>".$courses['courseCode']." | ".$courses['courseName']."</option>
@@ -149,7 +150,7 @@ session_start();
                 
             </div>
             <div id="course-manage">
-                <div class="course-info" id="c-info"> 
+                <div class="container" id="c-info"> 
                     <div class="st-info"> 
                         <div class="st-info-lb"><label> Instructor Name:</label></div> 
                         <div class="st-info-lb"><label>Lecture Timing: </label></div>
@@ -162,21 +163,21 @@ session_start();
                         <div class="st-info-lb"><label>Final Conflict:</label></div>
                     </div>
                 </div>
-                <div class="course-info" id="course-toolb">
-                    <div> <button name="addcourse" ><i class="fa-regular fa-plus" style="color: rgba(0, 0, 0, 0.7);"></i> </button> </div>
-                    <div> <button name="switchsection" ><i class="fa-solid fa-rotate" style="color: rgba(0, 0, 0, 0.7);"></i> </button> </div>
-                    <div> <button name="dropcourse" ><i class="fa-solid fa-trash"  style="color: rgba(0, 0, 0, 0.7);"></i> </button> </div>
+                <div class="container" id="course-toolb">
+                    <div> <button name="addcourse" type="submit"> <i class="fa-regular fa-plus" ></i> </button> </div>
+                    <div> <button name="switchsection" ><i class="fa-solid fa-rotate" ></i> </button> </div>
+                    <div> <button name="dropcourse" ><i class="fa-solid fa-trash"  ></i> </button> </div>
                 </div>
             </div>
-            <div class="display-sched">
-                <div class="sched">
+            <div  id="display-sched">
+                <div class="container" id="sched">
                     <?php 
                     require('schedule.php');
                     schedule();?>
                 </div>
-                <div class="sched-toolb">
-                <div> <button name="export" > <i class="fa-solid fa-download"style="color: rgba(0, 0, 0, 0.7);"></i> </button> </div>
-                <div> <button name="print" > <i class="fa-solid fa-print"style="color: rgba(0, 0, 0, 0.7);"></i>  </button> </div>
+                <div class="container" id="sched-toolb">
+                <div> <button name="export" > <i class="fa-solid fa-download"></i> </button> </div>
+                <div> <button name="print" > <i class="fa-solid fa-print"></i>  </button> </div>
                 </div>
             </div>
        
