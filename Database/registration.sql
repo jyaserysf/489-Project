@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 18, 2023 at 10:02 AM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: May 19, 2023 at 03:44 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -199,7 +199,7 @@ INSERT INTO `instructors` (`ID`, `username`, `fullName`, `phoneNumber`, `emailAd
 --
 
 CREATE TABLE `programs` (
-  `ID` int(11) NOT NULL,
+  `PID` int(11) NOT NULL,
   `name` varchar(150) NOT NULL,
   `year` year(4) NOT NULL,
   `departmentID` int(11) NOT NULL
@@ -209,9 +209,9 @@ CREATE TABLE `programs` (
 -- Dumping data for table `programs`
 --
 
-INSERT INTO `programs` (`ID`, `name`, `year`, `departmentID`) VALUES
-(1, 'Computer Science', '2022', 1),
-(2, 'Software Engineering', '2022', 1);
+INSERT INTO `programs` (`PID`, `name`, `year`, `departmentID`) VALUES
+(1, 'Computer Science', 2022, 1),
+(2, 'Software Engineering', 2022, 1);
 
 -- --------------------------------------------------------
 
@@ -321,10 +321,10 @@ CREATE TABLE `students` (
 --
 
 INSERT INTO `students` (`ID`, `studentID`, `fullName`, `phoneNumber`, `emailAddress`, `studyProgram`, `enrollmentStatus`, `creditsPassed`, `CGPA`, `GPA`, `balance`, `password`) VALUES
-(1, '202010691', 'Jood Yaser', '33336666', '202010691@mt.edu', 1, 'Enrolled', 0, 0.00, 0.00, 0, '$2y$10$S/eq/RGqgn8TvTnB7WVY.eVcqDglyCn2MnA0EGu5lDRjs/k1qk0Ze'),
-(2, '202007602', 'Sayed Ahmed Khalaf', '32222223', '202007602@mt.edu', 1, 'Enrolled', 0, 0.00, 0.00, 0, '$2y$10$DFJpUHgcJqV9X0R3RhXfm.hI4UTvTIKhvzgnFumYWLJ5u1dfOHwK2'),
-(3, '202002622', 'Ali Majeed', '32321131', '202002622@mt.edu', 2, 'Enrolled', 0, 0.00, 0.00, 0, '$2y$10$6zCfj5VCmiRSfbBmSM/iKOn/yUoUnRd1ZA/LZcO8DOWCKrH8u5jwW'),
-(4, '202002920', 'Muneera Jaber', '31311133', '202002920@mt.edu', 2, 'Enrolled', 0, 0.00, 0.00, 0, '$2y$10$JLtpxZaYZ7Q8g0LrZcsWeO0OUUAD22amkSbRMrA56OJcXHkmmf/5K');
+(1, '202010691', 'Jood Yaser', '33336666', '202010691@mt.edu', 1, 'Enrolled', 0, '0.00', '0.00', 0, '$2y$10$S/eq/RGqgn8TvTnB7WVY.eVcqDglyCn2MnA0EGu5lDRjs/k1qk0Ze'),
+(2, '202007602', 'Sayed Ahmed Khalaf', '32222223', '202007602@mt.edu', 1, 'Enrolled', 0, '0.00', '0.00', 0, '$2y$10$DFJpUHgcJqV9X0R3RhXfm.hI4UTvTIKhvzgnFumYWLJ5u1dfOHwK2'),
+(3, '202002622', 'Ali Majeed', '32321131', '202002622@mt.edu', 2, 'Enrolled', 0, '0.00', '0.00', 0, '$2y$10$6zCfj5VCmiRSfbBmSM/iKOn/yUoUnRd1ZA/LZcO8DOWCKrH8u5jwW'),
+(4, '202002920', 'Muneera Jaber', '31311133', '202002920@mt.edu', 2, 'Enrolled', 0, '0.00', '0.00', 0, '$2y$10$JLtpxZaYZ7Q8g0LrZcsWeO0OUUAD22amkSbRMrA56OJcXHkmmf/5K');
 
 --
 -- Indexes for dumped tables
@@ -384,7 +384,7 @@ ALTER TABLE `instructors`
 -- Indexes for table `programs`
 --
 ALTER TABLE `programs`
-  ADD PRIMARY KEY (`ID`),
+  ADD PRIMARY KEY (`PID`),
   ADD UNIQUE KEY `Name` (`name`),
   ADD KEY `Department` (`departmentID`);
 
@@ -455,7 +455,7 @@ ALTER TABLE `instructors`
 -- AUTO_INCREMENT for table `programs`
 --
 ALTER TABLE `programs`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `PID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `program_courses`
@@ -483,7 +483,7 @@ ALTER TABLE `students`
 -- Constraints for table `courses`
 --
 ALTER TABLE `courses`
-  ADD CONSTRAINT `courses_ibfk_1` FOREIGN KEY (`CourseDepartment`) REFERENCES `departments` (`ID`);
+  ADD CONSTRAINT `courses_ibfk_1` FOREIGN KEY (`courseDepartment`) REFERENCES `departments` (`ID`);
 
 --
 -- Constraints for table `course_sections`
@@ -497,8 +497,8 @@ ALTER TABLE `course_sections`
 -- Constraints for table `enrollments`
 --
 ALTER TABLE `enrollments`
-  ADD CONSTRAINT `enrollments_ibfk_1` FOREIGN KEY (`SectionID`) REFERENCES `course_sections` (`ID`),
-  ADD CONSTRAINT `enrollments_ibfk_2` FOREIGN KEY (`StudentID`) REFERENCES `students` (`ID`);
+  ADD CONSTRAINT `enrollments_ibfk_1` FOREIGN KEY (`sectionID`) REFERENCES `course_sections` (`ID`),
+  ADD CONSTRAINT `enrollments_ibfk_2` FOREIGN KEY (`studentID`) REFERENCES `students` (`ID`);
 
 --
 -- Constraints for table `programs`
@@ -511,13 +511,13 @@ ALTER TABLE `programs`
 --
 ALTER TABLE `program_courses`
   ADD CONSTRAINT `program_courses_ibfk_1` FOREIGN KEY (`courseID`) REFERENCES `courses` (`ID`),
-  ADD CONSTRAINT `program_courses_ibfk_2` FOREIGN KEY (`programID`) REFERENCES `programs` (`ID`);
+  ADD CONSTRAINT `program_courses_ibfk_2` FOREIGN KEY (`programID`) REFERENCES `programs` (`PID`);
 
 --
 -- Constraints for table `students`
 --
 ALTER TABLE `students`
-  ADD CONSTRAINT `students_ibfk_1` FOREIGN KEY (`StudyProgram`) REFERENCES `programs` (`ID`);
+  ADD CONSTRAINT `students_ibfk_1` FOREIGN KEY (`studyProgram`) REFERENCES `programs` (`PID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
