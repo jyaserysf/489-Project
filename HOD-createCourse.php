@@ -33,21 +33,19 @@
                 
                 <form method='post'>
 
-                    <!-- row 1 -->
                     <div class="row">
                         <td><h3>Enter Course Information</h3></td>
                     </div>
 
-                    <!-- row 2 -->
                     <div class="row">
                         <div class="col-25">
-                            <label for="fname">Course ID</label>
+                            <label for="Course Code">Course Code</label>
                         </div>
                         <div class="col-75">
                             <input 
                                 class="input-field"
                                 type="text"
-                                name="courseID"
+                                name="courseCode"
                                 maxlength="8"
                                 autocomplete="off"
                                 required
@@ -56,10 +54,9 @@
                         </div>
                     </div>
                     
-                    <!-- row 3 -->
                     <div class="row">
                         <div class="col-25">
-                            <label for="lname">Course Name</label>
+                            <label for="Course Name">Course Name</label>
                         </div>
                         <div class="col-75">
                             <input 
@@ -75,10 +72,9 @@
                         </div>
                     </div>
                     
-                    <!-- row 4 -->
                     <div class="row">
                         <div class="col-25">
-                            <label for="country">Credit Hours</label>
+                            <label for="Credit Hours">Credit Hours</label>
                         </div>
                         <div class="col-75">
                             <input 
@@ -94,10 +90,9 @@
                         </div>
                     </div>
                     
-                    <!-- row 5 -->
                     <div class="row">
                         <div class="col-25">
-                            <label for="subject">PreRequisites</label>
+                            <label for="PreRequisites">PreRequisites</label>
                         </div>
                         <div class="col-75">
                             <input 
@@ -112,16 +107,15 @@
                         </div>
                     </div>
                     
-                    <!-- row 6 -->
                     <div class="row">
                         <div class="col-25">
-                            <label for="subject">Course Department</label>
+                            <label for="Course Department">Course Department</label>
                         </div>
                         <div class="col-75">
                             
                             <?php
                             // sql statement
-                            $sql = "SELECT DepartmentName, DepartmentID FROM departments ORDER BY DepartmentCollege";
+                            $sql = "SELECT ID, name FROM departments ORDER BY college";
                             $rs = $db->query($sql);
                             
                             // <select>
@@ -131,8 +125,8 @@
                             // loop through and display DepartmentName(s)
                             foreach($rs as $option) {
                             // Get the ID of the selected department
-                            $departmentID = $option['DepartmentID'];
-                            echo "<option value='$departmentID'>" . $option['DepartmentName'] . " Department </option>";
+                            $departmentID = $option['ID'];
+                            echo "<option value='$departmentID'>" . $option['name'] . " Department </option>";
                             }
                             
                             echo "</select>";
@@ -141,7 +135,6 @@
                         </div>
                     </div>
                     
-                    <!-- row 7 -->
                     <div class="row" id="submitDiv">
                         <input class="submitBtn" type="submit" value="Create Course" name="createCourseSubmit" />
                     </div>
@@ -152,19 +145,19 @@
             <?php
             if (isset($_POST['createCourseSubmit'])) {
 
-            $courseID = $_POST['courseID'];
+            $courseCode = $_POST['courseCode'];
             $courseName = $_POST['courseName'];
             $creditHours = $_POST['creditHours'];
             $preRequisites = $_POST['preRequisites']; 
             $departmentName = $_POST['departmentName'];
             
             // Regular Expressions to validate
-            $courseIDPattern = "/^[A-Z]{3,5}[0-9]{1,3}$/";
+            $courseCodePattern = "/^[A-Z]{3,5}[0-9]{1,3}$/";
             $courseNamePattern = "/^[A-Z]{1}[a-zA-Z0-9]{1,49}$/";
             $creditHoursPattern = "/^[2-4]{1}$/";
             $preRequisitesPattern = "/^[A-Z]{3,5}[0-9]{1,3},?$/";
 
-            if(!preg_match($courseIDPattern, $courseID))
+            if(!preg_match($courseCodePattern, $courseCode))
                 die ("Invalid Course ID");
             if(!preg_match($courseNamePattern, $courseName))
                 die ("Invalid Course Name");
@@ -178,9 +171,9 @@
                 $db->beginTransaction();
 
                 // Insert into courses
-                $stmt = $db->prepare("INSERT INTO courses (CourseID, CourseName, CreditHours, PreRequisites, CourseDepartment) 
-                VALUES (:courseID, :courseName, :creditHours, :preRequisites, :courseDepartment)");
-                $stmt->bindParam(':courseID', $courseID);
+                $stmt = $db->prepare("INSERT INTO courses (courseCode, courseName, creditHours, preRequisites, courseDepartment) 
+                VALUES (:courseCode, :courseName, :creditHours, :preRequisites, :courseDepartment)");
+                $stmt->bindParam(':courseCode', $courseCode);
                 $stmt->bindParam(':courseName', $courseName);
                 $stmt->bindParam(':creditHours', $creditHours);
                 $stmt->bindParam(':preRequisites', $preRequisites);
