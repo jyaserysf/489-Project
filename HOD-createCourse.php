@@ -14,7 +14,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create a course</title>
     
-    <link rel="stylesheet" href="form.css">
     <link rel="stylesheet" href="generalstyling.css">
 
     
