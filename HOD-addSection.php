@@ -38,18 +38,27 @@
 
                     <div class="row">
                         <div class="col-25">
-                            <label for="Course ID">Course ID</label>
+                            <label for="Course ID">Course Code</label>
                         </div>
                         <div class="col-75">
-                            <input 
-                                class="input-field"
-                                name="courseID"
-                                type="text"
-                                maxlength="8"
-                                autocomplete="off"
-                                required
-                                placeholder="ITCS489"
-                            >
+                        <?php
+                            // sql statement
+                            $sql = "SELECT ID, courseCode, courseName FROM courses ORDER BY ID";
+                            $rs = $db->query($sql);
+                            
+                            // <select>
+                            echo "<select class='input-field' name='courseID' >";
+                            echo "<option disabled selected>Select Course</option>";
+                            
+                            // loop through and display SemesterYear(s) and SemesterNumbers
+                            foreach($rs as $option) {
+                                // Get the ID of the selected semester
+                            $courseID = $option['ID'];
+                            echo "<option value='$courseID'> ". $option['courseCode'] . "  " . $option['courseName'] . "</option>";
+                            }
+
+                            echo "</select>";
+                            ?>
                         </div>
                     </div>
 
@@ -60,18 +69,18 @@
                         <div class='col-75'>
                             <?php
                             // sql statement
-                            $sql = "SELECT SemesterID, SemesterYear, SemesterNumber FROM semester ORDER BY SemesterID";
-                            $rs = $db->query($sql);
+                            $sql = "SELECT ID, year, number FROM semester ORDER BY ID";
+                            $rs1 = $db->query($sql);
                             
                             // <select>
-                            echo "<select class='input-field' name='semester' >";
+                            echo "<select class='input-field' name='semesterID' >";
                             echo "<option disabled selected>Select Semester</option>";
                             
                             // loop through and display SemesterYear(s) and SemesterNumbers
-                            foreach($rs as $option) {
+                            foreach($rs1 as $option1) {
                                 // Get the ID of the selected semester
-                            $semesterID = $option['SemesterID'];
-                            echo "<option value='$semesterID'> ". $option['SemesterYear'] . " SEMESTER " . $option['SemesterNumber'] . "</option>";
+                            $semesterID = $option1['ID'];
+                            echo "<option value='$semesterID'> ". $option1['year'] . " SEMESTER " . $option1['number'] . "</option>";
                             }
 
                             echo "</select>";
@@ -187,7 +196,7 @@
                                     <label for='Section Days'>Section Days</label>
                                 </div>
                                 <div class='col-75'>
-                                    <select class='input-field' name='sectionDays[]' >
+                                    <select class='input-field' name='days[]' >
                                         <option disabled selected>Select Section Days</option>
                                         <option value='UTH'>UTH</option>
                                         <option value='UT'>UT</option>
@@ -205,10 +214,28 @@
                                         class="input-field"
                                         type="text"
                                         maxlength="10"
-                                        name="sectionRoom[]"
+                                        name="room[]"
                                         autocomplete="off"
                                         required
                                         placeholder="S40-049"
+                                    >
+                                </div>
+                            </div>
+
+                            <div class='row'>
+                                <div class='col-25'>
+                                    <label for='Room'>Number of Seats</label>
+                                </div>
+                                <div class='col-75'>
+                                    <input 
+                                        class="input-field"
+                                        type="number"
+                                        min="1"
+                                        max="35"
+                                        name="seats[]"
+                                        autocomplete="off"
+                                        required
+                                        placeholder=""
                                     >
                                 </div>
                             </div>
@@ -221,18 +248,18 @@
                                     <?php
                                     try {
                                         // sql statement
-                                        $sql = "SELECT InstructorID, FullName FROM instructors ORDER BY InstructorID";
-                                        $rs1 = $db->query($sql);
+                                        $sql = "SELECT ID, fullName FROM instructors ORDER BY departmentID";
+                                        $rs2 = $db->query($sql);
                                         
                                         // <select>
-                                        echo "<select name='instructor[]' class='input-field'>";
+                                        echo "<select name='instructorID[]' class='input-field'>";
                                         echo "<option disabled selected>Select instructor</option>";
                                     
                                         // loop through and display Instructors FullName
-                                        foreach($rs1 as $option1) {
+                                        foreach($rs2 as $option2) {
                                         // Get the ID of the selected Instructor
-                                        $instructorID = $option1['InstructorID'];
-                                        echo "<option value='$instructorID'> ". $option1['FullName'] . "</option>";
+                                        $instructorID = $option2['ID'];
+                                        echo "<option value='$instructorID'> ". $option2['fullName'] . "</option>";
                                         }
                                         
                                         echo "</select>";
@@ -272,51 +299,40 @@
             if (isset($_GET['sectionInfoSubmit']) && isset($_POST['addSectionsSubmit'])) {
                 
                 // Regular Expressions to validate
-                $courseIDPattern = "/^[A-Z]{3,5}[0-9]{1,3}$/";
-                $sectionTimePattern = "/^[0-2]\d:[0-5]\d:[0-5]\d$/";
-                $sectionDaysPattern = "/^(UTH|UT|MW)$/";
-                $sectionRoomPattern = "/^S[1-9]\d{1,2}-[0-4][0-9]{2,3}$/";
 
                 try {
                     // Begin transaction
                     $db->beginTransaction();
 
                     // Insert into course_sections
-                    $stmt = $db->prepare("INSERT INTO course_sections (SectionNumber, SectionStart, SectionEnd, SectionDays, SectionRoom, FinalDate, CourseID, SemesterID, SectionInstructor) 
-                    VALUES (:sectionNumber, :sectionStart, :sectionEnd, :sectionDays, :sectionRoom, :finalDate, :courseID, :semesterID, :sectionInstructor)");
-                    for ($i = 0; $i < count($_POST['sectionRoom']); $i++) {
-                        $sectionNumber = $i+1;
-                        $sectionStart = $_POST['startTime'][$i];
-                        $sectionEnd = $_POST['endTime'][$i];
-                        $sectionDays = $_POST['sectionDays'][$i];
-                        $sectionRoom = $_POST['sectionRoom'][$i];
-                        $finalDate = $_GET['finalDate'];
+                    $stmt = $db->prepare("INSERT INTO course_sections (ID, semesterID, courseID, sectionNumber, startTime, endTime, days, room, availableSeats, finalDate, instructorID) 
+                    VALUES (:ID, :semesterID, :courseID, :sectionNumber, :startTime, :endTime, :days, :room, :availableSeats, :finalDate, :instructorID)");
+                    for ($i = 0; $i < count($_POST['room']); $i++) {
+                        $ID = null;
+                        $semesterID = $_GET['semesterID'];
                         $courseID = $_GET['courseID'];
-                        $semesterID = $_GET['semester'];
-                        $sectionInstructor = $_POST['instructor'][$i];
-
-                        // Check validation
-                        if (!preg_match($courseIDPattern, $courseID)) 
-                            die ("Invalid Course ID");
-                        if (!preg_match($sectionTimePattern, $sectionStart)) 
-                            die ("Invalid Start Time");
-                        if (!preg_match($sectionTimePattern, $sectionEnd)) 
-                            die ("Invalid End Time"); 
-                        if (!preg_match($sectionDaysPattern, $sectionDays)) 
-                            die ("Invalid Section Days");
-                        if (!preg_match($sectionRoomPattern, $sectionRoom)) 
-                            die ("Invalid Section Room");
+                        $sectionNumber = $i+1;
+                        $startTime = $_POST['startTime'][$i];
+                        $endTime = $_POST['endTime'][$i];
+                        $days = $_POST['days'][$i];
+                        $room = $_POST['room'][$i];
+                        $availableSeats = $_POST['seats'][$i];
+                        $finalDate = $_GET['finalDate'];
+                        $instructorID = $_POST['instructorID'][$i];
+                        
                             
                         // Insert    
-                        $stmt->bindParam(':sectionNumber', $sectionNumber);
-                        $stmt->bindParam(':sectionStart', $sectionStart);
-                        $stmt->bindParam(':sectionEnd', $sectionEnd);
-                        $stmt->bindParam(':sectionDays', $sectionDays);
-                        $stmt->bindParam(':sectionRoom', $sectionRoom);
-                        $stmt->bindParam(':finalDate', $finalDate);
-                        $stmt->bindParam(':courseID', $courseID);
+                        $stmt->bindParam('ID:', $ID);
                         $stmt->bindParam(':semesterID', $semesterID);
-                        $stmt->bindParam(':sectionInstructor', $sectionInstructor);
+                        $stmt->bindParam(':courseID', $courseID);
+                        $stmt->bindParam(':sectionNumber', $sectionNumber);
+                        $stmt->bindParam(':startTime', $startTime);
+                        $stmt->bindParam(':endTime', $endTime);
+                        $stmt->bindParam(':days', $days);
+                        $stmt->bindParam(':room', $room);
+                        $stmt->bindParam(':availableSeats', $availableSeats);
+                        $stmt->bindParam(':finalDate', $finalDate);
+                        $stmt->bindParam(':instructorID', $instructorID);
                         $stmt->execute();
                     }
 
