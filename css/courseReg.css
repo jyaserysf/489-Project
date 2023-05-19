@@ -23,15 +23,11 @@ h2{
 #course-manage{
     margin: 20px 10px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    
-    
+    justify-content: space-between;  
 }
 .course-info{
     background-color: #F9EBC8;
     padding: 15px 15px;
-    
     min-height: 170px;
     border-radius: 3px;
 }
@@ -55,6 +51,23 @@ h2{
     margin-bottom: 10px;
 }
 
-.course-toolb{
+#course-toolb{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+#course-toolb button{
+    background-color: transparent;
+    border:none;
+}
+
+#course-toolb i:hover{
+    background-color: transparent;
+    
+}
+
+#course-toolb i{
+    font-size: 18px;
     
 }

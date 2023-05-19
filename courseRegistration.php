@@ -1,6 +1,8 @@
 
 <?php 
 session_start();
+
+//print_r( $_SESSION['activeUser']) ;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,6 +14,54 @@ session_start();
     <script src="https://kit.fontawesome.com/8f65530edf.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="generalstyling.css">
     
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#selectcourse').on('change',function(){
+                var cID=$(this).val();
+                if(cID){
+                    $.ajax({
+                        type:'POST',
+                        url:'ajaxSections.php',
+                        data:'ID='+cID,
+                        success:function(html){
+                            $('#selectSection').html(html);
+                        }
+                
+                    });
+                }else{
+                    $('#selectSection').html('<option hidden disabled selected value> Select a section first </option>')
+
+                }
+            });
+        });
+
+        $(document).ready(function (){
+            $(document).on('click', '.section-button', function() {
+                var sectionId = $(this).data('section-id');
+                $.ajax({
+                    url: 'ajaxsectionDetails.php',
+                    method: 'POST',
+                    data: {sectionId: sectionId},
+                    success: function(response) {
+                        var sectionDetails = JSON.parse(response);
+                        $('#c-info .st-info:nth-child(1) .st-info-lb:nth-child(1)').html('<label>Instructor Name: ' + sectionDetails.fullName + '</label>');
+                        $('#c-info .st-info:nth-child(1) .st-info-lb:nth-child(2)').html('<label>Lecture Timing: ' + sectionDetails.startTime +' - '+sectionDetails.endTime + '</label>');
+                        $('#c-info .st-info:nth-child(1) .st-info-lb:nth-child(3)').html('<label>Available Seats: ' + sectionDetails.availableSeats + '</label>');
+                        $('#c-info .st-info:nth-child(1) .st-info-lb:nth-child(4)').html('<label>Pre-requisite: ' + sectionDetails.preRequisites + '</label>');
+                        $('#c-info .st-info:nth-child(1) .st-info-lb:nth-child(5)').html('<label>Final Exam Date: ' + sectionDetails.finalDate + '</label>');
+                        $('#c-info').show();
+},
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus, errorThrown);
+                        
+                    }
+            });
+            });
+        });
+        
+    </script>
     
 </head>
 <body>
@@ -21,17 +71,23 @@ session_start();
             try{
                 require('Database/connection.php');
                 //print_r( $_SESSION['activeUser']) ;
-                $keys = array_keys($_SESSION['activeUser']);
-                $ID = $keys[0];
+                //$keys = array_keys($_SESSION['activeUser']);
+                $ID = $_SESSION['activeUser']['username'];
+                //echo $ID;
                 $stInfo = "SELECT students.*, programs.name, programs.year, programs.departmentID, programs.PID FROM students JOIN programs ON students.studyProgram=programs.PID where students.studentID=$ID ";
                 $semesterInfo="SELECT* from semester";
                 $enrolled_sections="SELECT course_sections.*, enrollments.* from course_sections Join enrollments on course_sections.ID = enrollments.sectionID";
                 $studentRec = $db->query($stInfo);
-                $semester =$db->query($semesterInfo);
                 $row=$studentRec->fetch();
+                $semester =$db->query($semesterInfo);
+                $sem=$semester->fetch();
                 $sql_courses = "SELECT courses.* FROM courses JOIN program_courses ON courses.ID = program_courses.courseID JOIN programs ON program_courses.programID = programs.PID WHERE programs.PID=".$row['PID'];
                 $programCourses=$db->query($sql_courses);
                 $courses=$programCourses->fetch();
+                $courses = array();    
+                //print_r($courses);
+                //echo $row['PID'];
+               
             }
             catch(PDOException $e){
                 die($e->getMessage());
@@ -53,7 +109,7 @@ session_start();
                         echo "<div class=''>Student Name: ".$row['fullName']." </div>
                             <div class=''>Major: ".$row['name']."</div>
                             <div class=''>Credit Hours:".$row['creditsPassed']."</div>";
-                            if ($sem=$semester->fetch()){
+                            if ($sem){
                                 echo "<div class=''>Semester: ".$sem['year']."</div>";
                             }
                         }
@@ -66,46 +122,32 @@ session_start();
             ?>
             </div>
             <div class="3 " id="course-section">
-                 <form action="" method="post">
+                 
                      <div class="select-cs">
-                      
                       <?php
                         try{
                             // display courses offered to student via student program 
                             echo "<label>Course: </label>";
                             echo "<select class='select' id='selectcourse'>
                                 <option hidden disabled selected value> Select a course </option>";
-                                if($courses){
-                                    echo 
-                                    "<option value='".$courses['ID']."'>".$courses['courseCode']." | ".$courses['courseName']."</option>
-                                    ";
+                                while ($courses = $programCourses->fetch(PDO::FETCH_ASSOC)) {
+                                    echo "<option value='".$courses['ID']."'>".$courses['courseCode']." | ".$courses['courseName']."</option>
+                                    //     ";
+                                   
                                 }
-                                // not sure why i wanted this, i wanted the sudents department
-                                // $stDepartment= "SELECT* from departments where ID=".$row['departmentID'];
-                                // $departmentrec = $db->query($stDepartment);
-                                // print_r($departmentrec);
-                                // if($dep=$departmentrec->fetch()){
-                                //     $depName=$dep['name'];
-                                //     echo $depName;
-                                // }
-                            
-                             echo "</select> ";
+                             echo "</select> 
+                                </div>
+                             <div class='select-cs' id='selectSection'>
+                                 <label>Section: </label>
+                             </div>
+                             ";
                         }catch(PDOException $e){
                             die($e->getMessage());
                         }
                         
-                      ?>
-                      
-                     </div>
-                     <!-- <label for="selectcourse">Select Course</label> aria-label="Floating label select example"</div> -->
-                     <div class="select-cs">
-                         <label>Section: </label> 
-                         <button type="submit" name="option" value="option1"> 01 | UTH</button>
-                         <button type="submit" name="option" value="option2">02 | UTH</button>
-                         <button type="submit" name="option" value="option3">3 | MW</button>
-                     </div>
-                 </form>
-             </div>
+                      ?> 
+                
+            </div>
             <div id="course-manage">
                 <div class="course-info" id="c-info"> 
                     <div class="st-info"> 
