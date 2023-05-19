@@ -11,7 +11,7 @@
         function selectGrade(){
             global $gradesW;
             foreach($gradesW as $grade=>$weight){
-                echo '<option value="'.$weight.'">'.$grade.' </option>';
+                echo '<option name="grade" value="'.$weight.'">'.$grade.' </option>';
             }
         }
 

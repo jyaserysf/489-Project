@@ -6,12 +6,55 @@ h2{
    width: 90%;
 }
 
+#student-info{
+    display:flex;
+    justify-content: space-between;
+    margin: 20px 10px;
+}
 
+.select-cs{
+    margin: 15px 10px;
+}
 
+.select-cs label{
+    margin-right: 5px;
+}
+
+#course-manage{
+    margin: 20px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    
+}
 .course-info{
     background-color: #F9EBC8;
+    padding: 15px 15px;
+    
+    min-height: 170px;
+    border-radius: 3px;
+}
+
+#c-info{
+    
+    width:89%;
+    display: flex;
+    justify-content: space-between;
+    
+}
+
+.st-info{
+    min-width:50%;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.st-info-lb{
+    margin-bottom: 10px;
 }
 
 .course-toolb{
-    background-color: #F9EBC8;
+    
 }
