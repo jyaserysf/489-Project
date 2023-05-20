@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 20, 2023 at 05:39 PM
+-- Generation Time: May 20, 2023 at 05:46 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -218,7 +218,7 @@ INSERT INTO `instructors` (`ID`, `username`, `fullName`, `phoneNumber`, `emailAd
 --
 
 CREATE TABLE `programs` (
-  `pid` int(11) NOT NULL,
+  `PID` int(11) NOT NULL,
   `name` varchar(150) NOT NULL,
   `year` year(4) NOT NULL,
   `departmentID` int(11) NOT NULL
@@ -228,7 +228,7 @@ CREATE TABLE `programs` (
 -- Dumping data for table `programs`
 --
 
-INSERT INTO `programs` (`pid`, `name`, `year`, `departmentID`) VALUES
+INSERT INTO `programs` (`PID`, `name`, `year`, `departmentID`) VALUES
 (1, 'Computer Science', '2022', 1),
 (2, 'Software Engineering', '2022', 1);
 
@@ -406,7 +406,7 @@ ALTER TABLE `instructors`
 -- Indexes for table `programs`
 --
 ALTER TABLE `programs`
-  ADD PRIMARY KEY (`pid`),
+  ADD PRIMARY KEY (`PID`),
   ADD UNIQUE KEY `Name` (`name`),
   ADD KEY `Department` (`departmentID`);
 
@@ -431,7 +431,7 @@ ALTER TABLE `students`
   ADD PRIMARY KEY (`ID`),
   ADD UNIQUE KEY `StudentID` (`studentID`),
   ADD UNIQUE KEY `EmailAddress` (`emailAddress`),
-  ADD KEY `StudyProgram` (`studyProgram`);
+  ADD KEY `students_ibfk_1` (`studyProgram`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -477,7 +477,7 @@ ALTER TABLE `instructors`
 -- AUTO_INCREMENT for table `programs`
 --
 ALTER TABLE `programs`
-  MODIFY `pid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `PID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `program_courses`
@@ -505,7 +505,7 @@ ALTER TABLE `students`
 -- Constraints for table `courses`
 --
 ALTER TABLE `courses`
-  ADD CONSTRAINT `courses_ibfk_1` FOREIGN KEY (`CourseDepartment`) REFERENCES `departments` (`ID`);
+  ADD CONSTRAINT `courses_ibfk_1` FOREIGN KEY (`courseDepartment`) REFERENCES `departments` (`ID`);
 
 --
 -- Constraints for table `course_sections`
@@ -516,11 +516,23 @@ ALTER TABLE `course_sections`
   ADD CONSTRAINT `course_sections_ibfk_5` FOREIGN KEY (`instructorID`) REFERENCES `instructors` (`ID`);
 
 --
+-- Constraints for table `departments`
+--
+ALTER TABLE `departments`
+  ADD CONSTRAINT `departments_ibfk_1` FOREIGN KEY (`departmentHead`) REFERENCES `instructors` (`ID`);
+
+--
 -- Constraints for table `enrollments`
 --
 ALTER TABLE `enrollments`
   ADD CONSTRAINT `enrollments_ibfk_1` FOREIGN KEY (`studentID`) REFERENCES `students` (`ID`),
   ADD CONSTRAINT `enrollments_ibfk_2` FOREIGN KEY (`sectionID`) REFERENCES `course_sections` (`ID`);
+
+--
+-- Constraints for table `instructors`
+--
+ALTER TABLE `instructors`
+  ADD CONSTRAINT `instructors_ibfk_1` FOREIGN KEY (`departmentID`) REFERENCES `departments` (`ID`);
 
 --
 -- Constraints for table `programs`
@@ -539,7 +551,7 @@ ALTER TABLE `program_courses`
 -- Constraints for table `students`
 --
 ALTER TABLE `students`
-  ADD CONSTRAINT `students_ibfk_1` FOREIGN KEY (`StudyProgram`) REFERENCES `programs` (`pid`);
+  ADD CONSTRAINT `students_ibfk_1` FOREIGN KEY (`studyProgram`) REFERENCES `programs` (`pid`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
