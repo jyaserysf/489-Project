@@ -54,17 +54,12 @@ h2{
     display: flex;
     justify-content: space-between;  
 }
-.course-info{
-    background-color: #F9EBC8;
-    padding: 15px 15px;
-    max-height: 240px;
-    border-radius: 3px;
-}
 
 #c-info{
     width:85%;
     display: flex;
     justify-content: space-between;
+    border-radius: 5px;
     
 }
 

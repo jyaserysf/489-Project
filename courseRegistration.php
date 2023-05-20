@@ -2,7 +2,7 @@
 <?php 
 session_start();
 //session_unset();
-
+//var_dump($_POST);
 //print_r( $_SESSION['activeUser']) ;
 ?>
 <!DOCTYPE html>
@@ -29,7 +29,6 @@ session_start();
                         success:function(html){
                             $('#selectSection').html(html);
                         }
-                
                     });
                 }else{
                     $('#selectSection').html('<option hidden disabled selected value> Select a section first </option>')
@@ -40,6 +39,7 @@ session_start();
 
         $(document).ready(function (){
             $(document).on('click', '.section-button', function() {
+                event.preventDefault();
                 var sectionId = $(this).data('section-id');
                 $.ajax({
                     url: 'ajaxsectionDetails.php',
@@ -53,14 +53,28 @@ session_start();
                         $('#c-info .st-info:nth-child(1) .st-info-lb:nth-child(4)').html('<label>Pre-requisite: ' + sectionDetails.preRequisites + '</label>');
                         $('#c-info .st-info:nth-child(1) .st-info-lb:nth-child(5)').html('<label>Final Exam Date: ' + sectionDetails.finalDate + '</label>');
                         $('#c-info').show();
-},
+                        $('#selectedSectioninfo').val(sectionDetails.sectionNumber + ' | ' + sectionDetails.days + ' | ' + sectionDetails.room + ' | ' + sectionDetails.fullName + ' | '+ sectionDetails.startTime + ' - ' + sectionDetails.endTime);
+                    },
                     error: function(jqXHR, textStatus, errorThrown) {
                         console.log(textStatus, errorThrown);
                         
                     }
-            });
+                });
             });
         });
+
+        // document.getElementById("addS").addEventListener("click", function() {
+        //     var xhttp = new XMLHttpRequest();
+        //     xhttp.onreadystatechange = function() {
+        //       if (this.readyState == 4 && this.status == 200) {
+        //         // response from PHP function
+        //         console.log(this.responseText);
+        //       }
+        //     };
+        //     xhttp.open("POST", "schedule.php?function=addS", true);
+        //     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        //     xhttp.send("addcourse=true&selectC=" + encodeURIComponent(document.getElementById("selectcourse").value) + "&selectS=" + encodeURIComponent(document.getElementById("selectSection").value));
+        // });
         
     </script>
     
@@ -76,19 +90,26 @@ session_start();
                 $ID = $_SESSION['activeUser']['username'];
                 //echo $ID;
                 $stInfo = "SELECT students.*, programs.name, programs.year, programs.departmentID, programs.PID FROM students JOIN programs ON students.studyProgram=programs.PID where students.studentID=$ID ";
-                $semesterInfo="SELECT* from semester";
                 $enrolled_sections="SELECT course_sections.*, enrollments.* from course_sections Join enrollments on course_sections.ID = enrollments.sectionID";
                 $studentRec = $db->query($stInfo);
                 $row=$studentRec->fetch();
+                $semesterInfo="SELECT* from semester";
                 $semester =$db->query($semesterInfo);
                 $sem=$semester->fetch();
                 $sql_courses = "SELECT courses.* FROM courses JOIN program_courses ON courses.ID = program_courses.courseID JOIN programs ON program_courses.programID = programs.PID WHERE programs.PID=".$row['PID'];
                 $programCourses=$db->query($sql_courses);
-                $courses=$programCourses->fetch();
-                $courses = array();    
+                $courses=$programCourses->fetch(PDO::FETCH_ASSOC);
+                //$courses = array();    
                 //print_r($courses);
-                //echo $row['PID'];
-               
+                //echo $row['ID'];
+                $prevenrolled_sectionsrec="SELECT course_sections.*, enrollments.grade, enrollments.paid, enrollments.studentID from course_sections Join enrollments on course_sections.ID = enrollments.sectionID where enrollments.studentID=".$row['ID'];
+                $prevEnrolled_sections=$db->query($prevenrolled_sectionsrec);
+                $passedCourses=$prevEnrolled_sections->fetch();
+                //print_r($passedCourses); 
+                $sql_coursesInCurrentSem="SELECT distinct c.* FROM courses c JOIN course_sections cs ON c.ID = cs.courseID JOIN semester s ON cs.semesterID = s.ID WHERE s.year=".date('Y');
+                $coursesInCurrentSemrec=$db->query($sql_coursesInCurrentSem);
+                $coursesCurrentSem=$coursesInCurrentSemrec->fetch(PDO::FETCH_ASSOC);
+                 $currentYear= date('Y');
             }
             catch(PDOException $e){
                 die($e->getMessage());
@@ -105,13 +126,15 @@ session_start();
             <div class="" id="student-info">
             <?php  
                 try{
-                    
-                    if($row){
+                     if($row){
+                            // need to calculate credit hours, add cgpa maybe?
                         echo "<div class=''>Student Name: ".$row['fullName']." </div>
                             <div class=''>Major: ".$row['name']."</div>
                             <div class=''>Credit Hours:".$row['creditsPassed']."</div>";
                             if ($sem){
-                                echo "<div class=''>Semester: ".$sem['year']."</div>";
+                                $currentY=$sem['year'];
+                                $nextY=$currentY + 1;
+                                echo "<div class=''>Semester: ".$currentY."/".$nextY."</div>";
                             }
                         }
                         
@@ -119,56 +142,79 @@ session_start();
                 catch(PDOException $e){
                     die($e->getMessage());
                 }
-        
+
             ?>
             </div>
             <div class="3 " id="course-section">
-                 
+                <form method="post" > 
                      <div class="select-cs" id="select-container">
                       <?php
-                        try{
+                        try{ 
                             // display courses offered to student via student program 
                             echo "<label>Course: </label>";
-                            echo "<select class='select' id='selectcourse' >
+                            echo "<select class='select' id='selectcourse' name='selectC'>
                                 <option hidden disabled selected value> Select a course </option>";
-                                while ($courses = $programCourses->fetch(PDO::FETCH_ASSOC)) {
-                                    echo "<option value='".$courses['ID']."'>".$courses['courseCode']." | ".$courses['courseName']."</option>
-                                    //     ";
-                                   
-                                }
+                                // display courses offered this SEM that have NOT been already enrolled
+                                while ($courses=$programCourses->fetch(PDO::FETCH_ASSOC)) {
+                                    $enrolled=false;
+                                    //echo " courses: ".$courses['ID'];
+                                    $prevEnrolled_sections->execute(); 
+                                    while($passedCourses=$prevEnrolled_sections->fetch(PDO::FETCH_ASSOC)){
+                                            if ($courses['ID'] == $passedCourses['courseID'] ){
+                                                $enrolled=true;
+                                                break;
+                                            }
+                                        //echo $passedCourses['courseID'];
+                                    } 
+                                    if (!$enrolled){
+                                        echo "<option  value='".$courses['ID']."'>".$courses['courseCode']." | ".$courses['courseName']."</option>  ";
+                                    } 
+                                }  
                              echo "</select> 
                                 </div>
-                             <div class='select-cs' id='selectSection'>
+                             <div class='select-cs' id='selectSection' name='selectS'>
                                  <label>Section: </label>
                              </div>
+                             <input type='hidden' id='selectedSectioninfo' name='selectedSection'>
                              ";
                         }catch(PDOException $e){
                             die($e->getMessage());
-                        }
-                        
+                        }   
                       ?> 
+                    </div>
+                <div id="course-manage">
+                    <div class="container" id="c-info"> 
+                        <div class="st-info"> 
+                            <div class="st-info-lb"><label> Instructor Name:</label></div> 
+                            <div class="st-info-lb"><label>Lecture Timing: </label></div>
+                            <div class="st-info-lb"><label>Available Seats: </label></div>
+                            <div class="st-info-lb"><label>Pre-requisite: </label></div>
+                            <div class="st-info-lb"><label>Final Exam Date: </label> </div>
+                        </div>
+                        <div class="st-info" id="conflict">
+                            <div class="st-info-lb"><label>Lecture Conflict: </label></div>
+                            <div class="st-info-lb"><label>Final Conflict:</label></div>
+                        </div>
+                    </div>
+                    <div class="container" id="course-toolb">
+                        <div> <button id="addS" name="addcourse" type="submit"> <i class="fa-regular fa-plus" ></i> </button> </div>
+                        <div> <button id="switchS" name="switchsection" type="submit" ><i class="fa-solid fa-rotate" ></i> </button> </div>
+                        <div> <button id="dropS" name="dropcourse" type="submit"><i class="fa-solid fa-trash"  ></i> </button> </div>
+                    </div>
+                </form>
+                </div>
+            <?php 
                 
-            </div>
-            <div id="course-manage">
-                <div class="container" id="c-info"> 
-                    <div class="st-info"> 
-                        <div class="st-info-lb"><label> Instructor Name:</label></div> 
-                        <div class="st-info-lb"><label>Lecture Timing: </label></div>
-                        <div class="st-info-lb"><label>Available Seats: </label></div>
-                        <div class="st-info-lb"><label>Pre-requisite: </label></div>
-                        <div class="st-info-lb"><label>Final Exam Date: </label> </div>
-                    </div>
-                    <div class="st-info" id="conflict">
-                        <div class="st-info-lb"><label>Lecture Conflict: </label></div>
-                        <div class="st-info-lb"><label>Final Conflict:</label></div>
-                    </div>
-                </div>
-                <div class="container" id="course-toolb">
-                    <div> <button name="addcourse" type="submit"> <i class="fa-regular fa-plus" ></i> </button> </div>
-                    <div> <button name="switchsection" ><i class="fa-solid fa-rotate" ></i> </button> </div>
-                    <div> <button name="dropcourse" ><i class="fa-solid fa-trash"  ></i> </button> </div>
-                </div>
-            </div>
+               if(isset($_POST['addcourse'])&& isset($_POST['selectC']) && isset($_POST['selectedSection'])){
+                echo "<h5>added seat successfully! </h5>";
+              }elseif(isset($_POST['addcourse'])&& isset($_POST['selectC'])){
+                  //popup -> must select course section
+                  echo "select course section before adding";
+              }elseif(isset($_POST['addcourse'])){
+                  // popup-> must select course
+                  echo "select course before adding";
+              } 
+            ?>
             <div  id="display-sched">
                 <div class="container" id="sched">
                     <?php 

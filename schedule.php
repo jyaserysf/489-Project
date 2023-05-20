@@ -61,6 +61,34 @@ function schedule(){
      * how to check if student has payed??? to confirm seat (should be within enrollment period from db)
      *  */
 
+
+
+    if (isset($_POST['function'])) {
+      $functionName = $_POST['function'];
+      if (function_exists($functionName)) {
+        call_user_func($functionName);
+      }
+    }
+    
+    // function addS() {
+    //   //echo" myFunction called! ";
+    //   if(isset($_POST['addcourse'])&& isset($_POST['selectC']) && isset($_POST['selectS'])){
+    //     echo "<h5>added seat successfully! </h5>";
+    //   }elseif(isset($_POST['addcourse'])&& isset($_POST['selectC'])){
+    //       //popup -> must select course section
+    //       echo "select course section before adding";
+    //   }elseif(isset($_POST['addcourse'])){
+    //       // popup-> must select course
+    //       echo "select course before adding";
+    //   }
+    // }
+    
+    function anotherFunction() {
+      // your PHP code here
+      echo "anotherFunction called!";
+    }
+     
+
     // replace course section (seat)
     /** use UPDATE to sql
      * user should select course to be replaced first (make course in schedule clickable ((same ajax call as section button)) -> info appears in info box then resubmit again through buttons)
