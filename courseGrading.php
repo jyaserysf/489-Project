@@ -1,3 +1,38 @@
+<?php
+session_start();
+if (!isset($_SESSION['activeUser'])){
+    die ("Please login first <a href='Login.php'>Login</a>");
+}
+try{
+require('Database/connection.php');
+$query="SELECT DISTINCT courses.courseCode, semester.ID,course_sections.courseID, courses.courseName,
+instructors.ID ,instructors.fullName, course_sections.sectionNumber FROM course_sections JOIN 
+courses on course_sections.courseID=courses.ID JOIN instructors 
+ON course_sections.instructorID=instrucwtors.ID join semester on
+ course_sections.semesterID=semester.ID where NOW() BETWEEN semester.beginDate and semester.endDate;";
+$CCode=$db->prepare($query);
+$CCode->execute();
+$CourseCode=$CCode->fetchAll();
+
+
+
+$Sem="SELECT * FROM `semester` ORDER BY `number` ASC";
+$semester=$db->prepare($Sem);
+$semester->execute();
+$year=$semester->fetchAll();
+
+
+
+
+
+}
+catch(PDOException $EXC)
+{
+    
+die('ERROR:'.$EXC->getMessage());
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +40,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Grading</title>
-    
     <link rel="stylesheet" href="generalstyling.css">
     <link rel="stylesheet" href="courseGrading.css">
     
@@ -20,36 +54,31 @@
                 <h2>Course Grading</h2> 
             </div>
             
-       <div class="grading lg-px-5 lg-py-4">
+            <div class="grading lg-px-5 lg-py-4">
             <form action="" method="get" >
                 <div class="row row-col-2 ">
                     <div class="col">
                         <div class="row ms-1">
                             <select class="form-select border-secondary-subtle w-75 me-1" aria-label="Default select example">
-                            <option selected>Course</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                            <option value="3">Four</option>
+                           <?php foreach($CourseCode as $output){ ?>
+                             <option><?php   echo $output[0]?> </option>
+                                <?php }?>
                             </select>
 
                             <select class="form-select border-secondary-subtle"  style="width: 20%"  aria-label="Default select example">
-                            <option selected>Section</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                            <option value="3">Four</option>
+                            <?php foreach($CourseCode as $output){ ?>
+                             <option><?php   echo $output[6]?> </option>
+                                <?php }?>
                             </select>
                         </div>
-                    </div>
+                    </div
                     <div class="col-lg-4 offset-1">
-                        Semester:
+                        Semester: 
                     </div>
                 </div>
-            </form>
-        </div>
+        </form>
 
-            <div class="student-list lg-mx-4 my-4" style="background-color: #FDF7CF" style="width:85%">
+                <div class="student-list lg-mx-4 my-4" style="background-color: #FDF7CF" style="width:85%">
                 <table class="table table-borderless">
                     <thead>
                         <tr> <th style="width: 8%"> ID </th> <th style="width: 15%"> Name </th>  <th class="" >Grade</th> </tr>
@@ -67,12 +96,14 @@
                             </select> 
                         </td> 
                         </tr>
-                    </tbody>
+                   </form> 
+                 </tbody>
                 </table>
                 <button type="submit" name="sb" value="">Save Section Grades</button>
-            </form>
-            </div>
+               
+                </div>
             
+            </div>
         </div>
     </div>
        <!-- Javascript file -->
