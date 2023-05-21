@@ -48,7 +48,7 @@
                                 maxlength="8"
                                 autocomplete="off"
                                 required
-                                placeholder="ITCS489"
+                                placeholder=""
                             >
                         </div>
                     </div>
@@ -66,7 +66,7 @@
                                 autocomplete="off"
                                 required
                                 
-                                placeholder="Software Engineering"
+                                placeholder=""
                             >
                         </div>
                     </div>
@@ -84,7 +84,7 @@
                                 name="creditHours"
                                 autocomplete="off"
                                 required
-                                placeholder="3"
+                                placeholder=""
                             >
                         </div>
                     </div>
@@ -101,7 +101,7 @@
                                 maxlength="100"
                                 autocomplete="off"
                                 required
-                                placeholder="ITCS285, ITCS389"
+                                placeholder="ITCSXXX,ITCSYYY"
                             >
                         </div>
                     </div>

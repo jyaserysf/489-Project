@@ -231,21 +231,25 @@ html {
   padding: 20px;
 }
 
+.row {
+  margin-top: 1.6rem;
+}
+
 .col-25 {
   float: left;
   width: 25%;
-  margin-top: 6px;
 }
 
 .col-75 {
   float: left;
   width: 75%;
-  margin-top: 6px;
+  margin-top: 0;
 }
 
 label {
   padding: 12px 12px 12px 0;
   display: inline-block;
+  font-size: 1rem;
 }
 
 .input-field {
@@ -285,6 +289,16 @@ label {
   margin-top: 0.7rem;
 }
 
+.input-field:focus {
+  border-bottom: 1.6px solid rgba(0, 0, 0, 0.8);
+}
+
+select.input-field {
+  background-color: rgba(236, 232, 221, 0.7);
+  transition: 0.4s;
+}
+
+
 /* Clear floats after the columns */
 .row:after {
   content: "";
@@ -319,4 +333,5 @@ label {
     float: left;
     margin-top: 0.3rem;
   }
+
 }

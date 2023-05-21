@@ -52,9 +52,9 @@
                             echo "<select class='input-field' name='courseID' >";
                             echo "<option disabled selected>Select Course</option>";
                             
-                            // loop through and display SemesterYear(s) and SemesterNumbers
+                            // loop through and display courses Code and name
                             foreach($rs as $option) {
-                                // Get the ID of the selected semester
+                                // Get the ID of the selected course
                             $courseID = $option['ID'];
                             echo "<option value='$courseID'> ". $option['courseCode'] . "  " . $option['courseName'] . "</option>";
                             }
@@ -114,7 +114,7 @@
                                 max="10"
                                 autocomplete="off"
                                 required
-                                placeholder="2"
+                                placeholder=""
                             />
                         </div>
                     </div>
