@@ -8,12 +8,17 @@ require('Database/connection.php');
 $query="SELECT DISTINCT courses.courseCode, semester.ID,course_sections.courseID, courses.courseName,
 instructors.ID ,instructors.fullName, course_sections.sectionNumber FROM course_sections JOIN 
 courses on course_sections.courseID=courses.ID JOIN instructors 
-ON course_sections.instructorID=instrucwtors.ID join semester on
+ON course_sections.instructorID=instructors.ID join semester on
  course_sections.semesterID=semester.ID where NOW() BETWEEN semester.beginDate and semester.endDate;";
 $CCode=$db->prepare($query);
 $CCode->execute();
 $CourseCode=$CCode->fetchAll();
-
+// to find students from sec 
+// get the sec ID from course section . and connect it 
+//course ID AND the Semster ID 
+//only the input for sec ID and from the sec id we get the student id from the enrollement table 
+// using the student id we get the student name and ID from student Table 
+// to get the student name 
 
 
 $Sem="SELECT * FROM `semester` ORDER BY `number` ASC";
