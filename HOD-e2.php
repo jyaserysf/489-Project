@@ -25,9 +25,7 @@
 
     // close the connection
     $db = null;
-
-    echo "<h2>Section(s) has been added successfully!</h2>";
-    $db=null;
+    header('location: HOD-addSection.php');
  }
     catch(PDOException $e) {
         echo "An Error Has Occured";

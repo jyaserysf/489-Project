@@ -1,11 +1,11 @@
 <?php 
     try{
         require('Database/connection.php');
-        // options sql statement
+        // course options sql statement
         $sql = "SELECT ID, courseCode, courseName FROM courses ORDER BY ID";
         $rs = $db->query($sql);
 
-        // semester sql statement
+        // semester options sql statement
         $sql = "SELECT ID, year, number FROM semester ORDER BY ID";
         $rs1 = $db->query($sql);
 
@@ -15,6 +15,7 @@
         die($e->getMessage());
     }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,10 +23,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Sections</title>
-    
     <link rel="stylesheet" href="generalstyling.css">
-
-    
 </head>
 <body>
     <div class="wrapper">

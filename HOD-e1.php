@@ -9,20 +9,17 @@
         $semesterID = $_POST['semesterID'];
         $courseID = $_POST['courseID'];
         $finalDate = $_POST['finalDate'];
-
-        try {
-        require("Database/connection.php");
-        // instructor sql statement
-        $sql = "SELECT ID, fullName FROM instructors ORDER BY departmentID";
-        $rs2 = $db->query($sql);
-        $db=null;
-        }
-        catch(PDOException $e) {
-            echo "An Error Has Occured";
-            die($e->getMessage());
-        }
 ?>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Section</title>
+    <link rel="stylesheet" href="generalstyling.css">
+</head>
+<body>
     <form method='post' action='HOD-e2.php'>
     
     <div class='row'>
@@ -134,6 +131,17 @@
                         // <select>
                         echo "<select name='instructorID[]' class='input-field'>";
                         echo "<option disabled selected>Select instructor</option>";
+
+                        try {
+                            require('Database/connection.php');
+                            $sql = "SELECT ID, fullName FROM instructors ORDER BY departmentID";
+                            $rs2 = $db->query($sql);
+                            $db=null;
+                        }
+                        catch(PDOException $e) {
+                            die($e->getMessage());
+                        }
+                        
                         // loop through and display Instructors FullName
                         foreach($rs2 as $option2) {
                         // Get the ID of the selected Instructor
@@ -176,5 +184,8 @@
         header('location: HOD-addSection.php');
     }
     ?>
+</body>
+</html>
+    
 
 
