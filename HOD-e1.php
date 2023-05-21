@@ -163,18 +163,19 @@
                                 ?>
                             </div>
                         </div>
-
-                        <!-- spaces between section containers -->
-                        <div class='row'>
+                    
+                    </div> 
+                    <!-- spaces between section containers -->
+                    <div class='row'>
                             <h1></h1>
                         </div>
                         <div class='row'>
                             <h1></h1>
-                        </div>
+                        </div>   
                     <?php
                     } // end for
                     ?>
-                </div>
+                
                 <input type="hidden" name="finalDate" value="<?php echo $finalDate ?>">
                 <input type="hidden" name="semesterID" value="<?php echo $semesterID ?>"> 
                 <input type="hidden" name="courseID" value="<?php echo $courseID ?>">  
