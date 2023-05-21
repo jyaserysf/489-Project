@@ -1,10 +1,14 @@
-<?php 
-    try{
-        require('Database/connection.php');
-    }
-    catch(PDOException $e){
-        die($e->getMessage());
-        }
+<?php
+try {
+    require('Database/connection.php');
+    // course options sql statement
+    $sql = "SELECT ID, courseCode, courseName FROM courses ORDER BY ID";
+    $rs = $db->query($sql);
+
+    $db = null;
+} catch (PDOException $e) {
+    die($e->getMessage());
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,9 +18,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     
-    <link rel="stylesheet" href="HODManage.css">
     <link rel="stylesheet" href="generalstyling.css">
-    
+
+    <style>
+        .row-flex {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            margin: 0 20px;
+        }
+    </style>
+
 </head>
 <body>
     <div class="wrapper">
@@ -28,17 +40,47 @@
                 <h1>Manage Courses</h1> 
             </div>
             
-            <div id="manageCoursesContainer">
-                <a href="HOD-createCourse.php">
-                    <button id="manageCoursesButton">
-                        <h4> Create a new course </h4>
-                    </button>
-                </a>
-                <a href="HOD-addSection.php">
-                    <button id="manageCoursesButton">
-                        <h4> Add new section </h4>
-                    </button>
-                </a>
+            <div class="container">
+                <form method='get'>
+                    <div class="row">
+                        <h3>Select course to manage</h3>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="Course ID">Course</label>
+                        </div>
+                        <div class="col-75">
+                        <?php        
+                            // <select>
+                            echo "<select class='input-field' name='courseID' >";
+                            echo "<option disabled selected>Select Course</option>";
+                            
+                            // loop through and display SemesterYear(s) and SemesterNumbers
+                            foreach($rs as $option) {
+                                // Get the ID of the selected semester
+                            $courseID = $option['ID'];
+                            echo "<option value='$courseID'> ". $option['courseCode'] . "  " . $option['courseName'] . "</option>";
+                            }
+
+                            echo "</select>";
+                        ?>
+                        </div>
+                    </div>
+
+                    <div class="row" class="submitDiv">
+                        <div class="row-flex">
+                            <button class="updateCourseBtn"> 
+                                Update Information
+                            </button>
+
+                            <button id="deleteCourseBtn">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                    
+                </form>
             </div>
             
         </div>
