@@ -2,7 +2,7 @@
 try {
     require('Database/connection.php');
     // course options sql statement
-    $sql = "SELECT courses.courseCode, courses.courseName
+    $sql = "SELECT courses.courseCode, courses.courseName, courses.ID
             FROM courses
             JOIN course_sections
             ON courses.ID = course_sections.courseID 
@@ -108,34 +108,68 @@ try {
                         <?php        
                             // <select>
                             echo "<select class='input-field' name='courseID' >";
-                            echo "<option disabled selected>Select Course</option>";
-                            
+                            echo "<option disabled ";
+                            if(!isset($_GET['CourseID'])) {
+                                echo "selected";
+                            }
+                            echo ">Select Course</option>";
                             // loop through and display SemesterYear(s) and SemesterNumbers
                             foreach($rs as $option) {
                                 // Get the ID of the selected semester
                             $courseID = $option['ID'];
-                            echo "<option value='$courseID'> ". $option['courseCode'] . "  " . $option['courseName'] . "</option>";
+                            echo "<option value='$courseID'";
+                            
+                            if(isset($_GET['courseID']) && $courseID == $_GET['courseID']) {
+                                echo "selected";
+                            }
+                            echo "> ". $option['courseCode'] . "  " . $option['courseName'] . "</option>";
                             }
 
                             echo "</select>";
                         ?>
                         </div>
                     </div>
+
+                    <div class="row" id="submitDiv">
+                        <input class="submitBtn" type="submit" value="Select Course" />
+                    </div>
+
+                </div> 
                 </form>
                 
                 <div class="row">
                     <div class="row-flex">
-                        <button id="btn1" class="manageBtn">Show div 1</button>
-                        <button id="btn2" class="manageBtn">Show div 2</button>
-                        <button id="btn3" class="manageBtn">Show div 3</button>
+                        <button id="btn1" class="manageBtn">Add New Course</button>
+                        <button id="btn2" class="manageBtn">Update Course</button>
+                        <button id="btn3" class="manageBtn">Manage Sections</button>
                     </div>
                 </div> 
             </div>
             <h1></h1>
             
-            <div id="div1" class="content hidden">Div 1 content</div>
-            <div id="div2" class="content hidden">Div 2 content</div>
-            <div id="div3" class="content hidden">Div 3 content</div>
+            <div id="div1" class="content hidden">
+                <?php 
+                    require('HOD-createCourse.php')
+                ?>
+            </div>
+
+            <div id="div2" class="content hidden">
+                <?php 
+                if(isset($_GET['courseID']))
+                    require('HOD-updateCourse.php');
+                else
+                    // POP-UP Error Message: PLease Select A Course To Update 
+                ?>
+            </div>
+
+            <div id="div3" class="content hidden">
+                <?php
+                if(isset($_GET['courseID']))
+                    require('HOD-manageSections.php');
+                else
+                    // POP-UP Error Message: PLease Select A Course To Manage Its Sections       
+                ?>
+            </div>
 
         </div>
     </div>
