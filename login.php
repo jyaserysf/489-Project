@@ -6,13 +6,13 @@ if (isset($_SESSION['activeUser'])) {
     header("location: $role-homep.php");
     die(); 
 }
-/* Needs Modification To Properly Set HOD Cookie */
+
 elseif (isset($_COOKIE['remember_me'])){
     $data = json_decode($_COOKIE['remember_me'], true);
     try {
         require('Database/connection.php');
         $role = $data['role'];
-        if($role == "instructor") {
+        if($role == "instructor" || $role == "HOD") {
             $stmt = $db->prepare("SELECT * FROM instructors WHERE username=?");
             $stmt->execute(array($data['username']));
         }

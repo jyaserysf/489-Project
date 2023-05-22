@@ -12,7 +12,7 @@
 <body>
     <div class="wrapper">
         <div class="sidebar-wrapper">
-            <?php include 'sidenav/student-sidenav.html'; ?>
+            <?php include 'sidenav/hod-sidenav.html'; ?>
         </div>
         <div class="pagecontent-wrapper" id="main">
             <div class="title" >
