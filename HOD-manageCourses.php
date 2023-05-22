@@ -2,7 +2,13 @@
 try {
     require('Database/connection.php');
     // course options sql statement
-    $sql = "SELECT ID, courseCode, courseName FROM courses ORDER BY ID";
+    $sql = "SELECT courses.courseCode, courses.courseName
+            FROM courses
+            JOIN course_sections
+            ON courses.ID = course_sections.courseID 
+            WHERE course_sections.courseID IS NOT NULL 
+            GROUP BY courses.courseCode
+            ORDER BY courses.ID";
     $rs = $db->query($sql);
 
     $db = null;
@@ -68,22 +74,23 @@ try {
                         </div>
                     </div>
 
-                    <div class="row" class="submitDiv">
-                        <div class="row-flex">
-                            <button class="updateCourseBtn"> 
-                                Update Information
-                            </button>
-
-                            <button id="deleteCourseBtn">
-                                Delete
-                            </button>
-                        </div>
-                    </div>
+                    
                     
                 </form>
             </div>
-            
-        </div>
+
+            <div class="row" class="submitDiv">
+                    <div class="row-flex">
+                        <button class="updateCourseBtn"> 
+                            Update Course Information
+                        </button>
+                        
+                        <button id="deleteCourseBtn">
+                            delete
+                        </button>
+                    </div>
+                </div>
+            </div>  
     </div>
        <!-- Javascript file -->
        <script src="js/sidenav.js"></script>
