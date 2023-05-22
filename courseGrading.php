@@ -9,7 +9,7 @@ $query="SELECT DISTINCT courses.courseCode, semester.ID,course_sections.courseID
 instructors.ID ,instructors.fullName, course_sections.sectionNumber FROM course_sections JOIN 
 courses on course_sections.courseID=courses.ID JOIN instructors 
 ON course_sections.instructorID=instructors.ID join semester on
- course_sections.semesterID=semester.ID where NOW() BETWEEN semester.beginDate and semester.endDate;";
+ course_sections.semesterID=semester.ID";
 $CCode=$db->prepare($query);
 $CCode->execute();
 $CourseCode=$CCode->fetchAll();
@@ -19,14 +19,18 @@ $CourseCode=$CCode->fetchAll();
 //only the input for sec ID and from the sec id we get the student id from the enrollement table 
 // using the student id we get the student name and ID from student Table 
 // to get the student name 
+//-----------------------------------------------------------------
+//SELECT DISTINCT  students.ID ,students.fullName,
+// course_sections.ID ,courseID ,semesterID, courses.courseCode
+// FROM `course_sections` JOIN courses JOIN semester JOIN students where NOW()
+// BETWEEN semester.beginDate and semester.endDate;
 
 
-$Sem="SELECT * FROM `semester` ORDER BY `number` ASC";
-$semester=$db->prepare($Sem);
-$semester->execute();
-$year=$semester->fetchAll();
-
-
+//
+$StudentName_ID="SELECT  studentID, fullName FROM `students`;";
+$SNID=$db->prepare($StudentName_ID);
+$SNID->execute();
+$SNI_D=$SNID->fetchAll();
 
 
 
@@ -38,6 +42,32 @@ die('ERROR:'.$EXC->getMessage());
 }
 
 ?>
+<script>
+    $(document).ready(function(){
+$('#courses').on('change',function(){
+var courseID=$(this).val();
+if(courseID){
+$.ajax({
+type:'POST',
+url:'ajaxinstarctor.php',
+data:'courseID'=+courseID,
+success:function(html){
+    $('#section').html(html1);
+}
+
+});
+
+}else {
+$('#section').html('<option value=""> course Code</option>');
+}
+    
+});
+
+    });
+
+
+</script>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,57 +90,59 @@ die('ERROR:'.$EXC->getMessage());
             </div>
             
             <div class="grading lg-px-5 lg-py-4">
-            <form action="" method="get" >
+            <div class="grading lg-px-5 lg-py-4">
+            <form method="Post">
                 <div class="row row-col-2 ">
                     <div class="col">
                         <div class="row ms-1">
-                            <select class="form-select border-secondary-subtle w-75 me-1" aria-label="Default select example">
-                           <?php foreach($CourseCode as $output){ ?>
-                             <option><?php   echo $output[0]?> </option>
-                                <?php }?>
+                            <select class="form-select border-secondary-subtle w-75 me-1" aria-label="Default select example" id="courses">
+                                <option value="courseCode"> course Code</option>
+                                <?php foreach($CourseCode as $row) { ?>
+                                    <option value="<?php echo $row[0]; ?>"><?php echo $row[0]; ?></option>
+                                <?php } ?>
                             </select>
-
-                            <select class="form-select border-secondary-subtle"  style="width: 20%"  aria-label="Default select example">
-                            <?php foreach($CourseCode as $output){ ?>
-                             <option><?php   echo $output[6]?> </option>
-                                <?php }?>
+                            <select class="form-select border-secondary-subtle" style="width: 20%" aria-label="Default select example" id="section">
+                                <option value="">Select Course Code first</option>
                             </select>
                         </div>
-                    </div
+                    </div>
                     <div class="col-lg-4 offset-1">
                         Semester: 
                     </div>
                 </div>
-        </form>
+            </form>
 
-                <div class="student-list lg-mx-4 my-4" style="background-color: #FDF7CF" style="width:85%">
+            <div class="student-list lg-mx-4 my-4" style="background-color: #FDF7CF" style="width:85%">
                 <table class="table table-borderless">
                     <thead>
-                        <tr> <th style="width: 8%"> ID </th> <th style="width: 15%"> Name </th>  <th class="" >Grade</th> </tr>
+                        <tr> 
+                            <th style="width: 8%"> ID </th> 
+                            <th style="width: 15%"> Name </th>  
+                            <th class="">Grade</th> 
+                        </tr>
                     </thead>
                     <tbody>
-                        <form method="post">
-                        <tr>  
-                        <td> 2019XXXX</td> <td> SName </td> 
-                        <td>  
-                            <select class=" " style="width: 10%" aria-label="Default select example">
-                            <?php 
-                               require 'gradesfunc.php';
-                               selectGrade();
-                            ?>
-                            </select> 
-                        </td> 
-                        </tr>
-                   </form> 
-                 </tbody>
+                        <?php foreach($SNI_D as $SND) { ?>  
+                            <tr> 
+                                <td> 
+                                    <?php echo $SND[0] ?>  
+                                    <select class="" style="width: 10%" aria-label="Default select example">
+                                        <?php 
+                                        require 'gradesfunc.php';
+                                        selectGrade();
+                                        ?>
+                                    </select>  
+                                </td>  
+                            </tr> 
+                            <br>
+                        <?php }?> 
+                    </tbody>
                 </table>
                 <button type="submit" name="sb" value="">Save Section Grades</button>
-               
-                </div>
-            
             </div>
+        
         </div>
     </div>
-       <!-- Javascript file -->
-       <script src="js/sidenav.js"></script>
-</body>
+</div>
+<!-- Javascript file -->
+<script src="js/sidenav.js"></script>
