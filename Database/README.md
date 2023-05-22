@@ -19,4 +19,4 @@
 2- Username: aahmed   Password: A@Aah1212 <br>
 
 ## Admin
-1- Username: bhamza@mt.edu   Password: Bbaq123 <br>
+1- Username: bhamza   Password: Bbaq123 <br>
