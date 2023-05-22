@@ -4,15 +4,28 @@ if (!isset($_SESSION['activeUser'])){
     die ("Please login first <a href='Login.php'>Login</a>");
 }
 try{
+    
 require('Database/connection.php');
-$query="SELECT DISTINCT courses.courseCode, semester.ID,course_sections.courseID, courses.courseName,
-instructors.ID ,instructors.fullName, course_sections.sectionNumber FROM course_sections JOIN 
-courses on course_sections.courseID=courses.ID JOIN instructors 
-ON course_sections.instructorID=instructors.ID join semester on
- course_sections.semesterID=semester.ID";
-$CCode=$db->prepare($query);
-$CCode->execute();
-$CourseCode=$CCode->fetchAll();
+{
+$Courses="SELECT DISTINCT courses.courseCode FROM `course_sections` JOIN courses ON courseID=courses.ID WHERE course_sections.instructorID = ".$_SESSION['activeUser']['ID'];
+$ViewC=$db->query($Courses);
+
+$Sections="SELECT DISTINCT sectionNumber FROM `course_sections` where ".$_SESSION['activeUser']['ID'];
+$viewSec=$db->query($Sections);
+$db=null;
+ 
+
+}
+
+///-------------------- IGNORE------------------------------------------------------------------
+//$query="SELECT DISTINCT courses.courseCode, semester.ID,course_sections.courseID, courses.courseName,
+//instructors.ID ,instructors.fullName, course_sections.sectionNumber FROM course_sections JOIN 
+//courses on course_sections.courseID=courses.ID JOIN instructors 
+//ON course_sections.instructorID=instructors.ID join semester on
+ //course_sections.semesterID=semester.ID";
+//$CCode=$db->prepare($query);
+//$CCode->execute();
+//$CourseCode=$CCode->fetchAll();
 // to find students from sec 
 // get the sec ID from course section . and connect it 
 //course ID AND the Semster ID 
@@ -24,13 +37,11 @@ $CourseCode=$CCode->fetchAll();
 // course_sections.ID ,courseID ,semesterID, courses.courseCode
 // FROM `course_sections` JOIN courses JOIN semester JOIN students where NOW()
 // BETWEEN semester.beginDate and semester.endDate;
-
-
 //
-$StudentName_ID="SELECT  studentID, fullName FROM `students`;";
-$SNID=$db->prepare($StudentName_ID);
-$SNID->execute();
-$SNI_D=$SNID->fetchAll();
+//$StudentName_ID="SELECT  studentID, fullName FROM `students`;";
+//$SNID=$db->prepare($StudentName_ID);
+//$SNID->execute();
+//$SNI_D=$SNID->fetchAll();
 
 
 
@@ -44,26 +55,19 @@ die('ERROR:'.$EXC->getMessage());
 ?>
 <script>
     $(document).ready(function(){
-$('#courses').on('change',function(){
-var courseID=$(this).val();
-if(courseID){
+$('#courses').change(function(){
+   var CourseName_code= $('#courses').val();
 $.ajax({
-type:'POST',
-url:'ajaxinstarctor.php',
-data:'courseID'=+courseID,
-success:function(html){
-    $('#section').html(html1);
-}
+url:'ajaxinstructor.php',
+method:'POST',
+data:'CourseName_code'+courseID,
+}).DONE(function(Sections){
+console.log(Sections);
+})
+})
+    })
 
-});
 
-}else {
-$('#section').html('<option value=""> course Code</option>');
-}
-    
-});
-
-    });
 
 
 </script>
@@ -96,14 +100,24 @@ $('#section').html('<option value=""> course Code</option>');
                     <div class="col">
                         <div class="row ms-1">
                             <select class="form-select border-secondary-subtle w-75 me-1" aria-label="Default select example" id="courses">
-                                <option value="courseCode"> course Code</option>
-                                <?php foreach($CourseCode as $row) { ?>
-                                    <option value="<?php echo $row[0]; ?>"><?php echo $row[0]; ?></option>
-                                <?php } ?>
-                            </select>
-                            <select class="form-select border-secondary-subtle" style="width: 20%" aria-label="Default select example" id="section">
-                                <option value="">Select Course Code first</option>
-                            </select>
+                          <?php  foreach($ViewC as $Course) 
+                          {
+                                // Get the ID of the selected semester
+                            $courseID = $Course['ID'];
+                            echo "<option value='$courseID'> ". $Course['courseCode'] . "  " . $Course['courseName'] . "</option>";
+                            }
+                            echo "</select>";
+                        ?>
+                           <?php
+                            echo "<select>";
+                            foreach($viewSec as $Section) {
+                                
+                            $Section_number = $Section['courseID'];
+                            echo "<option value='$Section'> ". $Section['sectionNumber'] . "  " . "</option>";
+                            }
+                            echo "</select>";
+                            ?>
+                                    <button type="submit" name="sb" value="">view students </button>
                         </div>
                     </div>
                     <div class="col-lg-4 offset-1">
@@ -122,20 +136,11 @@ $('#section').html('<option value=""> course Code</option>');
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach($SNI_D as $SND) { ?>  
-                            <tr> 
-                                <td> 
-                                    <?php echo $SND[0] ?>  
-                                    <select class="" style="width: 10%" aria-label="Default select example">
-                                        <?php 
-                                        require 'gradesfunc.php';
-                                        selectGrade();
-                                        ?>
-                                    </select>  
+                       
                                 </td>  
                             </tr> 
                             <br>
-                        <?php }?> 
+                    
                     </tbody>
                 </table>
                 <button type="submit" name="sb" value="">Save Section Grades</button>

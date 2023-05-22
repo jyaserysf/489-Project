@@ -3,4 +3,5 @@
 $db = new PDO('mysql:host=localhost;dbname=registration;charset=utf8', 'root', '');
 //Step 2 for error handling
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
  ?>
