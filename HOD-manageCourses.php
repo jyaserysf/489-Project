@@ -114,7 +114,7 @@ try {
                             foreach($rs as $option) {
                                 // Get the ID of the selected semester
                             $courseID = $option['ID'];
-                            echo "<option value='$courseID'> ". $option['courseCode'] . "  " . $option['courseName'] . "</option>";
+                            echo "<option value='$courseID'> ". $option['courseCode'] . " | " . $option['courseName'] . "</option>";
                             }
 
                             echo "</select>";
