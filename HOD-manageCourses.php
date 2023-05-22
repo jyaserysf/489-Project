@@ -33,7 +33,55 @@ try {
             justify-content: flex-end;
             margin: 0 20px;
         }
+
+        .manageBtn {
+            width: 10rem;
+            height: 4rem;
+            background-color:rgba(0, 0, 0, 0.8);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            /*finger*/
+            cursor: pointer;
+            float: right;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: 0.3s;
+            margin: 0 10px 0 10px;
+        }
+
+        .manageBtn:hover {
+        background-color: #A0BCC2;
+        }
+
+        .hidden {
+        display: none;
+        }
+
+        .content {
+            border-radius: 5px;
+            background-color: #f4f1de /* rgba(236, 232, 221, 0.7)*/;
+            padding: 20px;
+        }
     </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        const buttons = document.querySelectorAll('button');
+        const divs = document.querySelectorAll('.content');
+
+        buttons.forEach((button) => {
+            button.addEventListener('click', function () {
+            const targetDivId = this.id.replace('btn', 'div');
+            const targetDiv = document.getElementById(targetDivId);
+
+            divs.forEach((div) => {
+                div.classList.toggle('hidden', div !== targetDiv);
+            });
+            });
+        });
+        });
+    </script>   
 
 </head>
 <body>
@@ -73,25 +121,27 @@ try {
                         ?>
                         </div>
                     </div>
-
-                    
-                    
                 </form>
-            </div>
-
-            <div class="row" class="submitDiv">
+                
+                <div class="row">
                     <div class="row-flex">
-                        <button class="updateCourseBtn"> 
-                            Update Course Information
-                        </button>
-                        
-                        <button id="deleteCourseBtn">
-                            delete
-                        </button>
+                        <button id="btn1" class="manageBtn">Show div 1</button>
+                        <button id="btn2" class="manageBtn">Show div 2</button>
+                        <button id="btn3" class="manageBtn">Show div 3</button>
                     </div>
-                </div>
-            </div>  
+                </div> 
+            </div>
+            <h1></h1>
+            
+            <div id="div1" class="content hidden">Div 1 content</div>
+            <div id="div2" class="content hidden">Div 2 content</div>
+            <div id="div3" class="content hidden">Div 3 content</div>
+
+        </div>
     </div>
-       <!-- Javascript file -->
-       <script src="js/sidenav.js"></script>
+
+    
+    <!-- Javascript file -->
+    <script src="js/sidenav.js"></>
 </body>
+</html>
