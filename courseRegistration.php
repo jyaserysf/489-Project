@@ -302,6 +302,11 @@ var_dump($_POST);
 
                                 if($enrolled && count($preReq)==$preReqC){
                                     $addSectionEnroll->execute();
+                                    $selectedSecDetails[6]=$selectedSecDetails[6]--;
+                                    $updateAvailbSeats=$db->prepare("UPDATE course_sections set availableSeats=:seats where sectionID=:sectionID ");
+                                    $updateAvailbSeats->bindParam(':seats',$selectedSecDetails[6]);
+                                    $updateAvailbSeats->bindParam(':sectionID',$selectedSecDetails[7]);
+
                                     echo "<h5>added seat successfully! </h5>";
                                 }
                                 else{
