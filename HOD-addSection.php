@@ -49,14 +49,14 @@
                         <div class="col-75">
                         <?php        
                             // <select>
-                            echo "<select class='input-field' name='courseID' >";
+                            echo "<select class='input-field' name='courseID'>";
                             echo "<option disabled selected>Select Course</option>";
                             
                             // loop through and display courses Code and name
                             foreach($rs as $option) {
                                 // Get the ID of the selected course
                             $courseID = $option['ID'];
-                            echo "<option value='$courseID'> ". $option['courseCode'] . "  " . $option['courseName'] . "</option>";
+                            echo "<option value='$courseID'> ". $option['courseCode'] . " | " . $option['courseName'] . "</option>";
                             }
 
                             echo "</select>";
