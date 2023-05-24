@@ -1,28 +1,10 @@
-<?php
-try {
-    require('Database/connection.php');
-    // course options sql statement
-    $sql = "SELECT courses.courseCode, courses.courseName, courses.ID
-            FROM courses
-            JOIN course_sections
-            ON courses.ID = course_sections.courseID 
-            WHERE course_sections.courseID IS NOT NULL 
-            GROUP BY courses.courseCode
-            ORDER BY courses.ID";
-    $rs = $db->query($sql);
-
-    $db = null;
-} catch (PDOException $e) {
-    die($e->getMessage());
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Manage Courses</title>
     
     <link rel="stylesheet" href="generalstyling.css">
 
@@ -93,7 +75,58 @@ try {
             <div class="title" >
                 <h1>Manage Courses</h1> 
             </div>
-            
+            <?php if(!isset($_POST['semesterID']) && !isset($_GET['CourseID'])) {?>
+            <div class="container">
+                <form method='post'>
+                    <div class="row">
+                        <h3>Select A Semester To Manage</h3>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="semesterID">Semester</label>
+                        </div>
+                        <div class="col-75">
+                        <?php        
+                            // <select>
+                            try {
+                                require('Database/connection.php');
+                                $semesterSQL = $db->prepare("SELECT * FROM semester WHERE NOW() BETWEEN modifyStart AND modifyEnd");
+                                $semesterSQL->execute();
+
+                                $nextSemesterSQL = $db->prepare("SELECT * FROM semester WHERE modifyStart = (
+                                    SELECT MIN(modifyStart) FROM semester WHERE modifyStart > NOW())"
+                                );
+                                $nextSemesterSQL->execute();
+
+                                echo "<select class='input-field' name='semesterID' >";
+                                echo "<option disabled selected>Select Semester</option>";
+                                if($semesterInfo = $semesterSQL->fetch()) {
+                                    $semesterID = $semesterInfo['ID'];
+                                    echo "<option value='$semesterID'> ". $semesterInfo['year'] . " - " . $semesterInfo['number'] . " (Coming Semester)" ."</option>";
+                                    }
+                                    $nextSemesterID = $nextSemesterSQL->fetch();
+                                    echo "<option value=' " . $nextSemesterID['ID'] . "'> " . $nextSemesterID['year'] . " - " . $nextSemesterID['number'] . " (Next Semester)" . "</option>";
+                                    echo "</select>";
+                                $db=null;
+                            }
+                            catch(PDOException $e) {
+                                die("Error: " . $e->getMessage());
+                            }
+                        ?>
+                        </div>
+                    </div>
+                    <div class="row" id="submitDiv">
+                        <input class="submitBtn" type="submit" value="Select Course" />
+                    </div>
+                </div> 
+                </form>
+        </div>
+    </div>
+    <?php   } 
+            else {
+    ?>
+    
             <div class="container">
                 <form method='get'>
                     <div class="row">
@@ -107,25 +140,45 @@ try {
                         <div class="col-75">
                         <?php        
                             // <select>
-                            echo "<select class='input-field' name='courseID' >";
-                            echo "<option disabled ";
-                            if(!isset($_GET['CourseID'])) {
-                                echo "selected";
-                            }
-                            echo ">Select Course</option>";
-                            // loop through and display SemesterYear(s) and SemesterNumbers
-                            foreach($rs as $option) {
-                                // Get the ID of the selected semester
-                            $courseID = $option['ID'];
-                            echo "<option value='$courseID'";
-                            
-                            if(isset($_GET['courseID']) && $courseID == $_GET['courseID']) {
-                                echo "selected";
-                            }
-                            echo "> ". $option['courseCode'] . "  " . $option['courseName'] . "</option>";
-                            }
+                            try {
+                                require('Database/connection.php');
+                                $checkSemesterSQL = $db->prepare("SELECT * FROM semester WHERE NOW() BETWEEN modifyStart AND modifyEnd");
+                                $checkSemesterSQL->execute();
+                                if($row = $checkSemesterSQL->fetch()) {
+                                    if($_POST['semesterID'] == $row['ID']) {
+                                        $coursesInSemSQL = $db->prepare(
+                                            "SELECT courses.courseCode, courses.courseName, courses.ID
+                                            FROM courses
+                                            JOIN course_sections
+                                            ON courses.ID = course_sections.courseID 
+                                            WHERE course_sections.courseID IS NOT NULL 
+                                            GROUP BY courses.courseCode
+                                            ORDER BY courses.ID
+                                            ");
+                                        $coursesInSemSQL->execute();
 
-                            echo "</select>";
+                                        echo "<select class='input-field' name='courseID' >";
+                                        echo "<option disabled ";
+                                        if(!isset($_GET['CourseID'])) 
+                                            echo "selected";
+                                        echo ">Select Course</option>";
+                                        $rs = $coursesInSemSQL->fetchAll();
+                                        foreach($rs as $option) {
+                                            $courseID = $option['ID'];
+                                            echo "<option value='$courseID'";
+                                            if(isset($_GET['courseID']) && $courseID == $_GET['courseID'])
+                                                echo "selected";
+                                            echo "> ". $option['courseCode'] . "  " . $option['courseName'] . "</option>";
+                                        }
+
+                                        echo "</select>";
+                                    }
+                                }
+                                $db=null;
+                            }
+                            catch(PDOException $e) {
+                                die("Error: " . $e->getMessage());
+                            }
                         ?>
                         </div>
                     </div>
@@ -170,7 +223,7 @@ try {
                     // POP-UP Error Message: PLease Select A Course To Manage Its Sections       
                 ?>
             </div>
-
+        <?php } ?>
         </div>
     </div>
 
