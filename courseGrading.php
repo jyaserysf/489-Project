@@ -9,12 +9,20 @@ require('Database/connection.php');
 {
 $Courses="SELECT DISTINCT courses.courseCode FROM `course_sections` JOIN courses ON courseID=courses.ID WHERE course_sections.instructorID = ".$_SESSION['activeUser']['ID'];
 $ViewC=$db->query($Courses);
-
-$Sections="SELECT DISTINCT sectionNumber FROM `course_sections` where ".$_SESSION['activeUser']['ID'];
+$Sections="SELECT Distinct  sectionNumber FROM course_sections WHERE instructorID=".$_SESSION['activeUser']['ID'];
 $viewSec=$db->query($Sections);
-$db=null;
- 
+// $Student="SELECT * FROM `students`";
+// $viewS=$db->query($Student);
 
+
+// $Student= "SELECT enrollments.studentID, students.fullName, course_sections.sectionNumber
+// FROM enrollments
+// JOIN students ON enrollments.studentID = students.ID 
+// JOIN course_sections ON enrollments.sectionID = course_sections.ID
+// WHERE enrollments.sectionID WHERE ".
+// $viewS = $db->query($Student);
+//$studentname=""
+$db=null;
 }
 
 ///-------------------- IGNORE------------------------------------------------------------------
@@ -77,6 +85,7 @@ console.log(Sections);
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Grading</title>
     <link rel="stylesheet" href="generalstyling.css">
@@ -102,7 +111,6 @@ console.log(Sections);
                             <select class="form-select border-secondary-subtle w-75 me-1" aria-label="Default select example" id="courses">
                           <?php  foreach($ViewC as $Course) 
                           {
-                                // Get the ID of the selected semester
                             $courseID = $Course['ID'];
                             echo "<option value='$courseID'> ". $Course['courseCode'] . "  " . $Course['courseName'] . "</option>";
                             }
@@ -117,9 +125,11 @@ console.log(Sections);
                             }
                             echo "</select>";
                             ?>
-                                    <button type="submit" name="sb" value="">view students </button>
+                                    <button type="submit" name="sb" value="sb">view students </button>
                         </div>
                     </div>
+
+                    
                     <div class="col-lg-4 offset-1">
                         Semester: 
                     </div>
@@ -134,6 +144,15 @@ console.log(Sections);
                             <th style="width: 15%"> Name </th>  
                             <th class="">Grade</th> 
                         </tr>
+                            <?php 
+                            // if(isset($_POST['sb']))
+                        //{
+                     
+                            //foreach($viewS as $display){
+                               // echo"<li> ".$display[1]. $display[2] ."</li>";
+                            //}
+                       
+                             // }?>
                     </thead>
                     <tbody>
                        
@@ -143,11 +162,26 @@ console.log(Sections);
                     
                     </tbody>
                 </table>
-                <button type="submit" name="sb" value="">Save Section Grades</button>
+                <form method="POST">
+
+
+                <button type="submit" name="Save" value="">Save Section Grades</button>
+                </form>
+
+
+                <?php 
+                if (isset( $_POST['Save']))
+                {?>
+
+                    <script>swal("student Grades !", "student Grades has been updated!", "success");</script>
+
+
+
+               <?php }?>
             </div>
-        
         </div>
     </div>
 </div>
+
 <!-- Javascript file -->
 <script src="js/sidenav.js"></script>
