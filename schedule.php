@@ -1,26 +1,157 @@
 
-<?php 
+<?php
+
+ 
+
+
+//print_r($enrollSectSemAll);
+
+
+    function yourSched($arr){
+
+      try{
+          require('Database/connection.php');
+          $db->beginTransaction();
+          $checkCourse=$db->prepare("SELECT * FROM courses where ID=?");
+      
+
+          
+
+            
+            $schedule = array();
+            // Define the time slots for each day
+            $timeslots = array(
+                '8:00:00-9:00:00',
+                '9:00:00-10:00:00',
+                '10:00:00-11:00:00',
+                '11:00:00-12:00:00',
+                '12:00:00-13:00:00',
+                '13:00:00-14:00:00',
+                '14:00:00-15:00:00',
+                '15:00:00-16:00:00',
+                '16:00:00-17:00:00',
+                '17:00:00-18:00:00',
+            );
+
+            //$days=['1'=>'U', '2'=>'M', '3'=>'T','4'=>'W','5'=>'H'];
+            $daysOfWeek = array('U', 'M', 'T', 'W', 'H');
+
+            foreach($arr as $enrollSect){
+              $checkCourse->execute(array($enrollSect['courseID']));
+              if($checkThisCourse=$checkCourse->fetch()){
+                
+                $courseC=$checkThisCourse['courseCode'];
+              }
+              
+              
+              $sectionNo=$enrollSect['sectionNumber'];
+              $room=$enrollSect['room'];
+              $final=$enrollSect['finalDate'];
+              $days=str_split($enrollSect['days']);
+              $startT=$enrollSect['startTime'];
+              $endT=$enrollSect['endTime'];
+
+              foreach($days as $day){
+                $dayIndex = array_search($day, $daysOfWeek);
+                for ($i = 0; $i < count($timeslots); $i++){
+                  //echo $timeslots[1];
+                  //echo strtotime($timeslots[0]);
+                  $start = DateTime::createFromFormat('H:i:s', explode('-', $timeslots[$i])[0]);
+                        $end =DateTime::createFromFormat('H:i:s', explode('-', $timeslots[$i])[1]);
+                  $startEnrollment = DateTime::createFromFormat('H:i:s', $startT);
+                  
+                  $endEnrollment = DateTime::createFromFormat('H:i:s', $endT);
+                        //print_r($start) .'<br>';
+                        if ($startEnrollment >= $start && $endEnrollment<=$end) {
+                          
+                          $schedule[$dayIndex][$i][] = array(
+                              'courseCode' => $courseC,
+                              'sectionNumber' => $sectionNo,
+                              'location' => $room,
+                          );
+                        }
+                }
+              }
+
+            }
+
+            $db->commit();
+            $db=null;
+          
+          }catch(PDOException $e){
+        $db->rollBack();
+        die("Error: " . $e->getMessage());
+      }
+
+            // Generate the HTML table
+            echo '<table width="700px">';
+            echo '<tr><th>Time</th><th>U</th><th>M</th><th>T</th><th>W</th><th>H</th></tr>';
+
+            foreach ($timeslots as $index => $timeslot) {
+                echo '<tr>';
+                echo '<td>' . $timeslot . '</td>';
+                for ($dayIndex = 0; $dayIndex < count($daysOfWeek); $dayIndex++){
+                  echo '<td>';
+                  
+                  if (isset($schedule[$dayIndex][$index])){
+                    foreach ($schedule[$dayIndex][$index] as $class) {
+                      echo $class['courseCode'] . ' - section: ' . $class['sectionNumber'] . '<br> room: ' . $class['location'] . '<br>';
+                    }
+                  }echo '</td>';
+                }echo '</tr>';
+              }
+              echo '</table>';
+}
+
+//yourSched($enrollSectSemAll);
+
+
+
+
+
+
+
 
 // can be used for student and instructor
 // match $days value to course days (split days into single characters)
 // should add parameters to get specific user data or create another function then call it in this one
-function schedule(){ 
-    $days=['1'=>'U', '2'=>'M', '3'=>'T','4'=>'W','5'=>'H'];
-    echo "<table id='schedule'>"; 
-    for($i=0; $i<10; $i++){
-     echo '<tr>';
-        foreach($days as $header){
-            if ($i==0)
-                echo '<th>'.$header.'</th>'; //day header
-            else{
-                // if statement to add course (if course day from db match $header add to sched)
-                echo '<td> data </td>'; // courses
-            }
-        }
-     echo'</tr>';
-     }
-     echo '</table>';
-}
+// function schedule($enrollSectSemAll){ 
+//     $days=['1'=>'U', '2'=>'M', '3'=>'T','4'=>'W','5'=>'H'];
+//     $courseDay=[];
+
+//     foreach($enrollSectSemAll as $enrollSect){
+//       for($j=0; $j<strlen($enrollSect['days']); $j++){
+//         $courseDay[$j]=$enrollSect['days'][$j];
+//       }
+
+//     }
+//     print_r($courseDay);
+//     echo "<table id='schedule'>"; 
+//     for($i=0; $i<count($enrollSectSemAll)+1; $i++){
+//      echo '<tr>';
+//         foreach($days as $header){
+//             if ($i==0)
+//                 echo '<th>'.$header.'</th>'; //day header
+//             else{
+//               foreach($enrollSectSemAll as $enrollSect){
+//                 foreach($courseDay as $day){
+//                   if($day=='U')
+//                     echo '<td> data </td>';
+//                 }
+
+//                 // if statement to add course (if course day from db match $header add to sched)
+//                  // courses
+//               }
+              
+//             }
+//         }
+//      echo'</tr>';
+//      }
+//      echo '</table>';
+// }
+
+// schedule($enrollSectSemAll);
+
 
 // another schedule format 
     //  for($i=0; $i<10; $i++){

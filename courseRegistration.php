@@ -232,6 +232,7 @@ session_start();
                     $enrolledSectionsthisSem->bindParam(':sID', $sem['ID']);
                     $enrolledSectionsthisSem->execute();
                     $enrollSectSem=$enrolledSectionsthisSem->fetch();
+                    $enrollsectSemALL=$enrolledSectionsthisSem->fetchAll();
                     
 
                     // ************************* ADD COURSE ***************************
@@ -259,7 +260,7 @@ session_start();
                         $enrolled=true;
                         $preReqC=0; 
                                 // Check if enrolled sections are 6 or less, then check if there are available seats, then check for conflicts, then check prerequisites       
-                                $enrollsectSemALL=$enrolledSectionsthisSem->fetchAll();
+                                
                                 if(count($enrollsectSemALL)<7){  
                                     
                                     if($selectedSecDetails[6]>=1){
@@ -313,10 +314,12 @@ session_start();
                                     $updateAvailbSeats->bindParam(':seats',$selectedSecDetails[6]);
                                     $updateAvailbSeats->bindParam(':sectionID',$selectedSecDetails[7]);
 
-                                    echo "<h5>added seat successfully! </h5>";
+                                    echo "<h5>added seat successfully! </h5>
+                                    ";
                                 }
                                 else{
-                                    echo "<h5>course has not been added </h5>";
+                                    echo "<h5>course has not been added </h5>
+                                     ";
                                 }
                                 
                     
@@ -339,7 +342,9 @@ session_start();
                         $checkCourse=$db->prepare("SELECT * FROM courses where ID=:courID");
                         $checkCourse->bindParam(':courID',$selectedCour);
                         $checkCourse->execute();
-                        echo "<h5>switched seat successfully! </h5>";
+                        echo "<h5>switched seat successfully! </h5>
+                        
+                        ";
                         
 
                     }elseif(isset($_POST['switchsection'])&& isset($_POST['selectC'])){
@@ -381,12 +386,12 @@ session_start();
                 
               
             ?>
-            <div  id="display-sched">
-                <div class="container" id="sched">
-                    <?php 
-                    require('schedule.php');
-                    schedule();?>
-                </div>
+                <div  id='display-sched'>
+                                        <div class='container' id='sched'>
+                                            <?php 
+                                            require('schedule.php');
+                                            yourSched($enrollsectSemALL);?>
+                                        </div>
                 <div class="container" id="sched-toolb">
                 <div> <button name="export" > <i class="fa-solid fa-download"></i> </button> </div>
                 <div> <button name="print" > <i class="fa-solid fa-print"></i>  </button> </div>

@@ -37,7 +37,7 @@
                 <a href='HOD-manageCourses.php'>Manage Courses</a>
             </div>
             ";
-        }elseif($_SESSION['activeUser']['role'] == "instructor"){
+        }elseif($_SESSION['activeUser']['role'] == "Instructor"){
             echo "
             <div class='sideElement' >
             <img id='icon' src='icons/house.svg' alt=''>
