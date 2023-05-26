@@ -1,4 +1,12 @@
 <?php 
+
+session_start();
+
+if(!isset($_SESSION['activeUser'])){
+    header('Location: login.php');
+    exit();
+}
+
     if(isset($_GET['sectionID'])) {
         $sectionID = $_GET['sectionID'];
         try{
@@ -30,7 +38,7 @@
 <body>
     <div class="wrapper">
         <div class="sidebar-wrapper">
-            <?php include 'sidenav/hod-sidenav.html'; ?>
+            <?php include 'sidenav/instr-sidenav.php'; ?>
         </div>
         <div class="pagecontent-wrapper" id="main">
             <div class="title" >

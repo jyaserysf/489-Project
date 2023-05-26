@@ -1,5 +1,7 @@
 <?php
     session_start();
+
+
     if(isset($_SESSION['activeUser'])) {
         if($_SESSION['activeUser']['role'] == "instructor")
             header('location: instructor-homep.php');

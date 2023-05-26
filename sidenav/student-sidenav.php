@@ -42,15 +42,38 @@
             <img id="icon" src="icons/tray.svg" alt="">
             <a href="st-requests.php">Requests</a>
         </div>
+        
         <div id="spacing">
 
         </div>
 
-        <div id="sidenav-footer"><a href="#">Help</a><a href="#">Contact Us</a></div>
+        <div id="sidenav-footer">
+            <div> <a href="#">Profile</a> 
+            <?php if (isset($_SESSION['activeUser'])) {
+                echo " 
+                <a href='#' onclick='logout()'> <i class='fa fa-sign-out'> </i> Logout </a>
+                ";
+              }?>
+                </div>
+            <div> <a href="#">Contact Us</a></div> 
+        </div>
     </div>
       
     <!-- Use any element to open the sidenav -->
     <button onclick="openNav()" id="openbtn">  <img id="icon" src="icons/house.svg" alt=""> </button>
+    <script>
+                function logout() {
+                    // send AJAX request to the server to destroy the session
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', 'logout.php');
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    xhr.onload = function() {
+                        // redirect the user to homepage
+                        window.location.href = 'login.php';
+                    };
+                    xhr.send();
+                }
+                </script>
       
     
 

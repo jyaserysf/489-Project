@@ -1,3 +1,23 @@
+<?php 
+
+session_start();
+
+if(isset($_SESSION['activeUser'])){
+    if($_SESSION['activeUser']['role'] == "HOD"){
+            header('Location: HOD-homep.php');
+        }
+        elseif($_SESSION['activeUser']['role'] == "instructor"){
+            header('Location: instructor-homep.php');
+        }
+
+    
+}else{
+    header('Location: login.php');
+    exit();
+}
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +32,7 @@
 <body>
     <div class="wrapper">
         <div class="sidebar-wrapper">
-            <?php include 'sidenav/hod-sidenav.html'; ?>
+            <?php include 'sidenav/instr-sidenav.php'; ?>
         </div>
         <div class="pagecontent-wrapper" id="main">
         <div class="title" >

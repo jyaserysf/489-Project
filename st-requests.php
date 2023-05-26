@@ -1,4 +1,11 @@
 <?php 
+
+    session_start();
+
+    if(!isset($_SESSION['activeUser'])){
+        header('Location: login.php');
+        exit();
+    }
     try{
         require('Database/connection.php');
     }
@@ -20,7 +27,7 @@
 <body>
     <div class="wrapper">
         <div class="sidebar-wrapper">
-            <?php include 'sidenav/student-sidenav.html'; ?>
+            <?php include 'sidenav/student-sidenav.php'; ?>
         </div>
         <div class="pagecontent-wrapper" id="main">
             <div class="title" >

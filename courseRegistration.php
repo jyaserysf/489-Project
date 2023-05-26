@@ -1,8 +1,13 @@
 
 <?php 
 session_start();
-//session_unset();
-var_dump($_POST);
+
+    if(!isset($_SESSION['activeUser'])){
+        header('Location: login.php');
+        exit();
+    }
+
+//var_dump($_POST);
 //print_r( $_SESSION['activeUser']) ;
 // page should only be accessed betweeen modifyStart and end (use js popup and date), i can use the semester id from modifyStart and end
 ?>
@@ -81,7 +86,12 @@ var_dump($_POST);
     
 </head>
 <body>
-    
+
+        
+    <div class="wrapper">
+        <div class="sidebar-wrapper">
+            <?php require 'sidenav/student-sidenav.php'; ?>
+        </div>
         <?php 
             # to grab logged in student ID
             try{
@@ -117,10 +127,6 @@ var_dump($_POST);
                 die($e->getMessage());
                 }
         ?>
-    <div class="wrapper">
-        <div class="sidebar-wrapper">
-            <?php include 'sidenav/student-sidenav.html'; ?>
-        </div>
         <div class="pagecontent-wrapper" id="main">
             <div class="title" >
                 <h1>Course Registeration</h1> 
