@@ -59,10 +59,10 @@ elseif (isset($_POST['submit'])){
         $stmt->execute(array($uname));
         if ($row = $stmt->fetch()){
             if (password_verify($pass, $row['password'])) {
-                $session_arr = ["username"=>$row['studentID'], "role"=>"student"];
+                $session_arr = ["username"=>$row['studentID'], "role"=>"student", "ID"=>$row['ID']];
                 $_SESSION['activeUser'] = $session_arr;
                 if (isset($_POST['remember_me'])) {
-                    $cookie = ["username"=>$row['studentID'], "password"=>$row['password'], "role"=>"student"]; 
+                    $cookie = ["username"=>$row['studentID'], "password"=>$row['password'], "role"=>"student", "ID"=>$row['ID']]; 
                     setcookie('remember_me', json_encode($cookie), time()+(5*60));
                 }                     
                 header('location:student-homep.php');
@@ -110,10 +110,10 @@ elseif (isset($_POST['submit'])){
                 $stmt->execute(array($uname));
                 if ($row = $stmt->fetch()){
                     if (password_verify($pass, $row['password'])) {
-                        $session_arr = ["username"=>$row['username'], "role"=>"admin"];
+                        $session_arr = ["username"=>$row['username'], "role"=>"admin", "ID"=>$row['ID']];
                         $_SESSION['activeUser'] = $session_arr;
                         if (isset($_POST['remember_me'])) {
-                            $cookie = ["username"=>$row['username'], "password"=>$row['password'], "role"=>"admin"]; 
+                            $cookie = ["username"=>$row['username'], "password"=>$row['password'], "role"=>"admin", "ID"=>$row['ID']]; 
                             setcookie('remember_me', json_encode($cookie), time()+(5*60));
                         }                     
                         header('location:admin-homep.php');
