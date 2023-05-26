@@ -27,7 +27,7 @@ elseif (isset($_COOKIE['remember_me'])){
 
         if ($row = $stmt->fetch()) {
             if ($data['password'] == $row['password']) {
-                $session_arr = ["username"=>$data['username'], "role"=>$data['role']];
+                $session_arr = ["username"=>$data['username'], "role"=>$data['role'],"ID"=>$data['ID']];
                 $_SESSION['activeUser'] = $session_arr;                   
                 header("location: $role-homep.php");
                 $db=null;
@@ -80,16 +80,19 @@ elseif (isset($_POST['submit'])){
             $stmt->execute(array($uname));
             if ($row = $stmt->fetch()){
                 if (password_verify($pass, $row['password'])) {
+
+
                     $stmt1 = $db->prepare("SELECT * FROM departments WHERE departmentHead=?");
                     $stmt1->execute(array($row['ID']));
                     if($row1 = $stmt1->fetch()) 
                         $role = "HOD";
                     else 
                         $role = "Instructor";
-                    $session_arr = ["username"=>$row['username'], "role"=>$role];
+                    $session_arr = ["username"=>$row['username'], "role"=>$role,"ID"=>$row["ID"]];
                     $_SESSION['activeUser'] = $session_arr;
                     if (isset($_POST['remember_me'])) {
-                        $cookie = ["username"=>$row['username'], "password"=>$row['password'], "role"=>$role]; 
+                        $cookie = ["username"=>$row['username'], "password"=>$row['password'], "role"=>$role,"ID"=>$row["ID"]; 
+
                         setcookie('remember_me', json_encode($cookie), time()+(5*60));
                     }                     
                     header('location:' . $role . '-homep.php');
