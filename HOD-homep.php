@@ -2,18 +2,11 @@
 
 session_start();
 
-if(isset($_SESSION['activeUser'])){
-    if($_SESSION['activeUser']['role'] == "HOD"){
-            header('Location: HOD-homep.php');
-        }
-        elseif($_SESSION['activeUser']['role'] == "instructor"){
-            header('Location: instructor-homep.php');
-        }
+if(!isset($_SESSION['activeUser'])){
+   header('Location: login.php');
+    exit();
 
     
-}else{
-    header('Location: login.php');
-    exit();
 }
 
 

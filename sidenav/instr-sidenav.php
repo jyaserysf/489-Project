@@ -8,16 +8,15 @@
         </div>
         </div>
           
-        <div class="sideElement" >
-            <img id="icon" src="icons/house.svg" alt="">
-            <a href="instructor-homep.php">Home</a>
-        </div>
 
-    
-
+        
         <?php 
         if($_SESSION['activeUser']['role'] == "HOD"){
             echo"
+            <div class='sideElement' >
+            <img id='icon' src='icons/house.svg' alt=''>
+            <a href='HOD-homep.php'>Home</a>
+            </div>
             <div class='sideElement'>
             <img id='icon' src='icons/calendar-plus.svg' alt=''>
             <a href='courseGrading.php'>Grading</a>
@@ -40,7 +39,10 @@
             ";
         }elseif($_SESSION['activeUser']['role'] == "instructor"){
             echo "
-
+            <div class='sideElement' >
+            <img id='icon' src='icons/house.svg' alt=''>
+            <a href='instructor-homep.php'>Home</a>
+            </div>
             <div class='sideElement'>
             <img id='icon' src='icons/calendar-plus.svg' alt='>
             <a href='courseGrading.php'>Grading</a>
