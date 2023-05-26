@@ -48,7 +48,7 @@
         </div>
 
         <div id="sidenav-footer">
-            <div> <a href="#">Profile</a> 
+            <div> <a href="profile.php">Profile</a> 
             <?php if (isset($_SESSION['activeUser'])) {
                 echo " 
                 <a href='#' onclick='logout()'> <i class='fa fa-sign-out'> </i> Logout </a>

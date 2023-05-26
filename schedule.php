@@ -1,12 +1,9 @@
 
 <?php
+  function addSecAuto($arr){
 
- 
-
-
-//print_r($enrollSectSemAll);
-
-
+    yourSched($arr);
+}
     function yourSched($arr){
 
       try{
@@ -104,18 +101,9 @@
               echo '</table>';
 }
 
-//yourSched($enrollSectSemAll);
-
-
-
-
-
-
-
 
 // can be used for student and instructor
-// match $days value to course days (split days into single characters)
-// should add parameters to get specific user data or create another function then call it in this one
+
 // function schedule($enrollSectSemAll){ 
 //     $days=['1'=>'U', '2'=>'M', '3'=>'T','4'=>'W','5'=>'H'];
 //     $courseDay=[];
@@ -154,29 +142,7 @@
 // schedule($enrollSectSemAll);
 
 
-// another schedule format 
-    //  for($i=0; $i<10; $i++){
-    //     echo '<tr>';
-            
-    //        if($i==0){
-    //            for ($k=0; $k<12; $k++){
-    //                echo '<th> '.$i+$k.' </th>'; //time
-    //            }
-    //        }
-    //        else{
-    //            for ($j=0; $j<12; $j++){
-    //                if($j==0){
-    //                    echo '<th> '.$i+$j.' </th>';//days
-    //                }
-    //                else
-    //                    echo '<td> '.$i+$j.' </td>'; //data
-    //        }
-    //        }
-            
-           
-          
-    //     echo'</tr>';
-    //     }
+
 
 
 
@@ -193,33 +159,6 @@
      * how to check if student has payed??? to confirm seat (should be within enrollment period from db)
      *  */
 
-
-
-    if (isset($_POST['function'])) {
-      $functionName = $_POST['function'];
-      if (function_exists($functionName)) {
-        call_user_func($functionName);
-      }
-    }
-    
-    // function addS() {
-    //   //echo" myFunction called! ";
-    //   if(isset($_POST['addcourse'])&& isset($_POST['selectC']) && isset($_POST['selectS'])){
-    //     echo "<h5>added seat successfully! </h5>";
-    //   }elseif(isset($_POST['addcourse'])&& isset($_POST['selectC'])){
-    //       //popup -> must select course section
-    //       echo "select course section before adding";
-    //   }elseif(isset($_POST['addcourse'])){
-    //       // popup-> must select course
-    //       echo "select course before adding";
-    //   }
-    // }
-    
-    function anotherFunction() {
-      // your PHP code here
-      echo "anotherFunction called!";
-    }
-     
 
     // replace course section (seat)
     /** use UPDATE to sql

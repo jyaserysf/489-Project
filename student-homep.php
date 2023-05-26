@@ -22,7 +22,8 @@
     catch(PDOException $e){
         die($e->getMessage());
         }
-//print_r($_SESSION['activeUser']); echo $_SESSION['activeUser']['username'];
+//print_r($_SESSION['activeUser']); 
+//echo $_SESSION['activeUser']['username'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -58,12 +59,10 @@
                         $semester =$db->query($semesterInfo);
                         $semm=$semester->fetch();
                         $takingSectionsthisSem=$db->prepare("SELECT enrollments.* , course_sections.*, semester.* from enrollments join course_sections on enrollments.sectionID=course_sections.ID join semester on course_sections.semesterID=semester.ID where semester.ID=? and enrollments.studentID=?");
-                        $stID=$_SESSION['activeUser']['username'];
-                        $student=$db->prepare("SELECT students.ID from students where studentID=?");
-                        $student->execute(array($stID));
-                        $stIDJ=$student->fetch();
+                        $stID=$_SESSION['activeUser']['ID'];
+                        
 
-                        $takingSectionsthisSem->execute(array($semm['ID'],$stIDJ['ID']));
+                        $takingSectionsthisSem->execute(array($semm['ID'],$stID));
                         $enrollsectSemALL=$takingSectionsthisSem->fetchAll();
                         $db->commit();
                         $db=null;
