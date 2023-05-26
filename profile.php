@@ -74,11 +74,31 @@
             </div>
             <div class="container">
                 <form method='post'>
+
                     <div class="row">
                         <td><h3>Enter Profile Information</h3></td>
                     </div>
-                    <?php
-                        if($row = $sql->fetch(PDO::FETCH_ASSOC)) {
+                    <?php if($row = $sql->fetch(PDO::FETCH_ASSOC)) { ?>
+
+                    <?php if($_SESSION['activeUser']['role'] == "student") { ?>
+
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="Name">Student ID</label>
+                        </div>
+                        <div class="col-75">
+                            <input 
+                                class="input-field"
+                                type="text"
+                                value="<?php echo $row['studentID'];?>"
+                                disabled
+                            >
+                        </div>
+                    </div>
+
+                    <?php 
+                        }
+                        else {
                     ?>
 
                     <div class="row">
@@ -94,6 +114,8 @@
                             >
                         </div>
                     </div>
+
+                    <?php } ?>
 
                     <div class="row">
                         <div class="col-25">
