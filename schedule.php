@@ -1,4 +1,43 @@
+<html>
+  <head>
+    <style>
+      .scheduleTable {
+        border: 1px solid rgb(249, 235, 200);
+        background-color: rgba(249, 235, 200, 0.5);
+        text-align: center;
+      }
 
+      .daysRow {
+        background-color: rgb(249, 235, 200);
+      }
+
+      .timeCol {
+        background-color: rgb(249, 235, 200);
+        width: 7rem;
+        height: 1rem;
+        font-size: 0.8rem;
+        padding: 0.5rem;
+      }
+
+      .section-button {
+        color: rgba(0, 0, 0, 0.7);
+        background: none;
+        width: 100%;
+        border: none;
+        font-size: 0.6rem;
+        text-align: center;
+        padding: 0;
+        margin: 0;
+      }
+
+      .courseCol {
+        align-items: center;
+        margin: 0;
+        padding-bottom: 0.5rem ;
+      }
+    </style>
+  </head>
+</html>
 <?php
 
  
@@ -16,6 +55,7 @@
 
             $schedule = array();
             // Define the time slots for each day
+            
             $timeslots = array(
                 '8:00:00-9:00:00',
                 '9:00:00-10:00:00',
@@ -27,7 +67,7 @@
                 '15:00:00-16:00:00',
                 '16:00:00-17:00:00',
                 '17:00:00-18:00:00',
-            );
+            ); 
 
             //$days=['1'=>'U', '2'=>'M', '3'=>'T','4'=>'W','5'=>'H'];
             $daysOfWeek = array('U', 'M', 'T', 'W', 'H');
@@ -56,7 +96,6 @@
                   $start = DateTime::createFromFormat('H:i:s', explode('-', $timeslots[$i])[0]);
                         $end =DateTime::createFromFormat('H:i:s', explode('-', $timeslots[$i])[1]);
                   $startEnrollment = DateTime::createFromFormat('H:i:s', $startT);
-                  
                   $endEnrollment = DateTime::createFromFormat('H:i:s', $endT);
                         //print_r($start) .'<br>';
                         //echo $courseC;
@@ -84,19 +123,19 @@
       }
 
             // Generate the HTML table
-            echo '<table width="700px">';
-            echo '<tr><th>Time</th><th>U</th><th>M</th><th>T</th><th>W</th><th>H</th></tr>';
+            echo '<table class="scheduleTable" width="700px">';
+            echo '<tr class="daysRow"><th>Time</th><th>U</th><th>M</th><th>T</th><th>W</th><th>H</th></tr>';
 
-            foreach ($timeslots as $index => $timeslot) {
+              foreach ($timeslots as $index => $timeslot) {
                 echo '<tr>';
-                echo '<td>' . $timeslot . '</td>';
+                echo '<td class="timeCol">' . $timeslot . '</td>';
                 for ($dayIndex = 0; $dayIndex < count($daysOfWeek); $dayIndex++){
-                  echo '<td>';
+                  echo '<td class="courseCol">';
                   
                   if (isset($schedule[$dayIndex][$index])){
                     foreach ($schedule[$dayIndex][$index] as $class) {
                       echo '
-                      <button  class="section-button"  data-section-id='. $class['sID'].'> '.$class['courseCode'] . ' - section: ' . $class['sectionNumber'] . '<br> room: ' . $class['location'] . '</button><br>';
+                      <button  class="section-button"  data-section-id='. $class['sID'].'> <h3>'.$class['courseCode'] . '</h2> SECTION ' . $class['sectionNumber'] . '<br> ROOM ' . $class['location'] . '</button><br>';
                     }
                   }echo '</td>';
                 }echo '</tr>';
