@@ -91,7 +91,7 @@ elseif (isset($_POST['submit'])){
                     $session_arr = ["username"=>$row['username'], "role"=>$role,"ID"=>$row["ID"]];
                     $_SESSION['activeUser'] = $session_arr;
                     if (isset($_POST['remember_me'])) {
-                        $cookie = ["username"=>$row['username'], "password"=>$row['password'], "role"=>$role,"ID"=>$row["ID"]; 
+                        $cookie = ["username"=>$row['username'], "password"=>$row['password'], "role"=>$role,"ID"=>$row["ID"]]; 
 
                         setcookie('remember_me', json_encode($cookie), time()+(5*60));
                     }                     
