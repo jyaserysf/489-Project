@@ -1,4 +1,13 @@
 <?php 
+
+session_start();
+
+if(!isset($_SESSION['activeUser'])){
+    header('Location: login.php');
+    exit();
+}
+
+
     try{
         require('Database/connection.php');
     }
@@ -21,7 +30,7 @@
 <body>
     <div class="wrapper">
         <div class="sidebar-wrapper">
-            <?php include 'sidenav/student-sidenav.html'; ?>
+            <?php include 'sidenav/instr-sidenav.php'; ?>
         </div>
         <div class="pagecontent-wrapper" id="main">
             <div class="title" >
@@ -48,7 +57,7 @@
                                 maxlength="8"
                                 autocomplete="off"
                                 required
-                                placeholder="ITCS489"
+                                placeholder=""
                             >
                         </div>
                     </div>
@@ -66,7 +75,7 @@
                                 autocomplete="off"
                                 required
                                 
-                                placeholder="Software Engineering"
+                                placeholder=""
                             >
                         </div>
                     </div>
@@ -84,7 +93,7 @@
                                 name="creditHours"
                                 autocomplete="off"
                                 required
-                                placeholder="3"
+                                placeholder=""
                             >
                         </div>
                     </div>
@@ -101,7 +110,7 @@
                                 maxlength="100"
                                 autocomplete="off"
                                 required
-                                placeholder="ITCS285, ITCS389"
+                                placeholder="ITCSXXX,ITCSYYY"
                             >
                         </div>
                     </div>

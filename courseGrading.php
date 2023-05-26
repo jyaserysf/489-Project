@@ -1,7 +1,8 @@
+
 <?php
 session_start();
 if (!isset($_SESSION['activeUser'])){
-    die ("Please login first <a href='Login.php'>Login</a>");
+    header('Location: login.php');
 }
 try{
     
@@ -80,6 +81,7 @@ console.log(Sections);
 
 </script>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -95,7 +97,7 @@ console.log(Sections);
 <body>
     <div class="wrapper">
         <div class="sidebar-wrapper">
-            <?php include 'sidenav/instr-sidenav.html'; ?>
+            <?php include 'sidenav/instr-sidenav.php'; ?>
         </div>
         <div class="pagecontent-wrapper" id="main">
             <div class="title" >

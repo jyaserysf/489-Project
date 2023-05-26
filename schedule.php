@@ -6,7 +6,7 @@
 // should add parameters to get specific user data or create another function then call it in this one
 function schedule(){ 
     $days=['1'=>'U', '2'=>'M', '3'=>'T','4'=>'W','5'=>'H'];
-    echo '<table>'; 
+    echo "<table id='schedule'>"; 
     for($i=0; $i<10; $i++){
      echo '<tr>';
         foreach($days as $header){

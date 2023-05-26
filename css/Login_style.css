@@ -262,6 +262,7 @@ label {
 
 .backToLogin-btn:hover {
     background-color: #A0BCC2;
+    color: #fff;
 }
 
 form.forgotPassword-form {

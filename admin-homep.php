@@ -1,10 +1,17 @@
-<?php 
-
+<?php
     session_start();
 
-    if(!isset($_SESSION['activeUser'])){
-        header('Location: login.php');
-        exit();
+
+    if(isset($_SESSION['activeUser'])) {
+        if($_SESSION['activeUser']['role'] == "instructor")
+            header('location: instructor-homep.php');
+        elseif($_SESSION['activeUser']['role'] == "student")
+            header('location: student-homep.php');
+        elseif($_SESSION['activeUser']['role'] == "HOD")
+            header('location: HOD-homep.php');
+    }
+    else {
+        header('location: login.php');
     }
     try{
         require('Database/connection.php');
@@ -19,7 +26,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Admin Home Page</title>
     
     <link rel="stylesheet" href="generalstyling.css">
     
@@ -27,13 +34,12 @@
 <body>
     <div class="wrapper">
         <div class="sidebar-wrapper">
-            <?php include 'sidenav/student-sidenav.php'; ?>
+            <?php include 'sidenav/admin-sidenav.html'; ?>
         </div>
         <div class="pagecontent-wrapper" id="main">
             <div class="title" >
-                <h1>Requests</h1> 
+                <h1>Welcome Admin Name</h1> 
             </div>
-            
         </div>
     </div>
        <!-- Javascript file -->

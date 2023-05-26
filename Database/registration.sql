@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 20, 2023 at 05:46 PM
+-- Generation Time: May 21, 2023 at 07:03 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -89,7 +89,9 @@ INSERT INTO `courses` (`ID`, `courseCode`, `courseName`, `creditHours`, `preRequ
 (27, 'ITSE302', 'Software Design and Architecture', 3, 'ITSE220', 1),
 (28, 'ITSE305', 'Software Engineering Project', 3, 'ITSE301,ITSE302', 1),
 (29, 'ITSE403', 'Software Testing and Quality Assurance', 3, 'ITSE305', 1),
-(30, 'ITSE498', 'Software Engineering Senior Project', 3, 'ITCS396,ITSE305', 1);
+(30, 'ITSE498', 'Software Engineering Senior Project', 3, 'ITCS396,ITSE305', 1),
+(31, 'ITCS478', 'Programming Concepts', 4, 'ITCS317', 1),
+(32, 'ITCS409', 'Intro To Cybersecurity', 3, 'ITCS214,ITCS411', 1);
 
 -- --------------------------------------------------------
 
@@ -116,9 +118,8 @@ CREATE TABLE `course_sections` (
 --
 
 INSERT INTO `course_sections` (`ID`, `semesterID`, `courseID`, `sectionNumber`, `startTime`, `endTime`, `days`, `room`, `availableSeats`, `finalDate`, `instructorID`) VALUES
-(8, 1, 2, 1, '08:00:00', '08:50:00', 'UTH', '1046', 25, '2024-01-01', 9),
+(8, 1, 2, 1, '08:00:00', '08:50:00', 'UT', '1046', 25, '2024-01-01', 9),
 (9, 1, 2, 2, '08:00:00', '09:15:00', 'MW', '1046', 25, '2024-01-01', 9),
-(10, 1, 6, 1, '09:00:00', '09:50:00', 'UTH', '1046', 25, '2023-12-31', 1),
 (11, 1, 7, 1, '08:00:00', '08:50:00', 'UTH', '1047', 25, '2023-12-31', 1),
 (12, 1, 8, 1, '08:00:00', '09:15:00', 'MW', '2046', 25, '2024-01-03', 12),
 (13, 1, 8, 2, '09:30:00', '10:45:00', 'MW', '2047', 25, '2024-01-03', 12),
@@ -128,7 +129,12 @@ INSERT INTO `course_sections` (`ID`, `semesterID`, `courseID`, `sectionNumber`, 
 (17, 1, 14, 1, '09:00:00', '09:50:00', 'UTH', '049', 25, '2024-01-02', 10),
 (18, 9, 6, 1, '09:00:00', '09:50:00', 'UTH', '2047', 25, '2022-05-31', 1),
 (19, 8, 7, 1, '09:30:00', '10:45:00', 'MW', '049', 25, '2023-01-02', 16),
-(20, 7, 8, 1, '12:00:00', '12:50:00', 'UTH', '1049', 25, '2023-06-02', 15);
+(20, 7, 8, 1, '12:00:00', '12:50:00', 'UTH', '1049', 25, '2023-06-02', 15),
+(21, 7, 13, 1, '08:00:00', '08:50:00', 'UTH', '060', 29, '2024-01-01', 10),
+(22, 9, 19, 1, '08:00:00', '09:15:00', 'MW', '049', 31, '2021-05-31', 15),
+(23, 9, 19, 2, '09:30:00', '10:45:00', 'MW', '049', 28, '2021-05-31', 11),
+(24, 1, 18, 1, '08:00:00', '08:50:00', 'UTH', '048', 32, '2024-01-13', 14),
+(25, 1, 18, 2, '09:00:00', '09:50:00', 'UTH', '1043', 35, '2024-01-13', 16);
 
 -- --------------------------------------------------------
 
@@ -172,13 +178,17 @@ CREATE TABLE `enrollments` (
 --
 
 INSERT INTO `enrollments` (`ID`, `studentID`, `sectionID`, `grade`, `absence`, `excusedAbsence`, `paid`, `courseEvaluation`) VALUES
-(5, 2, 10, NULL, 0, 0, 'No', NULL),
 (6, 1, 15, NULL, 0, 0, 'No', NULL),
 (7, 1, 16, NULL, 0, 0, 'No', NULL),
 (8, 1, 17, NULL, 0, 0, 'No', NULL),
 (9, 1, 18, 'A', 3, 1, 'Yes', NULL),
 (10, 1, 19, 'A-', 0, 0, 'Yes', 9),
-(11, 1, 20, 'A', 6, 5, 'Yes', NULL);
+(11, 1, 20, 'A', 6, 5, 'Yes', NULL),
+(12, 3, 20, NULL, 0, 0, 'Yes', NULL),
+(13, 4, 21, NULL, 1, 0, 'Yes', NULL),
+(14, 2, 20, NULL, 0, 0, 'Yes', NULL),
+(15, 3, 21, NULL, 0, 0, 'Yes', NULL),
+(16, 4, 20, NULL, 0, 0, 'Yes', NULL);
 
 -- --------------------------------------------------------
 
@@ -312,7 +322,7 @@ CREATE TABLE `semester` (
 --
 
 INSERT INTO `semester` (`ID`, `year`, `number`, `beginDate`, `endDate`, `modifyStart`, `modifyEnd`, `dropEnd`) VALUES
-(1, '2023', '1', '2023-09-17', '2024-01-10', '2023-05-23', '2023-08-31', '2023-11-22'),
+(1, '2023', '1', '2023-09-17', '2024-01-10', '2023-05-20', '2023-08-31', '2023-11-22'),
 (7, '2022', '2', '2023-01-25', '2023-06-12', '2023-01-15', '2023-01-30', '2023-03-28'),
 (8, '2022', '1', '2022-09-18', '2023-01-06', '2022-09-01', '2022-09-20', '2022-11-28'),
 (9, '2021', '2', '2022-01-28', '2022-06-05', '2022-01-05', '2022-01-27', '2022-05-05');
@@ -447,13 +457,13 @@ ALTER TABLE `admins`
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `course_sections`
 --
 ALTER TABLE `course_sections`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `departments`
@@ -465,7 +475,7 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `enrollments`
 --
 ALTER TABLE `enrollments`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `instructors`

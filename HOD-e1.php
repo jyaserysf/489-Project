@@ -1,3 +1,13 @@
+<?php 
+session_start();
+
+if(!isset($_SESSION['activeUser'])){
+    header('Location: login.php');
+    exit();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +22,7 @@
 <body>
     <div class="wrapper">
         <div class="sidebar-wrapper">
-            <?php include 'sidenav/student-sidenav.html'; ?>
+            <?php include 'sidenav/instr-sidenav.php'; ?>
         </div>
         <div class="pagecontent-wrapper" id="main">
             <div class="title" >

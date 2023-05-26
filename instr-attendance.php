@@ -1,3 +1,13 @@
+
+<?php 
+session_start();
+
+if(!isset($_SESSION['activeUser'])){
+    header('Location: login.php');
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,7 +26,7 @@
 
 <div class="wrapper">
     <div class="sidebar-wrapper">
-            <?php include 'sidenav/instr-sidenav.html'; ?>
+            <?php include 'sidenav/instr-sidenav.php'; ?>
         </div>
 
     <!-- Page content -->

@@ -1,4 +1,12 @@
-<?php 
+<?php
+
+session_start();
+
+if(!isset($_SESSION['activeUser'])){
+    header('Location: login.php');
+    exit();
+}
+
     try{
         require('Database/connection.php');
         // course options sql statement
@@ -28,7 +36,7 @@
 <body>
     <div class="wrapper">
         <div class="sidebar-wrapper">
-            <?php include 'sidenav/student-sidenav.html'; ?>
+            <?php include 'sidenav/instr-sidenav.php'; ?>
         </div>
         <div class="pagecontent-wrapper" id="main">
             <div class="title" >
@@ -49,14 +57,14 @@
                         <div class="col-75">
                         <?php        
                             // <select>
-                            echo "<select class='input-field' name='courseID' >";
+                            echo "<select class='input-field' name='courseID'>";
                             echo "<option disabled selected>Select Course</option>";
                             
-                            // loop through and display SemesterYear(s) and SemesterNumbers
+                            // loop through and display courses Code and name
                             foreach($rs as $option) {
-                                // Get the ID of the selected semester
+                                // Get the ID of the selected course
                             $courseID = $option['ID'];
-                            echo "<option value='$courseID'> ". $option['courseCode'] . "  " . $option['courseName'] . "</option>";
+                            echo "<option value='$courseID'> ". $option['courseCode'] . " | " . $option['courseName'] . "</option>";
                             }
 
                             echo "</select>";
@@ -114,7 +122,7 @@
                                 max="10"
                                 autocomplete="off"
                                 required
-                                placeholder="2"
+                                placeholder=""
                             />
                         </div>
                     </div>

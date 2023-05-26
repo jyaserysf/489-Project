@@ -1,5 +1,11 @@
 <?php
     session_start();
+
+    if(!isset($_SESSION['activeUser'])){
+        header('Location: login.php');
+        exit();
+    }
+
     if(isset($_SESSION['activeUser'])) {
         if($_SESSION['activeUser'] == "instructor")
             header('location: instructor-homep.php');
@@ -31,7 +37,7 @@
 <body>
     <div class="wrapper">
         <div class="sidebar-wrapper">
-            <?php include 'sidenav/student-sidenav.html'; ?>
+            <?php include 'sidenav/student-sidenav.php'; ?>
         </div>
         <div class="pagecontent-wrapper" id="main">
             <div class="title" >
