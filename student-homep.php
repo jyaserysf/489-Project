@@ -22,6 +22,7 @@
     catch(PDOException $e){
         die($e->getMessage());
         }
+//print_r($_SESSION['activeUser']); echo $_SESSION['activeUser']['username'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,8 +50,29 @@
                 </div>
                 <div class="sched">
                     <?php 
+                    try{
+                        require('Database/connection.php');
+                        $db->beginTransaction();
+                        //$currentTime=date('Y-m-d');
+                        $semesterInfo="SELECT* from semester where now() BETWEEN semester.beginDate and semester.endDate";
+                        $semester =$db->query($semesterInfo);
+                        $semm=$semester->fetch();
+                        $takingSectionsthisSem=$db->prepare("SELECT enrollments.* , course_sections.*, semester.* from enrollments join course_sections on enrollments.sectionID=course_sections.ID join semester on course_sections.semesterID=semester.ID where semester.ID=? and enrollments.studentID=?");
+                        $stID=$_SESSION['activeUser']['username'];
+                        $student=$db->prepare("SELECT students.ID from students where studentID=?");
+                        $student->execute(array($stID));
+                        $stIDJ=$student->fetch();
+
+                        $takingSectionsthisSem->execute(array($semm['ID'],$stIDJ['ID']));
+                        $enrollsectSemALL=$takingSectionsthisSem->fetchAll();
+                        $db->commit();
+                        $db=null;
+                    }catch(PDOException $e){
+                        $db->rollBack();
+                        die("Error: " . $e->getMessage());
+                      }
                     require('schedule.php');
-                    schedule();?>
+                    yourSched($enrollsectSemALL);?>
                 </div>
             </div>
             

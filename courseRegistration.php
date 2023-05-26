@@ -7,7 +7,7 @@ session_start();
         exit();
     }
 
-//var_dump($_POST);
+var_dump($_POST);
 //print_r( $_SESSION['activeUser']) ;
 // page should only be accessed betweeen modifyStart and end (use js popup and date), i can use the semester id from modifyStart and end
 ?>
@@ -219,6 +219,7 @@ session_start();
                     $currentTime=date('Y-m-d');
                     $semesterInfo="SELECT* from semester where now() BETWEEN semester.modifyStart and semester.modifyEnd";
                     $semester =$db->query($semesterInfo);
+                    $semm=$semester->fetch();
 
                     $stInfo = "SELECT students.*, programs.name, programs.year, programs.departmentID, programs.PID FROM students JOIN programs ON students.studyProgram=programs.PID where students.studentID=$ID ";
                     $studentRec = $db->query($stInfo);
@@ -227,12 +228,18 @@ session_start();
                     $prevenrolled_sectionsrec="SELECT course_sections.*, enrollments.grade, enrollments.paid, enrollments.studentID, courses.courseCode from course_sections Join enrollments on course_sections.ID = enrollments.sectionID join courses on courses.ID=course_sections.courseID where enrollments.studentID=".$row['ID'];
                     $prevEnrolled_sections=$db->query($prevenrolled_sectionsrec);
                     $passedCourses=$prevEnrolled_sections->fetch();
-                    
-                    $enrolledSectionsthisSem=$db->prepare("SELECT enrollments.* , course_sections.*, semester.* from enrollments join course_sections on enrollments.sectionID=course_sections.ID join semester on course_sections.semesterID=semester.ID where semester.ID=:sID");
-                    $enrolledSectionsthisSem->bindParam(':sID', $sem['ID']);
+
+                    $sql_stEnrollID="SELECT students.ID from students where studentID=$ID";
+                                $stEnrollIDrec=$db->query($sql_stEnrollID);
+                                $stEnrollID=$stEnrollIDrec->fetch();
+
+                    $enrolledSectionsthisSem=$db->prepare("SELECT enrollments.* , course_sections.*, semester.* from enrollments join course_sections on enrollments.sectionID=course_sections.ID join semester on course_sections.semesterID=semester.ID where semester.ID=:sID and enrollments.studentID=:stID");
+                    $enrolledSectionsthisSem->bindParam(':sID', $semm['ID']);
+                    $enrolledSectionsthisSem->bindParam(':stID', $stEnrollID['ID']);
                     $enrolledSectionsthisSem->execute();
                     $enrollSectSem=$enrolledSectionsthisSem->fetch();
                     $enrollsectSemALL=$enrolledSectionsthisSem->fetchAll();
+                    
                     
 
                     // ************************* ADD COURSE ***************************
@@ -249,7 +256,7 @@ session_start();
                         //print_r($checkThisCourse);
                         $preReqs=$checkThisCourse['preRequisites'];
 
-                        $sql_lectureConflicts = "SELECT * FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE startTime< '".$selectedSecDetails[5]."' AND endTime>'" . $selectedSecDetails[4] ."' AND days='". $selectedSecDetails[1]."' AND  semesterID=".$sem['ID']."  AND course_sections.ID!=".$selectedSecDetails[7];
+                        $sql_lectureConflicts = "SELECT * FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE startTime<= '".$selectedSecDetails[5]."' AND endTime>='" . $selectedSecDetails[4] ."' AND days='". $selectedSecDetails[1]."' AND  semesterID=".$sem['ID'];
                         $lectureConflictsrec = $db->query($sql_lectureConflicts);
                         $lectureConf=$lectureConflictsrec->fetchAll();
 
@@ -265,7 +272,7 @@ session_start();
                                     
                                     if($selectedSecDetails[6]>=1){
                                         //echo "hi";
-                                        if( $finalConflictrec->rowCount() <= 0 || $lectureConflictsrec->rowCount() <= 0){
+                                        if( $finalConflictrec->rowCount() ==0 || $lectureConflictsrec->rowCount() == 0){
                                             while($passedCourses=$prevEnrolled_sections->fetch()){
                                                 $preReq= explode(',',$preReqs);
                                                 //print_r($preReq);
@@ -293,12 +300,17 @@ session_start();
                                     $enrolled=false;
                                 }
 
+                                foreach($enrollsectSemALL as $enrollS){
+                                    if($selectedSecDetails[7]==$enrollS['sectionID']){
+                                        $enrolled=false;
+                                    }
+                                }
+
                                 $ID = $_SESSION['activeUser']['username'];
 
-                                $sql_stEnrollID="SELECT students.ID from students where studentID=$ID";
-                                $stEnrollIDrec=$db->query($sql_stEnrollID);
                                 
-                                $stEnrollID=$stEnrollIDrec->fetch();
+                                
+                                
                                 //print_r($stEnrollID);
  
                                 $addSectionEnroll=$db->prepare("INSERT into enrollments ( studentID, sectionID) values ( :studentID, :sectionID) ");
@@ -308,6 +320,7 @@ session_start();
                                 
 
                                 if($enrolled && count($preReq)==$preReqC){
+                                    
                                     $addSectionEnroll->execute();
                                     $selectedSecDetails[6]=$selectedSecDetails[6]--;
                                     $updateAvailbSeats=$db->prepare("UPDATE course_sections set availableSeats=:seats where sectionID=:sectionID ");
@@ -357,21 +370,27 @@ session_start();
                    
                     // ************************* DROP COURSE ***************************
                     // this needs changing
-                    if(isset($_POST['dropcourse'])&& isset($_POST['selectC']) && isset($_POST['selectedSection'])){
-                        $selectedCour=$_POST['selectC'];
-                        $selectedSecInfo=$_POST['selectedSection'];
-                        $checkCourse=$db->prepare("SELECT * FROM courses where ID=:courID");
-                        $checkCourse->bindParam(':courID',$selectedCour);
-                        $checkCourse->execute();
-                        echo "<h5>removed seat successfully! </h5>";
+                    $deleteEnroll=$db->prepare("DELETE FROM `enrollments` WHERE `sectionID`=?");
+                    if(isset($_POST['dropcourse'])&&  isset($_POST['selectedSection'])){
                         
+                       
+                        $selectedSecInfo=$_POST['selectedSection'];
+                        $selectedSecDetails=explode(' | ',$selectedSecInfo);
+                        
+                        if(count($enrollsectSemALL)<=3){
+                            echo "you cannot have less than 3 courses ";
 
-                    }elseif(isset($_POST['dropcourse'])&& isset($_POST['selectC'])){
-                        //popup -> must select course section
-                        echo "select course section before adding";
+                        }else{
+                            $deleteEnroll->execute(array($selectedSecDetails[7]));
+                            echo "<h5>removed seat successfully! </h5>";
+                        };
+
+
+
+                        
                     }elseif(isset($_POST['dropcourse'])){
                         // popup-> must select course
-                        echo "select course before adding";
+                        echo "select course before dropiing";
                     } 
 
 

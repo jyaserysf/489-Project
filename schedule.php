@@ -13,11 +13,7 @@
           require('Database/connection.php');
           $db->beginTransaction();
           $checkCourse=$db->prepare("SELECT * FROM courses where ID=?");
-      
 
-          
-
-            
             $schedule = array();
             // Define the time slots for each day
             $timeslots = array(
@@ -35,15 +31,16 @@
 
             //$days=['1'=>'U', '2'=>'M', '3'=>'T','4'=>'W','5'=>'H'];
             $daysOfWeek = array('U', 'M', 'T', 'W', 'H');
-
+            //print_r($arr);
             foreach($arr as $enrollSect){
               $checkCourse->execute(array($enrollSect['courseID']));
+              //echo $enrollSect['courseID'];
               if($checkThisCourse=$checkCourse->fetch()){
-                
                 $courseC=$checkThisCourse['courseCode'];
+                $courseID=$checkThisCourse['ID'];
               }
-              
-              
+              $sID=$enrollSect['sectionID'];
+              //echo $courseC;
               $sectionNo=$enrollSect['sectionNumber'];
               $room=$enrollSect['room'];
               $final=$enrollSect['finalDate'];
@@ -62,12 +59,15 @@
                   
                   $endEnrollment = DateTime::createFromFormat('H:i:s', $endT);
                         //print_r($start) .'<br>';
+                        //echo $courseC;
                         if ($startEnrollment >= $start && $endEnrollment<=$end) {
                           
                           $schedule[$dayIndex][$i][] = array(
                               'courseCode' => $courseC,
                               'sectionNumber' => $sectionNo,
                               'location' => $room,
+                              'sID'=> $sID,
+                              'cID'=> $courseID
                           );
                         }
                 }
@@ -95,7 +95,8 @@
                   
                   if (isset($schedule[$dayIndex][$index])){
                     foreach ($schedule[$dayIndex][$index] as $class) {
-                      echo $class['courseCode'] . ' - section: ' . $class['sectionNumber'] . '<br> room: ' . $class['location'] . '<br>';
+                      echo '
+                      <button  class="section-button"  data-section-id='. $class['sID'].'> '.$class['courseCode'] . ' - section: ' . $class['sectionNumber'] . '<br> room: ' . $class['location'] . '</button><br>';
                     }
                   }echo '</td>';
                 }echo '</tr>';
