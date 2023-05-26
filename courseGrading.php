@@ -3,56 +3,29 @@
 session_start();
 if (!isset($_SESSION['activeUser'])){
     header('Location: login.php');
+    $_SESSION['activeUser']['ID'];
 }
 try{
     
 require('Database/connection.php');
 {
-$Courses="SELECT DISTINCT courses.courseCode FROM `course_sections` JOIN courses ON courseID=courses.ID WHERE course_sections.instructorID = ".$_SESSION['activeUser']['ID'];
-$ViewC=$db->query($Courses);
-$Sections="SELECT Distinct  sectionNumber FROM course_sections WHERE instructorID=".$_SESSION['activeUser']['ID'];
-$viewSec=$db->query($Sections);
-// $Student="SELECT * FROM `students`";
-// $viewS=$db->query($Student);
 
 
-// $Student= "SELECT enrollments.studentID, students.fullName, course_sections.sectionNumber
-// FROM enrollments
-// JOIN students ON enrollments.studentID = students.ID 
-// JOIN course_sections ON enrollments.sectionID = course_sections.ID
-// WHERE enrollments.sectionID WHERE ".
-// $viewS = $db->query($Student);
-//$studentname=""
+//  $TheCourse= $db->prepare ("SELECT * FROM course_sections WHERE semesterID=? AND instructorID=? ORDER BY courseID");
+//  $TheCourse->execute(array($semesterID, $instructorID)); 
+
+  $Courses="SELECT DISTINCT courses.courseCode, courses.courseName  FROM `course_sections` JOIN courses ON courseID=courses.ID WHERE course_sections.instructorID = ".$_SESSION['activeUser']['ID'];
+  $ViewC=$db->query($Courses);
+ $Sections="SELECT Distinct  sectionNumber FROM course_sections WHERE instructorID=".$_SESSION['activeUser']['ID'];
+  $viewSec=$db->query($Sections);
+
+$SQLfull="SELECT* FROM semester JOIN students JOIN programs on students.studyProgram = programs.PID JOIN course_sections
+ JOIN courses on courses.ID=course_sections.courseID JOIN instructors ON instructors.ID=course_sections.instructorID WHERE NOW() 
+ BETWEEN beginDate AND endDate and instructors.ID=".$_SESSION['activeUser']['ID'];
+ $SQLfull=$db->query($full);
+ $row=$SQLfull->fetch($SQLfull);
 $db=null;
 }
-
-///-------------------- IGNORE------------------------------------------------------------------
-//$query="SELECT DISTINCT courses.courseCode, semester.ID,course_sections.courseID, courses.courseName,
-//instructors.ID ,instructors.fullName, course_sections.sectionNumber FROM course_sections JOIN 
-//courses on course_sections.courseID=courses.ID JOIN instructors 
-//ON course_sections.instructorID=instructors.ID join semester on
- //course_sections.semesterID=semester.ID";
-//$CCode=$db->prepare($query);
-//$CCode->execute();
-//$CourseCode=$CCode->fetchAll();
-// to find students from sec 
-// get the sec ID from course section . and connect it 
-//course ID AND the Semster ID 
-//only the input for sec ID and from the sec id we get the student id from the enrollement table 
-// using the student id we get the student name and ID from student Table 
-// to get the student name 
-//-----------------------------------------------------------------
-//SELECT DISTINCT  students.ID ,students.fullName,
-// course_sections.ID ,courseID ,semesterID, courses.courseCode
-// FROM `course_sections` JOIN courses JOIN semester JOIN students where NOW()
-// BETWEEN semester.beginDate and semester.endDate;
-//
-//$StudentName_ID="SELECT  studentID, fullName FROM `students`;";
-//$SNID=$db->prepare($StudentName_ID);
-//$SNID->execute();
-//$SNI_D=$SNID->fetchAll();
-
-
 
 }
 catch(PDOException $EXC)
@@ -106,7 +79,7 @@ console.log(Sections);
             
             <div class="grading lg-px-5 lg-py-4">
             <div class="grading lg-px-5 lg-py-4">
-            <form method="Post">
+            <form method="POST">
                 <div class="row row-col-2 ">
                     <div class="col">
                         <div class="row ms-1">
@@ -114,7 +87,7 @@ console.log(Sections);
                           <?php  foreach($ViewC as $Course) 
                           {
                             $courseID = $Course['ID'];
-                            echo "<option value='$courseID'> ". $Course['courseCode'] . "  " . $Course['courseName'] . "</option>";
+                            echo "<option value='$courseID'> ". $Course['courseCode'] . "  " .$Course['courseName'] . "</option>";
                             }
                             echo "</select>";
                         ?>
@@ -130,7 +103,8 @@ console.log(Sections);
                                     <button type="submit" name="sb" value="sb">view students </button>
                         </div>
                     </div>
-
+                    
+                        
                     
                     <div class="col-lg-4 offset-1">
                         Semester: 
@@ -147,14 +121,22 @@ console.log(Sections);
                             <th class="">Grade</th> 
                         </tr>
                             <?php 
-                            // if(isset($_POST['sb']))
-                        //{
-                     
-                            //foreach($viewS as $display){
+                             if(isset($_POST['sb']))
+                        { 
+                            foreach($viewS as $viewStudent){
+                                echo $viewStudent[1].$viewStudent[2]."<br>";
+                            }
+                          //  $SelectedCourse=$_POST[ $Course['courseCode']];
+                          //  $SelectedSection=$_POST[$Section['sectionNumber']];
+                            //var_dump();
+                        
+                      
+
+                        //foreach($viewS as $display){
                                // echo"<li> ".$display[1]. $display[2] ."</li>";
-                            //}
+                           // }
                        
-                             // }?>
+                              }?>
                     </thead>
                     <tbody>
                        
