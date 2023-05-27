@@ -6,25 +6,34 @@ if (!isset($_SESSION['activeUser'])){
     $_SESSION['activeUser']['ID'];
 }
 try{
-    
+
 require('Database/connection.php');
 {
+    if(isset($_POST['sb'])){
+    $section_num = $_POST['Sections'];
+    //$course_Code=$_POST['Course'];
 
-
+  $semesterQuery = "SELECT DISTINCT * FROM semester 
+  JOIN students JOIN programs 
+  ON students.studyProgram = programs.PID
+   JOIN course_sections
+   ON semester.ID = course_sections.semesterID JOIN courses ON course_sections.courseID = 
+  courses.ID JOIN instructors ON course_sections.instructorID = instructors.ID WHERE 
+  instructors.ID = " . $_SESSION['activeUser']['ID']." AND course_sections.sectionNumber = ". $section_num ;//." AND courses.courseCode = ". $course_Code;
+$semesterResult = $db->query($semesterQuery);
+    }
 //  $TheCourse= $db->prepare ("SELECT * FROM course_sections WHERE semesterID=? AND instructorID=? ORDER BY courseID");
 //  $TheCourse->execute(array($semesterID, $instructorID)); 
 
-  $Courses="SELECT DISTINCT courses.courseCode, courses.courseName  FROM `course_sections` JOIN courses ON courseID=courses.ID WHERE course_sections.instructorID = ".$_SESSION['activeUser']['ID'];
+  $Courses="SELECT DISTINCT courses.courseCode, courses.courseName  FROM `course_sections` JOIN courses ON courseID=courses.ID 
+  WHERE course_sections.instructorID = ".$_SESSION['activeUser']['ID'];
   $ViewC=$db->query($Courses);
- $Sections="SELECT Distinct  sectionNumber FROM course_sections WHERE instructorID=".$_SESSION['activeUser']['ID'];
+
+ $Sections="SELECT DISTINCT  sectionNumber FROM course_sections WHERE instructorID=".$_SESSION['activeUser']['ID'];
   $viewSec=$db->query($Sections);
 
-$SQLfull="SELECT* FROM semester JOIN students JOIN programs on students.studyProgram = programs.PID JOIN course_sections
- JOIN courses on courses.ID=course_sections.courseID JOIN instructors ON instructors.ID=course_sections.instructorID WHERE NOW() 
- BETWEEN beginDate AND endDate and instructors.ID=".$_SESSION['activeUser']['ID'];
- $SQLfull=$db->query($full);
- $row=$SQLfull->fetch($SQLfull);
-$db=null;
+
+$db=null;    
 }
 
 }
@@ -49,9 +58,6 @@ console.log(Sections);
 })
     })
 
-
-
-
 </script>
 
 
@@ -65,6 +71,7 @@ console.log(Sections);
     <title>Course Grading</title>
     <link rel="stylesheet" href="generalstyling.css">
     <link rel="stylesheet" href="courseGrading.css">
+    <link rel="stylesheet" href="css/GPAcalc.css">
     
 </head>
 <body>
@@ -83,23 +90,28 @@ console.log(Sections);
                 <div class="row row-col-2 ">
                     <div class="col">
                         <div class="row ms-1">
-                            <select class="form-select border-secondary-subtle w-75 me-1" aria-label="Default select example" id="courses">
-                          <?php  foreach($ViewC as $Course) 
-                          {
-                            $courseID = $Course['ID'];
-                            echo "<option value='$courseID'> ". $Course['courseCode'] . "  " .$Course['courseName'] . "</option>";
-                            }
-                            echo "</select>";
+                            <select class="form-select border-secondary-subtle w-75 me-1" aria-label="Default select example" id="courses"> 
+                                 <?php 
+                       // echo "<select name='Course' >";
+                         foreach($ViewC as $Course){
+                      //  $course_Code=$Course['courseCode'];
+                        $course_Code= $Course['courseID'];
+                         echo "<option value={$Course['courseCode']} > ". $Course['courseCode'] . "  " .$Course['courseName'] . "</option>";
+                        }
+                        echo "</select>";
                         ?>
+                        
                            <?php
-                            echo "<select>";
+                            echo "<select name='Sections' >";
                             foreach($viewSec as $Section) {
-                                
                             $Section_number = $Section['courseID'];
-                            echo "<option value='$Section'> ". $Section['sectionNumber'] . "  " . "</option>";
+                            echo "<option value= {$Section['sectionNumber']}> ". $Section['sectionNumber'] . "  " . "</option>";
                             }
-                            echo "</select>";
+                            echo "</select>"; 
+                          
                             ?>
+                           
+
                                     <button type="submit" name="sb" value="sb">view students </button>
                         </div>
                     </div>
@@ -116,49 +128,74 @@ console.log(Sections);
                 <table class="table table-borderless">
                     <thead>
                         <tr> 
-                            <th style="width: 8%"> ID </th> 
-                            <th style="width: 15%"> Name </th>  
-                            <th class="">Grade</th> 
+                            <th> Student ID </th> 
+                            <th > student Name </th>  
+                            <th class=""> Student Grade</th> 
                         </tr>
-                            <?php 
-                             if(isset($_POST['sb']))
-                        { 
-                            foreach($viewS as $viewStudent){
-                                echo $viewStudent[1].$viewStudent[2]."<br>";
-                            }
-                          //  $SelectedCourse=$_POST[ $Course['courseCode']];
-                          //  $SelectedSection=$_POST[$Section['sectionNumber']];
-                            //var_dump();
-                        
-                      
-
-                        //foreach($viewS as $display){
-                               // echo"<li> ".$display[1]. $display[2] ."</li>";
-                           // }
-                       
-                              }?>
                     </thead>
                     <tbody>
-                       
-                                </td>  
-                            </tr> 
-                            <br>
+                    <tr>                 
+                        
+                <form method="POST" id="btn">
+                             <?php if(isset($_POST['sb']))
+                                {  require 'reversegardesfunc.php'; 
+                                    //var_dump($semesterResult);
+                                 foreach($semesterResult as $StudentsR)
+                                 {    $SID=$StudentsR[8];
+                                    //echo $StudentsR[8];
+                                 ?>
+                            
+                                 <td> <?php echo $StudentsR[9] ?> </td>
+                                   <td><?php echo $StudentsR[10] ?> </td>
+                                   <td>
+                                    <!-- sid=>grade -->
+                                   <select name="grade[<?php echo $SID?>]">
+                                 <?php  
+                                   selectGradeM();
+                                 echo" </tr>"; 
+                                }?> 
+                                 </select>
+                                  </td>
+                                   </table>
+                                    </tbody>  
+
+
                     
-                    </tbody>
-                </table>
-                <form method="POST">
+                    <button type="submit" name="Save" value="save" id="save" >Save Section Grades</button>  
 
-
-                <button type="submit" name="Save" value="">Save Section Grades</button>
-                </form>
-
-
+                    </form>                
+                    <?php  
+                }
+                ?>      
                 <?php 
-                if (isset( $_POST['Save']))
-                {?>
+                if (isset($_POST['Save']))
+                {
+                    $grades=$_POST['grade'];
+                foreach($grades as $SID=>$grades)
+                {
+                    try{
+                    require('Database/connection.php');
+                        {
+                    $stmt=$db->prepare("UPDATE `enrollments` SET `grade`=?  WHERE studentID=? ");
+                    $stmt->execute(array($grades,$SID));
+                    $db=null;
+                  
+                         }
+                        }
 
-                    <script>swal("student Grades !", "student Grades has been updated!", "success");</script>
+        
+             catch(PDOException $EXC)
+             {
+                   die('ERROR:'.$EXC->getMessage());
+            }
 
+                    //var_dump($_POST);
+         }   
+
+         ?>
+
+         <script>swal("student Grades !", "student Grades has been updated!", "success");</script>
+    
 
 
                <?php }?>
@@ -167,5 +204,26 @@ console.log(Sections);
     </div>
 </div>
 
+
 <!-- Javascript file -->
 <script src="js/sidenav.js"></script>
+<style> 
+/* #btn
+{
+display: flex;
+justify-content: center;
+padding-right: 25%;
+} */
+#save
+{
+    margin-left: auto;
+    margin-right: 55%;
+ display: flex;
+justify-content: center;
+
+}
+table
+{
+    justify-content: center;
+}
+</style>
