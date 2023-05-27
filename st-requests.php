@@ -88,7 +88,7 @@
                         $ID = $_SESSION['activeUser']['ID'];
                         require('Database/connection.php');
                         $stuInfoSQL = $db->prepare("SELECT * FROM students WHERE ID=?");
-                        $stuInfoSQL->execute(array($ID)); 
+                        $stuInfoSQL->execute(array($ID));
                         $db=null;
                     }
                     catch(PDOException $e) {
@@ -128,6 +128,27 @@
 
                         <div class="row">
                             <div class="col-25">
+                                <p>Study Program</p>
+                            </div>
+                            <div class="col-75">
+                            <?php
+                                try {
+                                    require('Database/connection.php');
+                                    $programSQl = $db->prepare("SELECT * FROM programs WHERE PID=?");
+                                    $programSQl->execute(array($stuInfo['studyProgram']));
+                                    $db=null; 
+                                }
+                                catch(PDOException $e) {
+                                    die($e->getMessage());
+                                }
+                                $program = $programSQl->fetch();        
+                                echo $program['name'];
+                            ?>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-25">
                                 <p>Credit Hours Passed</p>
                             </div>
                             <div class="col-75">
@@ -139,22 +160,22 @@
 
                         <div class="row">
                             <div class="col-25">
-                                <p>Cumulative GPA</p>
+                                <p>Semester GPA</p>
                             </div>
                             <div class="col-75">
                             <?php        
-                            echo $stuInfo['CGPA'];
+                            echo $stuInfo['GPA'];
                             ?>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-25">
-                                <p>Semester GPA</p>
+                                <p>Cumulative GPA</p>
                             </div>
                             <div class="col-75">
                             <?php        
-                            echo $stuInfo['GPA'];
+                            echo $stuInfo['CGPA'];
                             ?>
                             </div>
                         </div>
@@ -205,18 +226,33 @@
                                     ksort($sortedTranscript);
                                     foreach($sortedTranscript as $date=>$courseSemester) {
                                         echo "<div class='row'>";
-                                        echo "<table border='1' width='50%' align='center'>";
+                                        echo "<table border='1' width='70%' align='center'>";
                                         $count = 0;
                                         foreach($courseSemester as $course=>$semester) {
                                             if($count == 0) {
                                                 echo "<tr>";
-                                                echo "<th colspan='3'>";
+                                                echo "<th colspan='4'>";
                                                 $semesterInfoSQL = $db->prepare("SELECT * FROM semester WHERE ID=?");
                                                 $semesterInfoSQL->execute(array($semester));
                                                 $semesterInfo = $semesterInfoSQL->fetch();
                                                 echo $semesterInfo['year'] . "  -  Semester  " . $semesterInfo['number'];
                                                 echo "</td>";
                                                 echo "</th>";
+                                                echo "</tr>";
+                                                echo "<tr>";
+                                                echo "<th>";
+                                                echo "Course Code";
+                                                echo "</th>";
+                                                echo "<th>";
+                                                echo "Course Name";
+                                                echo "</th>";
+                                                echo "<th>";
+                                                echo "Credit Hours";
+                                                echo "</th>";
+                                                echo "<th>";
+                                                echo "Course Grade";
+                                                echo "</th>";
+                                                echo "</tr>";
                                                 $count++;
                                             }
                                             echo "<tr>";
@@ -235,10 +271,23 @@
                                             $courseCredits = $courseInfo['creditHours'];
                                             echo $courseCredits;
                                             echo "</td>";
+                                            echo "<td>";
+                                            $sectionSQL = $db->prepare("SELECT * FROM course_sections WHERE semesterID=? AND courseID=?");
+                                            $sectionSQL->execute(array($semester, $course));
+                                            $secInfo = $sectionSQL->fetch();
+                                            $enrollSQL = $db->prepare("SELECT * FROM enrollments WHERE studentID=? AND sectionID=?");
+                                            $enrollSQL->execute(array($_SESSION['activeUser']['ID'], $secInfo['ID']));
+                                            $enrollInfo = $enrollSQL->fetch();
+                                            if($enrollInfo['grade'] != NULL)
+                                                echo $enrollInfo['grade'];
+                                            else
+                                                echo "Current Semester";
+                                            echo "</td>";
                                             echo "</tr>";
                                         }
                                         echo "</table>";
                                         echo "</div>";
+                                        echo "<br><br>";
                                     }
                                 }
                                 else {
