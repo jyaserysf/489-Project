@@ -7,7 +7,7 @@ session_start();
         exit();
     }
 
-var_dump($_POST);
+//var_dump($_POST);
 //print_r( $_SESSION['activeUser']) ;
 // page should only be accessed betweeen modifyStart and end (use js popup and date), i can use the semester id from modifyStart and end
 ?>
@@ -244,11 +244,11 @@ var_dump($_POST);
                     $enrolledSectionsthisSem->bindParam(':sID', $semm['ID']);
                     $enrolledSectionsthisSem->bindParam(':stID', $stID);
                     $enrolledSectionsthisSem->execute();
-                    $enrollSectSem=$enrolledSectionsthisSem->fetch();
-                    $enrollsectSemALL=$enrolledSectionsthisSem->fetchAll();
-                    $checkCourse=$db->prepare("SELECT * FROM courses where ID=:courID");
                     
-
+                    $enrollsectSemALL=$enrolledSectionsthisSem->fetchAll(PDO::FETCH_ASSOC);
+                    $checkCourse=$db->prepare("SELECT * FROM courses where ID=:courID");
+                    //print_r($enrollsectSemALL);
+                    
                     // ************************* ADD COURSE ***************************
 
                      if(isset($_POST['addcourse'])&& isset($_POST['selectC']) && isset($_POST['selectedSection'])){

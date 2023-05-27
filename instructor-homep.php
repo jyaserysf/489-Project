@@ -34,7 +34,7 @@ if(!isset($_SESSION['activeUser'])){
                 <div class="sched">
                     <?php 
                     require('schedule.php');
-                    schedule();?>
+                    yourSched();?>
                 </div>
             </div>
             
