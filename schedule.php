@@ -132,7 +132,7 @@
                   if (isset($schedule[$dayIndex][$index])){
                     foreach ($schedule[$dayIndex][$index] as $class) {
                       echo '
-                      <button  class="section-button"  data-section-id='. $class['sID'].'> <h3>'.$class['courseCode'] . '</h2> SECTION ' . $class['sectionNumber'] . '<br> ROOM ' . $class['location'] . '</button><br>';
+                      <button  class="section-button"  data-section-id='. $class['sID'].'> <h3>'.$class['courseCode'] . '</h2> SEC ' . $class['sectionNumber'] . '<br> ROOM ' . $class['location'] . '</button><br>';
                     }
                   }echo '</td>';
                 }echo '</tr>';

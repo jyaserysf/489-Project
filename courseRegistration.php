@@ -17,6 +17,7 @@ session_start();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <title>Course Registration</title><link rel="stylesheet" href="css/courseReg.css">
     <script src="https://kit.fontawesome.com/8f65530edf.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="generalstyling.css">
@@ -325,9 +326,11 @@ session_start();
                                 unset($_POST);
 
                     }elseif(isset($_POST['addcourse'])&& isset($_POST['selectC'])){
-                        //popup -> must select course section
-                        echo "select course section before adding";
-                        unset($_POST);
+                        //popup -> must select course section?>
+
+                    <script>swal("select a section!", "you didint select any section !", "error");</script>
+
+                    <?php    echo "select course section before adding";
                     }elseif(isset($_POST['addcourse'])){
                         // popup-> must select course
                         echo "select course section before adding";
