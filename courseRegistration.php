@@ -236,7 +236,7 @@ session_start();
                     $checkCourse=$db->prepare("SELECT * FROM courses where ID=:courID");
                     //print_r($enrollsectSemALL);
 
-                    $lectureConflictsrec=$db->prepare("SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE startTime<= '?' AND endTime>='?' AND days='?' AND  semesterID=? and enrollments.studentID=?");
+                    $lectureConflictsrec=$db->prepare("SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE startTime<='?' AND endTime>='?' AND days='?' AND  semesterID=? and enrollments.studentID=?");
                     $finalConflictrec=$db->prepare(" SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE finalDate=? AND  semesterID=? AND enrollments.studentID=?");
                     $updateAvailbSeats=$db->prepare("UPDATE course_sections set availableSeats=? where sectionID=? ");
                     // ************************* ADD COURSE ***************************
@@ -254,11 +254,11 @@ session_start();
                         $preReqs=$checkThisCourse['preRequisites'];
 
                         
-                        $lectureConflictsrec-> execute(array($selectedSecDetails[5], $selectedSecDetails[4],$selectedSecDetails[1], $semm['ID'], $stEnrollID['ID']));
+                        $lectureConflictsrec-> execute(array($selectedSecDetails[5], $selectedSecDetails[4], $selectedSecDetails[1], $semm['ID'], $stEnrollID['ID']));
                         $lectureConf=$lectureConflictsrec->fetch()['num'];
 
                         
-                        $finalConflictrec->execute(array($selectedSecDetails[8],$semm['ID'],$stEnrollID['ID']));
+                        $finalConflictrec->execute(array($selectedSecDetails[8], $semm['ID'], $stEnrollID['ID']));
                         $finalConf=$finalConflictrec->fetch()['num'];
                         
                         $enrolled=true;
@@ -304,18 +304,18 @@ session_start();
                                 $addSectionEnroll->bindParam(':studentID', $stID);
                                 $addSectionEnroll->bindParam(':sectionID', $selectedSecDetails[7]);
                                 
-                                $updateAvailbSeats->bindParam(':sectionID',$selectedSecDetails[7]);
+                                
 
                                 if($enrolled && count($preReq)==$preReqC){
                                     
                                     $addSectionEnroll->execute();
-                                    $selectedSecDetails[6]=$selectedSecDetails[6]--;
+                                    $selectedSecDetails[6]=$selectedSecDetails[6]-1;
                                     
                                     
                                     $updateAvailbSeats->execute(array($selectedSecDetails[6],$selectedSecDetails[7]));
                                     echo "<h5>added seat successfully! </h5>
                                     ";
-                                    unset($_POST);
+                                    
                                 }
                                 else{
                                     echo "<h5>course has not been added </h5>
