@@ -367,7 +367,7 @@ var_dump($_POST);
                                     $selectedSecInfo=$_POST['selectedSection'];
                                     $selectedSecDetails=explode(' | ',$selectedSecInfo);
 
-                                echo" <div class='container' id='popup2'> 
+                                echo" 
                                 <form method='post'> 
                                 <div> <label>Section: </label>
                                 
@@ -393,7 +393,9 @@ var_dump($_POST);
                                 }  
                                 echo"</select>
                                 </div>
-                                <div><button id='close-popup'>Cancel</button> <div id='swap'><button type='submit' name='swapSections'>Swap</button></div>
+                                <div>
+                                <button id='close-popup'>Cancel</button> 
+                                <button type='submit' name='swapSections'>Swap</button>
                                 </div>
                             </form>
                             </div>";
