@@ -161,7 +161,7 @@
                             >
                         </div>
                     </div>
-
+                    
                     <div class="row" id="submitDiv">
                         <input class="submitBtn" type="submit" value="Update Profile" name="updateProfileSubmit" />
                     </div>
