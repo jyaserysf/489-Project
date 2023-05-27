@@ -1,19 +1,74 @@
 <?php 
 
-session_start();
+    session_start();
 
-if(!isset($_SESSION['activeUser'])){
-    header('Location: login.php');
-    exit();
-}
-
-
-    try{
-        require('Database/connection.php');
+    if(!isset($_SESSION['activeUser'])){
+        header('Location: login.php');
+        exit();
     }
-    catch(PDOException $e){
-        die($e->getMessage());
+
+    if (isset($_POST['createCourseSubmit'])) {
+        try {
+            require('Database/connection.php');
+            $depSQL = $db->prepare("SELECT * FROM departments WHERE departmentHead=?");
+            $depSQL->execute(array($_SESSION['activeUser']['ID']));
+            $db=null;
+        }
+        catch(PDOException $e) {
+            die($e->getMessage());
+        }
+        $courseCode = $_POST['courseCode'];
+        $courseName = $_POST['courseName'];
+        $creditHours = $_POST['creditHours'];
+        $preRequisites = $_POST['preRequisites']; 
+        //$departmentName = $_POST['departmentName'];
+        
+        $dep = $depSQL->fetch();
+        $departmentName = $dep['name'];
+
+        // Regular Expressions to validate
+        $courseCodePattern = "/^[A-Z]{3,5}[0-9]{1,3}$/";
+        $courseNamePattern = "/^[A-Z]{1}[a-z]+(\s{1}[A-Z]{1}[a-z]+)*[1-9]?$/";
+        $creditHoursPattern = "/^[2-4]{1}$/";
+        $preRequisitesPattern = "/^[A-Z]{3,5}[0-9]{1,3}(,[A-Z]{3,5}[0-9]{1,3})*$/";
+
+        if(!preg_match($courseCodePattern, $courseCode))
+            die ("Invalid Course ID");
+        if(!preg_match($courseNamePattern, $courseName))
+            die ("Invalid Course Name");
+        if(!preg_match($creditHoursPattern, $creditHours))
+            die ("Invalid Credit Hours");
+        if($preRequisites != "" && !preg_match($preRequisitesPattern, $preRequisites))
+            die ("Invalid PreRequisites");
+
+        try {
+            // Begin transaction
+            require('Database/connection.php');
+            $db->beginTransaction();
+
+            // Insert into courses
+            $stmt = $db->prepare("INSERT INTO courses (courseCode, courseName, creditHours, preRequisites, courseDepartment) 
+            VALUES (:courseCode, :courseName, :creditHours, :preRequisites, :courseDepartment)");
+            $stmt->bindParam(':courseCode', $courseCode);
+            $stmt->bindParam(':courseName', $courseName);
+            $stmt->bindParam(':creditHours', $creditHours);
+            $stmt->bindParam(':preRequisites', $preRequisites);
+            $stmt->bindParam(':courseDepartment', $dep['ID']);
+            $stmt->execute();
+
+        // commit transaction
+        $db->commit();
+
+        // close the connection
+        $db = null;
+        header('location: HOD-manageCourses.php');
+        die();
+        } 
+        catch (PDOException $e) {
+            die("Error: " . $e->getMessage());
+        }
     }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -109,13 +164,12 @@ if(!isset($_SESSION['activeUser'])){
                                 name="preRequisites"
                                 maxlength="100"
                                 autocomplete="off"
-                                required
                                 placeholder="ITCSXXX,ITCSYYY"
                             >
                         </div>
                     </div>
                     
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-25">
                             <label for="Course Department">Course Department</label>
                         </div>
@@ -123,25 +177,25 @@ if(!isset($_SESSION['activeUser'])){
                             
                             <?php
                             // sql statement
-                            $sql = "SELECT ID, name FROM departments ORDER BY college";
-                            $rs = $db->query($sql);
+                            // $sql = "SELECT ID, name FROM departments ORDER BY college";
+                            // $rs = $db->query($sql);
                             
-                            // <select>
-                            echo "<select name='departmentName' class='input-field'>";
-                            echo "<option disabled selected>Select Department</option>";
+                            // // <select>
+                            // echo "<select name='departmentName' class='input-field'>";
+                            // echo "<option disabled selected>Select Department</option>";
                            
-                            // loop through and display DepartmentName(s)
-                            foreach($rs as $option) {
-                            // Get the ID of the selected department
-                            $departmentID = $option['ID'];
-                            echo "<option value='$departmentID'>" . $option['name'] . " Department </option>";
-                            }
+                            // // loop through and display DepartmentName(s)
+                            // foreach($rs as $option) {
+                            // // Get the ID of the selected department
+                            // $departmentID = $option['ID'];
+                            // echo "<option value='$departmentID'>" . $option['name'] . " Department </option>";
+                            // }
                             
-                            echo "</select>";
+                            // echo "</select>";
                             ?>
 
                         </div>
-                    </div>
+                    </div> -->
                     
                     <div class="row" id="submitDiv">
                         <input class="submitBtn" type="submit" value="Create Course" name="createCourseSubmit" />
@@ -149,57 +203,6 @@ if(!isset($_SESSION['activeUser'])){
 
                 </form>
             </div>
-
-            <?php
-            if (isset($_POST['createCourseSubmit'])) {
-
-            $courseCode = $_POST['courseCode'];
-            $courseName = $_POST['courseName'];
-            $creditHours = $_POST['creditHours'];
-            $preRequisites = $_POST['preRequisites']; 
-            $departmentName = $_POST['departmentName'];
-            
-            // Regular Expressions to validate
-            $courseCodePattern = "/^[A-Z]{3,5}[0-9]{1,3}$/";
-            $courseNamePattern = "/^[A-Z]{1}[a-z]+(\s{1}[A-Z]{1}[a-z]+)*[1-9]?$/";
-            $creditHoursPattern = "/^[2-4]{1}$/";
-            $preRequisitesPattern = "/^[A-Z]{3,5}[0-9]{1,3}(,[A-Z]{3,5}[0-9]{1,3})*$/";
-
-            if(!preg_match($courseCodePattern, $courseCode))
-                die ("Invalid Course ID");
-            if(!preg_match($courseNamePattern, $courseName))
-                die ("Invalid Course Name");
-            if(!preg_match($creditHoursPattern, $creditHours))
-                die ("Invalid Credit Hours");
-            if(!preg_match($preRequisitesPattern, $preRequisites))
-                die ("Invalid PreRequisites");
-
-            try {
-                // Begin transaction
-                $db->beginTransaction();
-
-                // Insert into courses
-                $stmt = $db->prepare("INSERT INTO courses (courseCode, courseName, creditHours, preRequisites, courseDepartment) 
-                VALUES (:courseCode, :courseName, :creditHours, :preRequisites, :courseDepartment)");
-                $stmt->bindParam(':courseCode', $courseCode);
-                $stmt->bindParam(':courseName', $courseName);
-                $stmt->bindParam(':creditHours', $creditHours);
-                $stmt->bindParam(':preRequisites', $preRequisites);
-                $stmt->bindParam(':courseDepartment', $departmentName);
-                $stmt->execute();
-
-                // commit transaction
-                $db->commit();
-
-                // close the connection
-                $db = null;
-
-                echo "<h2>New Course added successfully!</h2>";
-            } catch (PDOException $e) {
-                die("Error: " . $e->getMessage());
-            }
-            }
-            ?>
         </div>
     </div>
     

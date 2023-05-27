@@ -33,6 +33,44 @@ if(!isset($_SESSION['activeUser'])){
     
     <link rel="stylesheet" href="generalstyling.css">
 
+    <style>
+        .row-flex {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            margin: 0 20px;
+        }
+
+        .manageBtn {
+            width: 10rem;
+            height: 4rem;
+            background-color:rgba(0, 0, 0, 0.8);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            /*finger*/
+            cursor: pointer;
+            float: right;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: 0.3s;
+            margin: 0 10px 0 10px;
+        }
+
+        .manageBtn:hover {
+        background-color: #A0BCC2;
+        }
+
+        .hidden {
+        display: none;
+        }
+
+        .content {
+            border-radius: 5px;
+            background-color: #f4f1de /* rgba(236, 232, 221, 0.7)*/;
+            padding: 20px;
+        }
+    </style>
     
 </head>
 <body>
@@ -47,7 +85,7 @@ if(!isset($_SESSION['activeUser'])){
 
             <div class="container">
                 
-                <form method='post' action='HOD-e3.php'>
+                <form method='post' action='HOD-updateCourse-2.php'>
 
                     <div class="row">
                         <td><h3>Enter Course Information</h3></td>
@@ -121,7 +159,6 @@ if(!isset($_SESSION['activeUser'])){
                                 value="<?php echo $row['preRequisites'];?>"
                                 maxlength="100"
                                 autocomplete="off"
-                                required
                             >
                         </div>
                     </div>
@@ -129,10 +166,15 @@ if(!isset($_SESSION['activeUser'])){
                     <input type="hidden" name="courseID" value="<?php echo $courseID ?>">
 
                     <div class="row" id="submitDiv">
-                        <input class="submitBtn" type="submit" value="Update Course" name="updateCourseSubmit" />
+                        <input class="manageBtn" type="submit" value="Update Course" name="updateCourseSubmit" />
                     </div>
                 </form>
                 <?php } ?>
+                <form ,method='get' action="manageCourses.php">
+                    <div class="row" id="submitDiv">
+                        <input class="manageBtn" type="submit" value="Cancel" name="Cancel" />
+                    </div>
+                </form>
             </div>
         </div>
     </div>
