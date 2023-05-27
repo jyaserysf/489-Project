@@ -19,7 +19,7 @@ require('Database/connection.php');
    JOIN course_sections
    ON semester.ID = course_sections.semesterID JOIN enrollments ON students.ID=enrollments.studentID JOIN courses ON course_sections.courseID = 
   courses.ID JOIN instructors ON course_sections.instructorID = instructors.ID WHERE 
-  instructors.ID = ". $_SESSION['activeUser']['ID']." AND course_sections.sectionNumber = ". $section_num ;//." AND courses.courseCode = ". $course_Code;
+  instructors.ID = ". $_SESSION['activeUser']['ID']." AND course_sections.sectionNumber = ". $section_num." AND NOW() BETWEEN beginDate AND endDate" ;//." AND courses.courseCode = ". $course_Code;
 $semesterResult = $db->query($semesterQuery);
     }
 //  $TheCourse= $db->prepare ("SELECT * FROM course_sections WHERE semesterID=? AND instructorID=? ORDER BY courseID");
@@ -102,7 +102,7 @@ console.log(Sections);
                          foreach($ViewC as $Course){
                       //  $course_Code=$Course['courseCode'];
                         $course_Code= $Course['courseID'];
-                         echo "<option value={$Course['courseCode']} > ". $Course['courseCode'] . "  " .$Course['courseName'] . "</option>";
+                         echo "<option value={$Course['courseCode']} id='opc'> ". $Course['courseCode'] . "  " .$Course['courseName'] . "</option>";
                         }
                         echo "</select>";
                         ?>
@@ -208,7 +208,13 @@ console.log(Sections);
 
    <!-- Javascript file -->
    <script src="js/sidenav.js"></script>
+<style>
+#update{
+margin-left: 25%;
+}
 
+
+</style>
       
 
                         
