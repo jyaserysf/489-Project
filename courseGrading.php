@@ -19,7 +19,7 @@ require('Database/connection.php');
    JOIN course_sections
    ON semester.ID = course_sections.semesterID JOIN courses ON course_sections.courseID = 
   courses.ID JOIN instructors ON course_sections.instructorID = instructors.ID WHERE 
-  instructors.ID = " . $_SESSION['activeUser']['ID']." AND course_sections.sectionNumber = ". $section_num ;//." AND courses.courseCode = ". $course_Code;
+  instructors.ID = " . $_SESSION['activeUser']['ID']." AND course_sections.sectionNumber = ". $section_num ." AND NOW() BETWEEN beginDate AND endDate";//." AND courses.courseCode = ". $course_Code;
 $semesterResult = $db->query($semesterQuery);
     }
 //  $TheCourse= $db->prepare ("SELECT * FROM course_sections WHERE semesterID=? AND instructorID=? ORDER BY courseID");
