@@ -39,10 +39,7 @@
   </head>
 </html>
 <?php
-  function addSecAuto($arr){
 
-    yourSched($arr);
-}
     function yourSched($arr){
 
       try{

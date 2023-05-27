@@ -44,7 +44,7 @@
             <a href='instructor-homep.php'>Home</a>
             </div>
             <div class='sideElement'>
-            <img id='icon' src='icons/calendar-plus.svg' alt='>
+            <img id='icon' src='icons/calendar-plus.svg' alt=''>
             <a href='courseGrading.php'>Grading</a>
             </div>
             
@@ -53,11 +53,11 @@
                 <a href='instr-attendance.php'>Attendance</a>
             </div>
         
-            
             <div class='sideElement'>
-                <img id='icon' src='icons/calendar-blank.svg'>
-                <a href='advisingList.php'>Advising List</a>
+                <img id='icon' src='icons/calculator.svg' alt=''>
+                <a href='courseList.php'>Course List</a>
             </div>
+            
             
             ";
 

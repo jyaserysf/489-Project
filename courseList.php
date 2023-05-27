@@ -37,6 +37,7 @@ $instructorID = $_SESSION['activeUser']['ID'];
                 $semesterSQL->execute();
                 if($semester = $semesterSQL->fetch())
                     $semesterID = $semester['ID'];
+                
                 $sectionsSQL = $db->prepare("SELECT * FROM course_sections WHERE semesterID=? AND instructorID=? ORDER BY courseID");
                 $sectionsSQL->execute(array($semesterID, $instructorID));
                 $count = 0;
