@@ -7,7 +7,7 @@ session_start();
         exit();
     }
 
-//var_dump($_POST);
+var_dump($_POST);
 //print_r( $_SESSION['activeUser']) ;
 // page should only be accessed betweeen modifyStart and end (use js popup and date), i can use the semester id from modifyStart and end
 ?>
@@ -352,6 +352,7 @@ session_start();
                         $selectedSecDetails=explode(' | ',$selectedSecInfo);
                         echo "
                             <div class='container' id='popup'>
+                            <form method='post'> 
                                 <div> <label>Section: </label>
                                     <select name='selectSwC'>
                                     <option selected value=".$selectedSecDetails[7]."> ".$selectedSecDetails[9]." | ".$selectedSecDetails[0]." </option>";
@@ -370,23 +371,22 @@ session_start();
                                             }
                                     } 
                                     if (!$enrolled){
-                                        echo "<option  value='".$courses['ID']."'>".$courses['courseCode']." | ".$courses['sectionNumber']."</option>  ";
+                                        echo "<option  value='".$courses['sectionID']."'>".$courses['courseCode']." | ".$courses['sectionNumber']."</option>  ";
                                     } 
                                 }  
-                                
-
                                 echo"</select>
                                 </div>
-                                <div><button id='close-popup'>Cancel</button> <div id='swap'>Swap</div>
+                                <div><button id='close-popup'>Cancel</button> <div id='swap' ><button type='submit'>Swap</button></div>
                                 </div>
-                        
+                            </form>
                             </div>";
+                            
                        
                         //echo "<h5>switched seat successfully! </h5>";
                         
-
+                        unset($_POST['selectedSection']);
                     
-                    }elseif(!isset($_POST['selectedSection'])){
+                    }elseif(!isset($_POST['selectedSection']) && isset($_POST['switchsection'])){
                         // popup-> must select course
                         echo "select course before ";
                     } 
