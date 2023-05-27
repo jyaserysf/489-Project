@@ -9,6 +9,7 @@
 
       .daysRow {
         background-color: rgb(249, 235, 200);
+        color: rgba(0, 0, 0, 0.65);
       }
 
       .timeCol {
@@ -17,10 +18,11 @@
         height: 1rem;
         font-size: 0.8rem;
         padding: 0.5rem;
+        color: rgba(0, 0, 0, 0.65);
       }
 
       .section-button {
-        color: rgba(0, 0, 0, 0.7);
+        color: rgba(0, 0, 0, 0.65);
         background: none;
         width: 100%;
         border: none;
@@ -35,6 +37,7 @@
         margin: 0;
         padding-bottom: 0.5rem ;
       }
+    
     </style>
   </head>
 </html>
@@ -117,7 +120,7 @@
       }
 
             // Generate the HTML table
-            echo '<table class="scheduleTable" width="700px">';
+            echo '<table class="scheduleTable table-responsive" width="700px">';
             echo '<tr class="daysRow"><th>Time</th><th>U</th><th>M</th><th>T</th><th>W</th><th>H</th></tr>';
 
               foreach ($timeslots as $index => $timeslot) {
