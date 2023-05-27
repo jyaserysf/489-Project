@@ -236,7 +236,6 @@
                                                 $semesterInfoSQL->execute(array($semester));
                                                 $semesterInfo = $semesterInfoSQL->fetch();
                                                 echo $semesterInfo['year'] . "  -  Semester  " . $semesterInfo['number'];
-                                                echo "</td>";
                                                 echo "</th>";
                                                 echo "</tr>";
                                                 echo "<tr>";
