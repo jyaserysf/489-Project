@@ -346,15 +346,18 @@ session_start();
 
                        
                         echo "
-                            <div class='container' id='popup'>";
-                            
+                            <div class='container' id='popup'>
+                            <h4> Select a course from the schedule below </h4>
+                            <button  name='sw' id='sW' >Swap</button>
+                            </div>";
 
                                 if(isset($_POST['selectedSection'])){ 
-                                    
+
                                     $selectedSecInfo=$_POST['selectedSection'];
                                     $selectedSecDetails=explode(' | ',$selectedSecInfo);
 
-                                echo" <form method='post'> 
+                                echo" <div class='container' id='popup2'> 
+                                <form method='post'> 
                                 <div> <label>Section: </label>
                                 
                                    <select name='selectSwC'>
@@ -379,7 +382,7 @@ session_start();
                                 }  
                                 echo"</select>
                                 </div>
-                                <div><button id='close-popup'>Cancel</button> <div id='swap'  ><button type='submit' name='swapSections'>Swap</button></div>
+                                <div><button id='close-popup'>Cancel</button> <div id='swap'><button type='submit' name='swapSections'>Swap</button></div>
                                 </div>
                             </form>
                             </div>";
@@ -518,7 +521,9 @@ session_start();
 
         // Get references to button and pop up elements
        var openButton = document.getElementById('switchS');
+       var swap =document.getElementById('sW');
         var popup = document.getElementById('popup');
+        var popup2=document.getElementById('popup2');
         var closeButton = document.getElementById('close-popup');
 
         // Add an event listener to open button to show the pop up
@@ -528,9 +533,15 @@ session_start();
         popup.style.display = 'block';
         });
 
+        swap.addEventListener('click', function() {
+        //event.preventDefault();
+        popup.style.display = 'block';
+        });
+
+
         // Add an event listener to the close button to hide the pop up
         closeButton.addEventListener('click', function() {
-        popup.style.display = 'none';
+        popup2.style.display = 'none';
         });
 
 
