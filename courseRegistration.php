@@ -7,7 +7,7 @@ session_start();
         exit();
     }
 
-//var_dump($_POST);
+var_dump($_POST);
 //print_r( $_SESSION['activeUser']) ;
 // page should only be accessed betweeen modifyStart and end (use js popup and date), i can use the semester id from modifyStart and end
 ?>
@@ -237,12 +237,12 @@ session_start();
                     $checkCourse=$db->prepare("SELECT * FROM courses where ID=:courID");
                     //print_r($enrollsectSemALL);
 
-                    $lectureConflictsrec=$db->prepare("SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE startTime<='?' AND endTime>='?' AND days='?' AND  semesterID=? and enrollments.studentID=?");
-                    $finalConflictrec=$db->prepare(" SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE finalDate=? AND  semesterID=? AND enrollments.studentID=?");
+                    $lectureConflictsrec=$db->prepare("SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE startTime<=':sTime' AND endTime>=':eTime' AND days=':days' AND  semesterID=:smID and enrollments.studentID=:stID");
+                    $finalConflictrec=$db->prepare(" SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE finalDate=:fD AND  semesterID=:sID AND enrollments.studentID=:stID");
                     $updateAvailbSeats=$db->prepare("UPDATE course_sections set availableSeats=? where sectionID=? ");
                     // ************************* ADD COURSE ***************************
 
-                     if(isset($_POST['addcourse'])&& isset($_POST['selectC']) && isset($_POST['selectedSection'])){
+                     if(isset($_POST['addcourse'])&& isset($_POST['selectC']) && isset($_POST['selectedSection']) && !empty($_POST['selectedSection'])){
                         $selectedCour=$_POST['selectC'];
                         $selectedSecInfo=$_POST['selectedSection'];
                         $selectedSecDetails=explode(' | ',$selectedSecInfo);
@@ -254,12 +254,21 @@ session_start();
                         //print_r($checkThisCourse);
                         $preReqs=$checkThisCourse['preRequisites'];
 
-                        
-                        $lectureConflictsrec-> execute(array($selectedSecDetails[5], $selectedSecDetails[4], $selectedSecDetails[1], $semm['ID'], $stEnrollID['ID']));
+
+                        $lectureConflictsrec->bindParam(':sTime',$selectedSecDetails[5]);
+                        $lectureConflictsrec->bindParam(':eTime',$selectedSecDetails[4]);
+                        $lectureConflictsrec->bindParam(':days',$selectedSecDetails[1]);
+                        $lectureConflictsrec->bindParam(':smID',$semm['ID']);
+                        $lectureConflictsrec->bindParam(':stID',$stEnrollID['ID']);
+                        $lectureConflictsrec->execute();
+                        //$lectureConflictsrec-> execute(array($selectedSecDetails[5], $selectedSecDetails[4], $selectedSecDetails[1], $semm['ID'], $stEnrollID['ID']));
                         $lectureConf=$lectureConflictsrec->fetch()['num'];
 
-                        
-                        $finalConflictrec->execute(array($selectedSecDetails[8], $semm['ID'], $stEnrollID['ID']));
+                        $finalConflictrec->bindParam(':fD',$selectedSecDetails[8]);
+                        $finalConflictrec->bindParam(':sID',$semm['ID']);
+                        $finalConflictrec->bindParam(':stID',$stEnrollID['ID']);
+                        $finalConflictrec->execute();
+                        //$finalConflictrec->execute(array($selectedSecDetails[8], $semm['ID'], $stEnrollID['ID']));
                         $finalConf=$finalConflictrec->fetch()['num'];
                         
                         $enrolled=true;
@@ -313,7 +322,7 @@ session_start();
                                     $selectedSecDetails[6]=$selectedSecDetails[6]-1;
                                     
                                     
-                                    $updateAvailbSeats->execute(array($selectedSecDetails[6],$selectedSecDetails[7]));
+                                    $updateAvailbSeats->execute(array($selectedSecDetails[6], $selectedSecDetails[7]));
                                     echo "<h5>added seat successfully! </h5>
                                     ";
                                     
@@ -326,9 +335,9 @@ session_start();
                                 unset($_POST);
 
                     }elseif(isset($_POST['addcourse'])&& isset($_POST['selectC'])){
-                        //popup -> must select course section?>
+                        //popup -> must select course section ?>
 
-                    <script>swal("select a section!", "you didint select any section !", "error");</script>
+                     <script>swal("select a section!", "you didint select any section !", "error");</script>
 
                     <?php    echo "select course section before adding";
                     }elseif(isset($_POST['addcourse'])){
@@ -345,16 +354,15 @@ session_start();
 
                     $sectionInf=$db->prepare("SELECT course_sections.*, courses.preRequisites, courses.courseCode FROM course_sections join courses on course_sections.courseID=courses.ID where course_sections.ID=?");
                 
-                    if(isset($_POST['switchsection']) ){
+                    if(isset($_POST['switchsection']) && isset($_POST['selectedSection'])){
 
                        
                         echo "
                             <div class='container' id='popup'>
-                            <h4> Select a course from the schedule below </h4>
-                            <button  name='sw' id='sW' >Swap</button>
-                            </div>";
+                            
+                            ";
 
-                                if(isset($_POST['selectedSection'])){ 
+                                
 
                                     $selectedSecInfo=$_POST['selectedSection'];
                                     $selectedSecDetails=explode(' | ',$selectedSecInfo);
@@ -389,9 +397,7 @@ session_start();
                                 </div>
                             </form>
                             </div>";
-                        }else{
-                            echo "select a section from below schedule";
-                        }
+                        
 
                             if(isset($_POST['selectSwC']) && isset($_POST['selectToSwC']) && isset($_POST['swapSections'])){
                                 $oldSID=$_POST['selectSwC'];
@@ -406,7 +412,13 @@ session_start();
                                 $newSect=$sectionInf->fetch();
                                 
                                 $preReqs=$newSect['preRequisites'];
-                                $lectureConflictsrec-> execute(array($newSect['startTime'], $newSect['endTime'],$newSect['days'], $semm['ID'], $stEnrollID['ID']));
+                                $lectureConflictsrec->bindParam(':sTime',$newSect['startTime']);
+                                $lectureConflictsrec->bindParam(':eTime',$newSect['endTime']);
+                                $lectureConflictsrec->bindParam(':days',$newSect['days']);
+                                $lectureConflictsrec->bindParam(':smID',$semm['ID']);
+                                $lectureConflictsrec->bindParam(':stID',$stEnrollID['ID']);
+                                $lectureConflictsrec->execute();
+                                //$lectureConflictsrec-> execute(array($newSect['startTime'], $newSect['endTime'],$newSect['days'], $semm['ID'], $stEnrollID['ID']));
                                 $lectureConf=$lectureConflictsrec->fetch()['num'];
                                 $finalConflictrec->execute(array($newSect['finalDate'],$semm['ID'],$stEnrollID['ID']));
                                 $finalConf=$finalConflictrec->fetch()['num'];
