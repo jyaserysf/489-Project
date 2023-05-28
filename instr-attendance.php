@@ -68,7 +68,11 @@ try {
     <title>Attendance </title>
     <link rel="stylesheet" href="generalstyling.css">
     <link rel="stylesheet" href="css/Attendance_instractor.css">
-
+    <style>
+        #update {
+            margin-left: 25%;
+        }
+    </style>
 
 </head>
 
@@ -135,9 +139,9 @@ try {
                             <tbody>
                                 <?php
                                  require('Database/connection.php');
-$sql="SELECT * FROM `enrollments` JOIN students ON students.ID = enrollments.studentID";
-$stmt=$db->prepare($sql);
-$stmt->execute();
+                        $sql="SELECT * FROM `enrollments` JOIN students ON students.ID = enrollments.studentID";
+                        $stmt=$db->prepare($sql);
+                        $stmt->execute();
 
 
                                 if (isset($_POST['sb'])) {   //echo"meoww";
@@ -175,10 +179,10 @@ $stmt->execute();
                                                   $stmt->bindParam('studentID',$SID);
                                              }
 
-                                             header('location:instr.attendance.php');
+                                             header('location:instr.attendance.php');?>
 
 
-?>
+
                 </div>
 
             </div>
@@ -191,9 +195,8 @@ $stmt->execute();
 
     <!-- Javascript file -->
     <script src="js/sidenav.js"></script>
-    <style>
-        #update {
-            margin-left: 25%;
-        }
-    </style>
-</body>
+   </body>                                    
+
+
+
+   
