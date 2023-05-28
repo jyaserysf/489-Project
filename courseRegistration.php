@@ -7,7 +7,7 @@ session_start();
         exit();
     }
 
-var_dump($_POST);
+//var_dump($_POST);
 //print_r( $_SESSION['activeUser']) ;
 // page should only be accessed betweeen modifyStart and end (use js popup and date), i can use the semester id from modifyStart and end
 ?>
@@ -70,9 +70,6 @@ var_dump($_POST);
             });
         });
 
-        
-        
-        
     </script>
     
 </head>
@@ -127,13 +124,16 @@ var_dump($_POST);
                 try{
                      if($row){
                             // need to calculate credit hours, add cgpa maybe?
-                        echo "<div class=''>Student Name: ".$row['fullName']." </div>
+                            
+                        echo "<div class='upper-container'>
+                            <div class=''>Student Name: ".$row['fullName']." </div>
                             <div class=''>Major: ".$row['name']."</div>
                             <div class=''>Credit Hours:".$row['creditsPassed']."</div>";
                             if ($sem){
                                 $currentY=$sem['year'];
                                 $nextY=$currentY + 1;
                                 echo "<div class=''>Semester: ".$currentY."/".$nextY."</div>";
+                                echo "</div>";
                             }
                         }
                         
@@ -183,8 +183,8 @@ var_dump($_POST);
                     </div>
                 <div id="course-manage">
                     <div class="container" id="c-info"> 
-                        <div class="st-info"> 
-                            <div class="st-info-lb"><label> Instructor Name:</label></div> 
+                        <div class="st-info">  
+                            <div class="st-info-lb"><label> Instructor Name: </label></div> 
                             <div class="st-info-lb"><label>Lecture Timing: </label></div>
                             <div class="st-info-lb"><label>Available Seats: </label></div>
                             <div class="st-info-lb"><label>Pre-requisite: </label></div>
@@ -192,7 +192,7 @@ var_dump($_POST);
                         </div>
                         <div class="st-info" id="conflict">
                             <div class="st-info-lb"><label>Lecture Conflict: </label></div>
-                            <div class="st-info-lb"><label>Final Conflict:</label></div>
+                            <div class="st-info-lb"><label>Final Conflict: </label></div>
                         </div>
                     </div>
                     <div class="container" id="course-toolb">
@@ -258,22 +258,12 @@ var_dump($_POST);
 
                         $lectureConflictsrec=$db->query("SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE startTime<='$selectedSecDetails[5]' AND endTime>='$selectedSecDetails[4]' AND days='$selectedSecDetails[1]' AND semesterID=".$semm['ID']." and enrollments.studentID=$stID");
                         
-                        // $lectureConflictsrec->bindParam(':sTime',$selectedSecDetails[5]);
-                        // $lectureConflictsrec->bindParam(':eTime',$selectedSecDetails[4]);
-                        // $lectureConflictsrec->bindParam(':days',$selectedSecDetails[1]);
-                        // $lectureConflictsrec->bindParam(':smID',$semm['ID']);
-                        // $lectureConflictsrec->bindParam(':stID',$stID);
-                        // $lectureConflictsrec->execute();
-                        //$lectureConflictsrec-> execute(array($selectedSecDetails[5], $selectedSecDetails[4], $selectedSecDetails[1], $semm['ID'], $stEnrollID['ID']));
-                        $lectureConf=$lectureConflictsrec->fetch()['num'];
+                        
+                        $lectureConf=$lectureConflictsrec->fetch();
 
                         $finalConflictrec=$db->query(" SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE course_sections.finalDate=$selectedSecDetails[8] AND  course_sections.semesterID=".$semm['ID']." AND enrollments.studentID=$stID");
-                        // $finalConflictrec->bindParam(':fD',$selectedSecDetails[8]);
-                        // $finalConflictrec->bindParam(':sID',$semm['ID']);
-                        // $finalConflictrec->bindParam(':stID',$stID);
-                        // $finalConflictrec->execute();
-                        //$finalConflictrec->execute(array($selectedSecDetails[8], $semm['ID'], $stEnrollID['ID']));
-                        $finalConf=$finalConflictrec->fetch()['num'];
+                    
+                        $finalConf=$finalConflictrec->fetch();
                         
                         $enrolled=true;
                         $preReqC=0; 
@@ -281,7 +271,7 @@ var_dump($_POST);
                                 
                                 if(count($enrollsectSemALL)<7){  
                                     if($selectedSecDetails[6]>=1){
-                                        if( $finalConf <1 || $lectureConf<1){
+                                        if( $finalConf['num'] <1 || $lectureConf['num']<1){
                                             while($passedCourses=$prevEnrolled_sections->fetch()){
                                                 $preReq= explode(',',$preReqs);
                                                 //print_r($preReq);
@@ -294,11 +284,15 @@ var_dump($_POST);
                                         else{
 
                                             //pop up
-
-                                            $enrolled=false;
+                                            ?>
+                                            <script>swal("Conflict error !", "You have a conflict with another section !", "error");</script>
+                                            <?php $enrolled=false;
                                         }
                                     }else{
                                         //pop up
+                                        ?>
+                                        <script>swal("Seats error !", "There are no available seats !", "error");</script>
+                                        <?php
                                         $enrolled=false;
                                     }
                                 }else{
@@ -322,8 +316,8 @@ var_dump($_POST);
                                 
                                 
 
-                                if($enrolled && count($preReq)==$preReqC){
-                                    
+                                if($enrolled && count($preReq)>=$preReqC){
+                                    // insert section in enrollments and decrease available seats
                                     $addSectionEnroll->execute();
                                     $selectedSecDetails[6]=$selectedSecDetails[6]-1;
                                     
@@ -336,8 +330,9 @@ var_dump($_POST);
                                     
                                 }
                                 else{
-                                    echo "<h5>course has not been added </h5>
-                                     ";
+                                    ?> <script>swal("Adding error !", "You cannot add this course !", "error");</script> <?php
+                                    //echo "<h5>course has not been added </h5>";
+                                     
                                 }
 
                                 unset($_POST);
@@ -374,7 +369,7 @@ var_dump($_POST);
                                     // $selectedSecDetails=explode(' | ',$selectedSecInfo);
 
                                 echo" 
-                                <form method='post'> 
+                                <form method='get'> 
                                 <div> <label>Section: </label>
                                 
                                    <select name='selectSwC'>";
@@ -395,8 +390,7 @@ var_dump($_POST);
                                     $prevEnrolled_sections->execute(); 
                                     while($passedCourses=$prevEnrolled_sections->fetch(PDO::FETCH_ASSOC)){
                                             if ($courses['ID'] == $passedCourses['courseID'] ){
-                                                //$sectionInf->execute(array($courses['ID']));
-                                                //$selectSwap=$sectionInf->fetch();
+                                                
                                                 // get section number from course id for this SEMESTER
                                                 $enrolled=true;
                                                 break;
@@ -416,67 +410,65 @@ var_dump($_POST);
                                 </div>
                                 <div>
                                 <button id='close-popup'>Cancel</button> 
-                                <button type='submit' name='swapSections'>Swap</button>
+                                <button type='submit' id='sW' name='swapSections'>Swap</button>
                                 </div>
                             </form>
                             </div>";
                         
 
-                            if(isset($_POST['selectSwC']) && isset($_POST['selectToSwC']) && isset($_POST['swapSections'])){
-                                $oldSID=$_POST['selectSwC'];
-                                $newSID=$_POST['selectToSwC'];
-                                //check for seats, preReqs and conflicts again 
-
+                            if(isset($_GET['selectSwC']) && isset($_GET['selectToSwC']) ){
+                                $oldSID=$_GET['selectSwC'];
+                                $newSID=$_GET['selectToSwC'];
+                                
+                                
                                 $enrollID=$db->prepare("SELECT ID from enrollments where sectionID=? and studentID=?");
-                                $enrollID->execute(array($oldSID, $row['ID']));
-                                $eID->fetch()['ID'];
+                                $enrollID->execute(array($oldSID, $stID));
+                                $eID=$enrollID->fetch();
 
                                 $sectionInf->execute(array($newSID));
                                 $newSect=$sectionInf->fetch();
                                 
                                 $preReqs=$newSect['preRequisites'];
-                                $lectureConflictsrec=$db->query("SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE startTime<='".$newSect['startTime']."' AND endTime>='".$newSect['endTime']."' AND days='".$newSect['days']."' AND semesterID=".$semm['ID']." and enrollments.studentID=$stID");
-                                // $lectureConflictsrec->bindParam(':sTime',$newSect['startTime']);
-                                // $lectureConflictsrec->bindParam(':eTime',$newSect['endTime']);
-                                // $lectureConflictsrec->bindParam(':days',$newSect['days']);
-                                // $lectureConflictsrec->bindParam(':smID',$semm['ID']);
-                                // $lectureConflictsrec->bindParam(':stID',$stEnrollID['ID']);
-                                // $lectureConflictsrec->execute();
-                                //$lectureConflictsrec-> execute(array($newSect['startTime'], $newSect['endTime'],$newSect['days'], $semm['ID'], $stEnrollID['ID']));
-                                $lectureConf=$lectureConflictsrec->fetch()['num'];
+                                $lectureConflictsrec=$db->query("SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE startTime='".$newSect['startTime']."' AND endTime='".$newSect['endTime']."' AND days='".$newSect['days']."' AND semesterID=".$semm['ID']." and enrollments.studentID=$stID");
+                             
+                                $lectureConf=$lectureConflictsrec->fetch();
 
                                 $finalConflictrec=$db->query(" SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE course_sections.finalDate=".$newSect['finalDate']." AND  course_sections.semesterID=".$semm['ID']." AND enrollments.studentID=$stID");
-                                // $finalConflictrec->bindParam(':fD',$newSect['finalDate']);
-                                // $finalConflictrec->bindParam(':sID',$semm['ID']);
-                                // $finalConflictrec->bindParam(':stID',$stEnrollID['ID']);
-                                // $finalConflictrec->execute();
-                                //$finalConflictrec->execute(array($newSect['finalDate'],$semm['ID'],$stEnrollID['ID']));
-                                $finalConf=$finalConflictrec->fetch()['num'];
-                                $enrolled=true;
+                            
+                                $finalConf=$finalConflictrec->fetch();
+                                $check=true;
                                 $preReqC=0;
+                                $preReq= explode(',',$preReqs);print_r($preReq);
+                                //check for seats, preReqs and conflicts again 
                                     if($newSect['availableSeats']>=1){
-                                        if( $finalConf <1 || $lectureConf<1){
+                                        if( $finalConf['num'] <1 || $lectureConf['num']!=1){
                                             while($passedCourses=$prevEnrolled_sections->fetch()){
-                                                $preReq= explode(',',$preReqs);
-                                                //print_r($preReq);
                                                 for($i=0; $i<count($preReq); $i++){
                                                     if($passedCourses['courseCode']==$preReq[$i]){
-                                                        $preReqC++;}   
+                                                        $preReqC++;
+                                                    }   
                                                 }     
                                             }
                                         }
                                         else{
-                                            //pop up
-                                            $enrolled=false;
+
+                                            $check=false;
+                                            //pop up?>
+                                            <script>swal("Conflict error !", "You have a conflict with another section !", "error");</script>
+                                            <?php echo 'conflict error';
+                                            
                                         }
                                     }else{
+                                        echo 'no seats';
                                         //pop up
-                                        $enrolled=false;
+                                        $check=false;
                                     }
+                                    echo $preReqC;
+                                    //echo $check;
 
-                                    if($enrolled && count($preReq)==$preReqC){
+                                    if($check && count($preReq)>=$preReqC){
                                     
-                                        $switchSectionEnroll->execute(array($newSID, $eID));
+                                        $switchSectionEnroll->execute(array($newSID, $eID['ID']));
                                         $newSect['availableSeats']=$newSect['availableSeats']-1; 
                                         $updateAvailbSeats->bindParam(':seats',$newSect['availableSeats']);
                                         $updateAvailbSeats->bindParam(':secID',$newSID);
@@ -495,17 +487,20 @@ var_dump($_POST);
                                         ";
                                     }
                                     else{
-                                        echo "<h5>course has not been switched </h5>
-                                         ";
+                                        ?>
+                                        <script>swal("Swap error !", "This section cannot be swapped !", "error");</script>
+                                        <?php
+                                            //echo "<h5>course has not been switched </h5>";
+                                         
                                     }
                                 
 
-                            }elseif(isset($_POST['swapSections'])){
+                            }elseif(empty($_GET['selectSwC']) || empty($_GET['selectToSwC'])){
                                 echo "<h5> select a section to switch with </h5>";
                             }
                        
                         //echo "<h5>switched seat successfully! </h5>";
-                        
+                        unset($_GET);
                         unset($_POST);
                     
                     }
@@ -581,27 +576,22 @@ var_dump($_POST);
 
         // Get references to button and pop up elements
        var openButton = document.getElementById('switchS');
-       var swap =document.getElementById('sW');
+     
         var popup = document.getElementById('popup');
-        var popup2=document.getElementById('popup2');
+        
         var closeButton = document.getElementById('close-popup');
 
         // Add an event listener to open button to show the pop up
         
-        openButton.addEventListener('click', function() {
-        //event.preventDefault();
-        popup.style.display = 'block';
-        });
-
-        swap.addEventListener('click', function() {
-        //event.preventDefault();
-        popup.style.display = 'block';
-        });
+        // openButton.addEventListener('click', function() {
+        // //event.preventDefault();
+        // popup.style.display = 'block';
+        // });
 
 
-        // Add an event listener to the close button to hide the pop up
+        Add an event listener to the close button to hide the pop up
         closeButton.addEventListener('click', function() {
-        popup2.style.display = 'none';
+        popup.style.display = 'none';
         });
 
 

@@ -68,7 +68,11 @@ try {
     <title>Attendance </title>
     <link rel="stylesheet" href="generalstyling.css">
     <link rel="stylesheet" href="css/Attendance_instractor.css">
-
+    <style>
+        #update {
+            margin-left: 25%;
+        }
+    </style>
 
 </head>
 

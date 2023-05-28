@@ -3,7 +3,7 @@
     try{
         require('Database/connection.php');
         if(isset($_POST['ID'])){
-            echo $_POST['ID'];
+            //echo $_POST['ID'];
             $semesterInfo="SELECT* from semester where now() between modifyStart and modifyEnd";
                 $semester =$db->query($semesterInfo);
                 $sem=$semester->fetch();
