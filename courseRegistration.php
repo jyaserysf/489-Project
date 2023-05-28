@@ -258,21 +258,11 @@ var_dump($_POST);
 
                         $lectureConflictsrec=$db->query("SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE startTime<='$selectedSecDetails[5]' AND endTime>='$selectedSecDetails[4]' AND days='$selectedSecDetails[1]' AND semesterID=".$semm['ID']." and enrollments.studentID=$stID");
                         
-                        // $lectureConflictsrec->bindParam(':sTime',$selectedSecDetails[5]);
-                        // $lectureConflictsrec->bindParam(':eTime',$selectedSecDetails[4]);
-                        // $lectureConflictsrec->bindParam(':days',$selectedSecDetails[1]);
-                        // $lectureConflictsrec->bindParam(':smID',$semm['ID']);
-                        // $lectureConflictsrec->bindParam(':stID',$stID);
-                        // $lectureConflictsrec->execute();
-                        //$lectureConflictsrec-> execute(array($selectedSecDetails[5], $selectedSecDetails[4], $selectedSecDetails[1], $semm['ID'], $stEnrollID['ID']));
+                        
                         $lectureConf=$lectureConflictsrec->fetch();
 
                         $finalConflictrec=$db->query(" SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE course_sections.finalDate=$selectedSecDetails[8] AND  course_sections.semesterID=".$semm['ID']." AND enrollments.studentID=$stID");
-                        // $finalConflictrec->bindParam(':fD',$selectedSecDetails[8]);
-                        // $finalConflictrec->bindParam(':sID',$semm['ID']);
-                        // $finalConflictrec->bindParam(':stID',$stID);
-                        // $finalConflictrec->execute();
-                        //$finalConflictrec->execute(array($selectedSecDetails[8], $semm['ID'], $stEnrollID['ID']));
+                    
                         $finalConf=$finalConflictrec->fetch();
                         
                         $enrolled=true;
@@ -327,7 +317,7 @@ var_dump($_POST);
                                 
 
                                 if($enrolled && count($preReq)>=$preReqC){
-                                    
+                                    // insert section in enrollments and decrease available seats
                                     $addSectionEnroll->execute();
                                     $selectedSecDetails[6]=$selectedSecDetails[6]-1;
                                     
@@ -439,7 +429,7 @@ var_dump($_POST);
                                 $newSect=$sectionInf->fetch();
                                 
                                 $preReqs=$newSect['preRequisites'];
-                                $lectureConflictsrec=$db->query("SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE startTime<='".$newSect['startTime']."' AND endTime>='".$newSect['endTime']."' AND days='".$newSect['days']."' AND semesterID=".$semm['ID']." and enrollments.studentID=$stID");
+                                $lectureConflictsrec=$db->query("SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE startTime='".$newSect['startTime']."' AND endTime='".$newSect['endTime']."' AND days='".$newSect['days']."' AND semesterID=".$semm['ID']." and enrollments.studentID=$stID");
                              
                                 $lectureConf=$lectureConflictsrec->fetch();
 
@@ -451,7 +441,7 @@ var_dump($_POST);
                                 $preReq= explode(',',$preReqs);print_r($preReq);
                                 //check for seats, preReqs and conflicts again 
                                     if($newSect['availableSeats']>=1){
-                                        if( $finalConf['num'] <1 || $lectureConf['num']<1){
+                                        if( $finalConf['num'] <1 || $lectureConf['num']!=1){
                                             while($passedCourses=$prevEnrolled_sections->fetch()){
                                                 for($i=0; $i<count($preReq); $i++){
                                                     if($passedCourses['courseCode']==$preReq[$i]){

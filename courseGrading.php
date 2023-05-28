@@ -130,7 +130,7 @@ console.log(Sections);
                     <thead>
                         <tr> 
                             <th> Student ID </th> 
-                            <th > student Name </th>  
+                            <th > Student Name </th>  
                             <th class=""> Student Grade</th> 
                         </tr>
                     </thead>
