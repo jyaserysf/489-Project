@@ -235,7 +235,7 @@ margin-left: 50px;
 .col-75 {
   float: left;
   width: 65%;
-  margin-top: 0;
+  margin-top: 1rem;
 }
 
 label {

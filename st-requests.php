@@ -20,10 +20,49 @@
     
     <link rel="stylesheet" href="generalstyling.css">
     <style>
+        /*
         th, td {
             padding: 10px;
             text-align: center;
         }
+        */
+
+        table {
+            width: 100%;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+
+        /* For tablet view */
+        @media screen and (max-width: 768px) {
+            th, td {
+                padding: 4px;
+            }
+        }
+
+        /* For mobile view */
+        @media screen and (max-width: 480px) {
+            th, td {
+                display: block;
+                padding: 4px;
+            }
+        
+            th {
+                text-align: center;
+            }
+        
+            td:before {
+                content: attr(data-label);
+                float: left;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+        }
+
+        
     </style>
 </head>
 <body>
