@@ -33,7 +33,7 @@ try {
         $viewSec = $db->query($Sections);
 
 
-        $db = null;
+      
     }
 } catch (PDOException $EXC) {
 
@@ -130,54 +130,74 @@ try {
                             </tr>
                         </thead>
 
-                        <form method="POST" id="btn">
-
+                    
+                            <form method="POST" id="btn">
                             <tbody>
                                 <?php
                                  require('Database/connection.php');
-$sql="SELECT * FROM `enrollments` JOIN students ON students.ID = enrollments.studentID";
-$stmt=$db->prepare($sql);
-$stmt->execute();
-
-
-                                if (isset($_POST['sb'])) {   //echo"meoww";
+                                if (isset($_POST['sb']))
+                                 {  
+                                    
+                                    //echo"meoww";
                                     //var_dump($semesterResult);    
-                                    foreach ($semesterResult as $StudentsR) {
+                                    foreach ($semesterResult as $StudentsR) 
+                                    {
                                         $SID = $StudentsR[8];
                                         $Abnum = $StudentsR['absence'];
-                                ?>
+                                                    ?>
                                         <tr>
                                             <td> <?php echo $StudentsR[9] ?> </td>
                                             <td><?php echo $StudentsR[10] ?> </td>
-                                            <td> <input type='submit' name='checkbox_attendance'> </td>
+                                            <td> <input type='checkbox' name='checkbox_attendance' value="YES"> </td>
                                             <td><?php echo $StudentsR['absence'] ?> </td>
                                         </tr>
                                         <?php   
                                     }
-                                        ?>
-                            </tbody>
-                    </table>
-                    </form>
+                                }
+                                          ?>
+                                             </tbody>
+                                                </table>  
+                                                     <input type='submit' name='submit'> 
+                                              </form>    
+                                                 <?php
+                                            //      $count=0;
+                                            // while(isset ($_POST['checkbox_attendance'])){
+                                            //               $count=$count+1;
+                                            //                  echo$count;
+                                            //                 
+                                            // $checkbox = $_POST['checkbox_attendance'];
+                                            // $checked_count = count($checkbox); // Count the number of checked checkboxes
+                                            // echo "Number of checked checkboxes: " . $checked_count;          
+                                            require('Database/connection.php');
+                                              while(isset($_POST['checkbox_attendance'])&& $_POST['checkbox_attendance'] =='YES'&& isset($_POST['submit']))
+                                                  {
+                                                  
+                                                    try
+                                                     {  
+                                                        $query = "SELECT * FROM `enrollments`";
+                                                        $results = $db->prepare($query);
+                                                        $results->execute(); // execute the prepared statement
+                                                        $rows = $results->fetchAll(PDO::FETCH_ASSOC);
+                                                        echo $rows[0]['ID'];
 
-                    <?php
-                
-                
-                require('Database/connection.php');
+                                                        $query = "UPDATE enrollments 
+                                                        JOIN students ON enrollments.studentID =students.ID
+                                                         SET absence =  absence + 1
+                                                          WHERE enrollments.studentID =".$rows[0]['studentID'];
+                                                        $stmt = $db->prepare($query);
+                                                        $stmt->execute();
+                            
+                                                             $db = null;    
+    } 
+                                                        catch (PDOException $EXC) {
 
-                                            if (isset($_POST['checkbox_attendance']))
-                                             {  
-                                               
-                                            $SQL ="UPDATE enrollments 
-                                             JOIN students ON enrollments.studentID =students.ID
-                                             SET absence = 10
-                                              WHERE enrollments.studentID ='studentID'";
-                                                  $stmt=$db->prepare($SQL);
-                                                  $stmt->bindParam('studentID',$SID);
-                                             }
-
-                                             header('location:instr.attendance.php');
-
-
+                                                            die('ERROR:' . $EXC->getMessage());
+                                                        }
+                                                   }   //}
+                                           //header('location:instr.attendance.php');
+                                                
+                                                
+                                                    
 ?>
                 </div>
 
