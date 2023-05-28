@@ -95,7 +95,7 @@ var_dump($_POST);
                 $enrolled_sections="SELECT course_sections.*, enrollments.* from course_sections Join enrollments on course_sections.ID = enrollments.sectionID";
                 $studentRec = $db->query($stInfo);
                 $row=$studentRec->fetch();
-                $semesterInfo="SELECT* from semester";
+                $semesterInfo="SELECT * from semester where now() BETWEEN semester.modifyStart and semester.modifyEnd";
                 $semester =$db->query($semesterInfo);
                 $sem=$semester->fetch();
                 $sql_courses = "SELECT courses.*, course_sections.semesterID FROM courses JOIN program_courses ON courses.ID = program_courses.courseID JOIN programs ON program_courses.programID = programs.PID JOIN course_sections on course_sections.ID = courses.ID WHERE programs.PID=".$row['PID']." and course_sections.semesterID=".$sem['ID'];
@@ -209,6 +209,7 @@ var_dump($_POST);
 
                 try{
                     $stID=$_SESSION['activeUser']['ID'];
+                    
                     $ID = $_SESSION['activeUser']['username'];
                     $db->beginTransaction();
                     $currentTime=date('Y-m-d');
@@ -227,6 +228,7 @@ var_dump($_POST);
                     $sql_stEnrollID="SELECT students.ID from students where studentID=$ID";
                                 $stEnrollIDrec=$db->query($sql_stEnrollID);
                                 $stEnrollID=$stEnrollIDrec->fetch();
+                                
 
                     $enrolledSectionsthisSem=$db->prepare("SELECT enrollments.* , course_sections.*, semester.* from enrollments join course_sections on enrollments.sectionID=course_sections.ID join semester on course_sections.semesterID=semester.ID where semester.ID=:sID and enrollments.studentID=:stID");
                     $enrolledSectionsthisSem->bindParam(':sID', $semm['ID']);
@@ -237,9 +239,9 @@ var_dump($_POST);
                     $checkCourse=$db->prepare("SELECT * FROM courses where ID=:courID");
                     //print_r($enrollsectSemALL);
 
-                    $lectureConflictsrec=$db->prepare("SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE startTime<=':sTime' AND endTime>=':eTime' AND days=':days' AND  semesterID=:smID and enrollments.studentID=:stID");
-                    $finalConflictrec=$db->prepare(" SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE finalDate=:fD AND  semesterID=:sID AND enrollments.studentID=:stID");
-                    $updateAvailbSeats=$db->prepare("UPDATE course_sections set availableSeats=? where sectionID=? ");
+                    
+                    
+                    $updateAvailbSeats=$db->prepare("UPDATE course_sections set availableSeats=:seats where ID=:secID ");
                     // ************************* ADD COURSE ***************************
 
                      if(isset($_POST['addcourse'])&& isset($_POST['selectC']) && isset($_POST['selectedSection']) && !empty($_POST['selectedSection'])){
@@ -254,20 +256,22 @@ var_dump($_POST);
                         //print_r($checkThisCourse);
                         $preReqs=$checkThisCourse['preRequisites'];
 
-
-                        $lectureConflictsrec->bindParam(':sTime',$selectedSecDetails[5]);
-                        $lectureConflictsrec->bindParam(':eTime',$selectedSecDetails[4]);
-                        $lectureConflictsrec->bindParam(':days',$selectedSecDetails[1]);
-                        $lectureConflictsrec->bindParam(':smID',$semm['ID']);
-                        $lectureConflictsrec->bindParam(':stID',$stEnrollID['ID']);
-                        $lectureConflictsrec->execute();
+                        $lectureConflictsrec=$db->query("SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE startTime<='$selectedSecDetails[5]' AND endTime>='$selectedSecDetails[4]' AND days='$selectedSecDetails[1]' AND semesterID=".$semm['ID']." and enrollments.studentID=$stID");
+                        
+                        // $lectureConflictsrec->bindParam(':sTime',$selectedSecDetails[5]);
+                        // $lectureConflictsrec->bindParam(':eTime',$selectedSecDetails[4]);
+                        // $lectureConflictsrec->bindParam(':days',$selectedSecDetails[1]);
+                        // $lectureConflictsrec->bindParam(':smID',$semm['ID']);
+                        // $lectureConflictsrec->bindParam(':stID',$stID);
+                        // $lectureConflictsrec->execute();
                         //$lectureConflictsrec-> execute(array($selectedSecDetails[5], $selectedSecDetails[4], $selectedSecDetails[1], $semm['ID'], $stEnrollID['ID']));
                         $lectureConf=$lectureConflictsrec->fetch()['num'];
 
-                        $finalConflictrec->bindParam(':fD',$selectedSecDetails[8]);
-                        $finalConflictrec->bindParam(':sID',$semm['ID']);
-                        $finalConflictrec->bindParam(':stID',$stEnrollID['ID']);
-                        $finalConflictrec->execute();
+                        $finalConflictrec=$db->query(" SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE course_sections.finalDate=$selectedSecDetails[8] AND  course_sections.semesterID=".$semm['ID']." AND enrollments.studentID=$stID");
+                        // $finalConflictrec->bindParam(':fD',$selectedSecDetails[8]);
+                        // $finalConflictrec->bindParam(':sID',$semm['ID']);
+                        // $finalConflictrec->bindParam(':stID',$stID);
+                        // $finalConflictrec->execute();
                         //$finalConflictrec->execute(array($selectedSecDetails[8], $semm['ID'], $stEnrollID['ID']));
                         $finalConf=$finalConflictrec->fetch()['num'];
                         
@@ -321,8 +325,10 @@ var_dump($_POST);
                                     $addSectionEnroll->execute();
                                     $selectedSecDetails[6]=$selectedSecDetails[6]-1;
                                     
-                                    
-                                    $updateAvailbSeats->execute(array($selectedSecDetails[6], $selectedSecDetails[7]));
+                                    $updateAvailbSeats->bindParam(':seats',$selectedSecDetails[6]);
+                                    $updateAvailbSeats->bindParam(':secID',$selectedSecDetails[7]);
+                                    $updateAvailbSeats->execute();
+                                    //$updateAvailbSeats->execute(array($selectedSecDetails[6], $selectedSecDetails[7]));
                                     echo "<h5>added seat successfully! </h5>
                                     ";
                                     
@@ -354,25 +360,28 @@ var_dump($_POST);
 
                     $sectionInf=$db->prepare("SELECT course_sections.*, courses.preRequisites, courses.courseCode FROM course_sections join courses on course_sections.courseID=courses.ID where course_sections.ID=?");
                 
-                    if(isset($_POST['switchsection']) && isset($_POST['selectedSection'])){
+                    if(isset($_POST['switchsection'])){
 
                        
                         echo "
                             <div class='container' id='popup'>
                             
                             ";
-
-                                
-
-                                    $selectedSecInfo=$_POST['selectedSection'];
-                                    $selectedSecDetails=explode(' | ',$selectedSecInfo);
+                                    // $selectedSecInfo=$_POST['selectedSection'];
+                                    // $selectedSecDetails=explode(' | ',$selectedSecInfo);
 
                                 echo" 
                                 <form method='post'> 
                                 <div> <label>Section: </label>
                                 
-                                   <select name='selectSwC'>
-                                    <option selected value=".$selectedSecDetails[7]."> ".$selectedSecDetails[9]." | ".$selectedSecDetails[0]." </option>";
+                                   <select name='selectSwC'>";
+
+                                    foreach($enrollsectSemALL as $section){
+                                        $sectionInf->execute(array($section['sectionID']));
+                                        $currSec=$sectionInf->fetch();
+                                        echo"   <option selected value=".$section['sectionID']."> ".$currSec['courseCode']." | ".$section['sectionNumber']." </option>";
+                                    }
+                                    
                             echo"   </select> 
                                 </div>
                                 <div> <label>Section To Swap: </label>
@@ -383,12 +392,21 @@ var_dump($_POST);
                                     $prevEnrolled_sections->execute(); 
                                     while($passedCourses=$prevEnrolled_sections->fetch(PDO::FETCH_ASSOC)){
                                             if ($courses['ID'] == $passedCourses['courseID'] ){
+                                                //$sectionInf->execute(array($courses['ID']));
+                                                //$selectSwap=$sectionInf->fetch();
+                                                // get section number from course id for this SEMESTER
                                                 $enrolled=true;
                                                 break;
                                             }
                                     } 
                                     if (!$enrolled){
-                                        echo "<option  value='".$courses['sectionID']."'>".$courses['courseCode']." | ".$courses['sectionNumber']."</option>  ";
+                                        $sql_currentSections="SELECT * FROM course_sections join courses on course_sections.courseID=courses.ID WHERE courseID=".$courses['ID']." and semesterID=".$semm['ID'];
+                                        $currentSectionsrec=$db->query($sql_currentSections);
+                                        $currentSections=$currentSectionsrec->fetch(PDO::FETCH_ASSOC);
+                                        if($currentSections){
+                                            echo "<option  value='".$currentSections['ID']."'>".$currentSections['courseCode']." | ".$currentSections['sectionNumber']."</option>  ";
+                                        }
+                                        
                                     } 
                                 }  
                                 echo"</select>
@@ -414,15 +432,22 @@ var_dump($_POST);
                                 $newSect=$sectionInf->fetch();
                                 
                                 $preReqs=$newSect['preRequisites'];
-                                $lectureConflictsrec->bindParam(':sTime',$newSect['startTime']);
-                                $lectureConflictsrec->bindParam(':eTime',$newSect['endTime']);
-                                $lectureConflictsrec->bindParam(':days',$newSect['days']);
-                                $lectureConflictsrec->bindParam(':smID',$semm['ID']);
-                                $lectureConflictsrec->bindParam(':stID',$stEnrollID['ID']);
-                                $lectureConflictsrec->execute();
+                                $lectureConflictsrec=$db->query("SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE startTime<='".$newSect['startTime']."' AND endTime>='".$newSect['endTime']."' AND days='".$newSect['days']."' AND semesterID=".$semm['ID']." and enrollments.studentID=$stID");
+                                // $lectureConflictsrec->bindParam(':sTime',$newSect['startTime']);
+                                // $lectureConflictsrec->bindParam(':eTime',$newSect['endTime']);
+                                // $lectureConflictsrec->bindParam(':days',$newSect['days']);
+                                // $lectureConflictsrec->bindParam(':smID',$semm['ID']);
+                                // $lectureConflictsrec->bindParam(':stID',$stEnrollID['ID']);
+                                // $lectureConflictsrec->execute();
                                 //$lectureConflictsrec-> execute(array($newSect['startTime'], $newSect['endTime'],$newSect['days'], $semm['ID'], $stEnrollID['ID']));
                                 $lectureConf=$lectureConflictsrec->fetch()['num'];
-                                $finalConflictrec->execute(array($newSect['finalDate'],$semm['ID'],$stEnrollID['ID']));
+
+                                $finalConflictrec=$db->query(" SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE course_sections.finalDate=".$newSect['finalDate']." AND  course_sections.semesterID=".$semm['ID']." AND enrollments.studentID=$stID");
+                                // $finalConflictrec->bindParam(':fD',$newSect['finalDate']);
+                                // $finalConflictrec->bindParam(':sID',$semm['ID']);
+                                // $finalConflictrec->bindParam(':stID',$stEnrollID['ID']);
+                                // $finalConflictrec->execute();
+                                //$finalConflictrec->execute(array($newSect['finalDate'],$semm['ID'],$stEnrollID['ID']));
                                 $finalConf=$finalConflictrec->fetch()['num'];
                                 $enrolled=true;
                                 $preReqC=0;
@@ -449,12 +474,20 @@ var_dump($_POST);
                                     if($enrolled && count($preReq)==$preReqC){
                                     
                                         $switchSectionEnroll->execute(array($newSID, $eID));
-                                        $newSect['availableSeats']=$newSect['availableSeats']-1;
+                                        $newSect['availableSeats']=$newSect['availableSeats']-1; 
+                                        $updateAvailbSeats->bindParam(':seats',$newSect['availableSeats']);
+                                        $updateAvailbSeats->bindParam(':secID',$newSID);
+                                        $updateAvailbSeats->execute();
+
+                                        //$updateAvailbSeats->execute(array($newSect['availableSeats'], $newSID));
                                         $sectionInf->execute(array($oldSID));
                                         $oldSect=$sectionInf->fetch();
                                         $oldSect['availableSeats']=$oldSect['availableSeats']+1;
-                                        $updateAvailbSeats->execute(array($newSect['availableSeats'], $newSID));
-                                        $updateAvailbSeats->execute(array($oldSect['availableSeats'],$oldSID));
+                                       
+                                        $updateAvailbSeats->bindParam(':seats',$oldSect['availableSeats']);
+                                        $updateAvailbSeats->bindParam(':secID',$oldSID);
+                                        $updateAvailbSeats->execute();
+                                        //$updateAvailbSeats->execute(array($oldSect['availableSeats'],$oldSID));
                                         echo "<h5>switched seat successfully! </h5>
                                         ";
                                     }
@@ -475,9 +508,10 @@ var_dump($_POST);
                     }
                    
                     // ************************* DROP COURSE ***************************
-                    // this needs changing
-                    $deleteEnroll=$db->prepare("DELETE FROM `enrollments` WHERE `sectionID`=?");
-                    $updateAvailbSeats=$db->prepare("UPDATE course_sections set availableSeats=:seats where sectionID=:sectionID ");
+                    
+                    $deleteEnroll=$db->prepare("DELETE FROM enrollments WHERE sectionID=:sID and studentID=:stID");
+
+                    // $updateAvailbSeats=$db->prepare("UPDATE course_sections set availableSeats=? where sectionID=? ");
                                 
                     if(isset($_POST['dropcourse'])&&  isset($_POST['selectedSection'])){
                         
@@ -489,9 +523,15 @@ var_dump($_POST);
                             echo "you cannot have less than 3 courses ";
 
                         }else{
-                            $deleteEnroll->execute(array($selectedSecDetails[7]));
-                            $selectedSecDetails[6]=$selectedSecDetails[6]-1;
-                            $updateAvailbSeats->execute(array($selectedSecDetails[6],$selectedSecDetails[7]));
+                            $deleteEnroll->bindParam(':sID', $selectedSecDetails[7]);
+                            $deleteEnroll->bindParam(':stID', $stEnrollID['ID']);
+                            $deleteEnroll->execute();
+                            //$deleteEnroll->execute(array($selectedSecDetails[7], $stEnrollID['ID']));
+                            $selectedSecDetails[6]=$selectedSecDetails[6]+1;
+                            $updateAvailbSeats->bindParam(':seats',$selectedSecDetails[6]);
+                            $updateAvailbSeats->bindParam(':secID',$selectedSecDetails[7]);
+                            $updateAvailbSeats->execute();
+                            //$updateAvailbSeats->execute(array($selectedSecDetails[6],$selectedSecDetails[7]));
                             echo "<h5>removed seat successfully! </h5>";
                         };
 
