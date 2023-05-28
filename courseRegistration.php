@@ -7,7 +7,7 @@ session_start();
         exit();
     }
 
-var_dump($_POST);
+//var_dump($_POST);
 //print_r( $_SESSION['activeUser']) ;
 // page should only be accessed betweeen modifyStart and end (use js popup and date), i can use the semester id from modifyStart and end
 ?>
@@ -589,10 +589,10 @@ var_dump($_POST);
         // });
 
 
-        // Add an event listener to the close button to hide the pop up
-        // closeButton.addEventListener('click', function() {
-        // popup.style.display = 'none';
-        // });
+        Add an event listener to the close button to hide the pop up
+        closeButton.addEventListener('click', function() {
+        popup.style.display = 'none';
+        });
 
 
 
