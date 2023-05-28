@@ -17,7 +17,7 @@ try {
    JOIN course_sections
    ON semester.ID = course_sections.semesterID JOIN enrollments ON students.ID=enrollments.studentID JOIN courses ON course_sections.courseID = 
   courses.ID JOIN instructors ON course_sections.instructorID = instructors.ID WHERE 
-  instructors.ID = " . $_SESSION['activeUser']['ID'] . " AND course_sections.sectionNumber = " . $section_num." AND NOW() BETWEEN beginDate AND endDate" ;
+  instructors.ID = " . $_SESSION['activeUser']['ID'] . " AND course_sections.sectionNumber = " . $section_num;//." AND NOW() BETWEEN beginDate AND endDate" ;
             // we need to insert data for dr taher for  this semester  
             //." AND courses.courseCode = ". $course_Code;
             $semesterResult = $db->query($semesterQuery);
@@ -155,6 +155,10 @@ try {
                                             <td> <input type='checkbox' name='checkbox_attendance[<?php echo $SID?>]' value="YES"> </td>
                                             <!--absence_num=>$StudentsR-->
                                             <td  <?php if($StudentsR['absence']>=5)echo'style="background-color: red;"'?>><?php echo $StudentsR['absence'] ?> </td>
+                                           <?php $P=$StudentsR['absence']/30;$P  ?>
+                                             <td><?php echo number_format($P*100,2) ."%";  ?></td>
+                                           
+                                            
                                         </tr>
                                     <?php  
                                             
@@ -192,8 +196,6 @@ try {
                                                   
                                                     try
                                                      {  
-                                                       
-                                                
                                                         $query = "SELECT * FROM `enrollments`";
                                                         $results = $db->prepare($query);
                                                         $results->execute(); // execute the prepared statement
@@ -201,11 +203,10 @@ try {
                                                 
                                                         $query = "UPDATE enrollments 
                                                         JOIN students ON enrollments.studentID =students.ID
-                                                         SET absence =  absence + 1
+                                                         SET absence =  absence + 1 
                                                           WHERE enrollments.studentID =".$key;
                                                         $stmt = $db->prepare($query);
                                                         $stmt->execute();
-                            
                                                              $db = null;    
     } 
                                                         catch (PDOException $EXC) {
