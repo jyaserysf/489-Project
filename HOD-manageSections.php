@@ -70,7 +70,7 @@ if(isset($_POST['submit']))
                 <h1>Select Section</h1> 
             </div>
             <div class="container">
-                <form method='get' action='HOD-manageSections.php'>
+                <form method='post' action='HOD-manageSections-2.php'>
                     <div class="row">
                         <h3>Select a section</h3>
                     </div>
