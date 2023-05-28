@@ -55,6 +55,8 @@
                         $sql = $db->prepare("SELECT * FROM instructors WHERE ID=?");
                     $sql->execute(array($_SESSION['activeUser']['ID']));
                     $db=null;
+
+
                 }
                 catch(PDOException $e) {
                     die($e->getMessage());
@@ -66,12 +68,7 @@
             </div>
             <div class="student-sched">
                 <div class="semester-no">
-                    <?php
-                    echo "Your [semester] Schedule";
-                    ?> 
-                    <h1></h1>
-                </div>
-                <div class="sched">
+                   
                     <?php 
                     try{
                         require('Database/connection.php');
@@ -80,6 +77,13 @@
                         $semesterInfo="SELECT* from semester where now() BETWEEN semester.beginDate and semester.endDate";
                         $semester =$db->query($semesterInfo);
                         $semm=$semester->fetch();
+
+                        
+                        echo "<h4> Your Semester ".$semm['number'].", ".$semm['year']." Schedule: </h4>";
+                         
+                       echo " 
+                        </div>
+                        <div class='sched'>";
                         $takingSectionsthisSem=$db->prepare("SELECT enrollments.* , course_sections.*, semester.* from enrollments join course_sections on enrollments.sectionID=course_sections.ID join semester on course_sections.semesterID=semester.ID where semester.ID=? and enrollments.studentID=?");
                         $stID=$_SESSION['activeUser']['ID'];
                         

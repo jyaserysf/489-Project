@@ -17,7 +17,7 @@ try {
    JOIN course_sections
    ON semester.ID = course_sections.semesterID JOIN enrollments ON students.ID=enrollments.studentID JOIN courses ON course_sections.courseID = 
   courses.ID JOIN instructors ON course_sections.instructorID = instructors.ID WHERE 
-  instructors.ID = " . $_SESSION['activeUser']['ID'] . " AND course_sections.sectionNumber = " . $section_num; //." AND NOW() BETWEEN beginDate AND endDate" ;
+  instructors.ID = " . $_SESSION['activeUser']['ID'] . " AND course_sections.sectionNumber = " . $section_num;//." AND NOW() BETWEEN beginDate AND endDate" ;
             // we need to insert data for dr taher for  this semester  
             //." AND courses.courseCode = ". $course_Code;
             $semesterResult = $db->query($semesterQuery);
@@ -68,7 +68,11 @@ try {
     <title>Attendance </title>
     <link rel="stylesheet" href="generalstyling.css">
     <link rel="stylesheet" href="css/Attendance_instractor.css">
-
+    <style>
+        #update {
+            margin-left: 25%;
+        }
+    </style>
 
 </head>
 
@@ -133,7 +137,10 @@ try {
                     
                             <form method="POST" id="btn">
                             <tbody>
+                         
                                 <?php
+                                // if(isset($_POST['checkbox_attendance']))
+                                // var_dump($_POST['checkbox_attendance']);
                                  require('Database/connection.php');
                                 if (isset($_POST['sb']))
                                  {  
@@ -148,18 +155,31 @@ try {
                                         <tr>
                                             <td> <?php echo $StudentsR[9] ?> </td>
                                             <td><?php echo $StudentsR[10] ?> </td>
-                                            <td> <input type='checkbox' name='checkbox_attendance' value="YES"> </td>
-                                            <td><?php echo $StudentsR['absence'] ?> </td>
+                                            <!--SID=>YES-->
+                                            <td> <input type='checkbox' name='checkbox_attendance[<?php echo $SID?>]' value="YES"> </td>
+                                            <!--absence_num=>$StudentsR-->
+                                            <td  <?php if($StudentsR['absence']>=5)echo'style="background-color: red;"'?>><?php echo $StudentsR['absence'] ?> </td>
+                                           <?php $P=$StudentsR['absence']/30;$P  ?>
+                                             <td><?php echo number_format($P*100,2) ."%";  ?></td>
+                                           
+                                            
                                         </tr>
-                                        <?php   
-                                    }
-                                }
-                                          ?>
-                                             </tbody>
-                                                </table>  
-                                                     <input type='submit' name='submit'> 
-                                              </form>    
-                                                 <?php
+                                    <?php  
+                                            
+ 
+                            if($StudentsR['absence']==5){?>
+                                <script>swal("warning !", "The student has exceeded the allowed threshold", "warning");</script>
+
+                           <?php }   }?>
+                                  
+                                       
+                                     </tbody>
+                                    </table>  
+                                         <input type='submit' name='submit' id="sbt">  
+                                    <?php  } ?>        
+                                        </form>    
+                                         <?php   
+                                                
                                             //      $count=0;
                                             // while(isset ($_POST['checkbox_attendance'])){
                                             //               $count=$count+1;
@@ -167,10 +187,16 @@ try {
                                             //                 
                                             // $checkbox = $_POST['checkbox_attendance'];
                                             // $checked_count = count($checkbox); // Count the number of checked checkboxes
-                                            // echo "Number of checked checkboxes: " . $checked_count;          
+                                            // echo "Number of checked checkboxes: " . $checked_count;    
+                                           
                                             require('Database/connection.php');
-                                              while(isset($_POST['checkbox_attendance'])&& $_POST['checkbox_attendance'] =='YES'&& isset($_POST['submit']))
-                                                  {
+                                            if(isset($_POST['checkbox_attendance'])){ 
+                                            $array= $_POST['checkbox_attendance']  ;
+                                            foreach($array as $key=>$value){
+                                            //  echo $key ."<br>";
+                                            //  echo $value;
+                                              // var_dump($array);
+                    
                                                   
                                                     try
                                                      {  
@@ -178,27 +204,28 @@ try {
                                                         $results = $db->prepare($query);
                                                         $results->execute(); // execute the prepared statement
                                                         $rows = $results->fetchAll(PDO::FETCH_ASSOC);
-                                                        echo $rows[0]['ID'];
-
+                                                
                                                         $query = "UPDATE enrollments 
                                                         JOIN students ON enrollments.studentID =students.ID
-                                                         SET absence =  absence + 1
-                                                          WHERE enrollments.studentID =".$rows[0]['studentID'];
+                                                         SET absence =  absence + 1 
+                                                          WHERE enrollments.studentID =".$key;
                                                         $stmt = $db->prepare($query);
                                                         $stmt->execute();
-                            
                                                              $db = null;    
     } 
                                                         catch (PDOException $EXC) {
 
                                                             die('ERROR:' . $EXC->getMessage());
                                                         }
-                                                   }   //}
+                                                 
+                                             } }  
+                                                  //}
                                            //header('location:instr.attendance.php');
-                                                
-                                                
-                                                    
-?>
+     
+                                     if(isset ($_POST['submit'])){ ?>
+<script>swal("student attendance !", "student attendance has been updated!", "success");</script>
+                                     <?php }?>
+
                 </div>
 
             </div>
@@ -213,6 +240,12 @@ try {
     <script src="js/sidenav.js"></script>
     <style>
         #update {
+            margin-left: 25%;
+        }
+        td{
+            text-align: center;
+        }
+        #sbt{
             margin-left: 25%;
         }
     </style>

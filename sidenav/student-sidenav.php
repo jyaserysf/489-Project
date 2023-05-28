@@ -28,15 +28,12 @@
             <a href="stdnt-attendance.php">Attendance</a>
         </div>
         
-        <div class="sideElement">
-            <img id="icon" src="icons/calendar-blank.svg">
-            <a href="schedPlanner.php">Schedule Planner</a>
-        </div>
+      
         
-        <div class="sideElement">
+        <!-- <div class="sideElement">
             <img id="icon" src="icons/calculator.svg" alt="">
             <a href="GPAcalc.php">GPA Calculater</a>
-        </div>
+        </div> -->
         
         <div class="sideElement">
             <img id="icon" src="icons/tray.svg" alt="">
