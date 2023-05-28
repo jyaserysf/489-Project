@@ -48,6 +48,7 @@
             <div class="student-sched">
                 <div class="semester-no">
                     Your semester number Schedule
+                    <h1></h1>
                 </div>
                 <div class="sched">
                     <?php 
