@@ -80,8 +80,20 @@
     </div>
       
     <!-- Use any element to open the sidenav -->
-    <button onclick="openNav()" id="openbtn">  <img id="icon" src="icons/house.svg" alt=""> </button>
+    <button onclick="openNav()" id="openbtn">  <img id="icon" src="icons\menu-icon.svg" alt=""> </button>
     <script>
+
+function openNav() {
+    document.getElementById("mySidenav").classList.add("open");
+    document.getElementById("main").style.marginLeft = "270px";
+} 
+
+/* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
+function closeNav() {
+    document.getElementById("mySidenav").classList.remove("open"); 
+    document.getElementById("main").style.marginLeft = "0";
+}
+
                 function logout() {
                     // send AJAX request to the server to destroy the session
                     var xhr = new XMLHttpRequest();

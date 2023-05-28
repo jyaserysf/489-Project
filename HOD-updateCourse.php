@@ -170,7 +170,7 @@ if(!isset($_SESSION['activeUser'])){
                     </div>
                 </form>
                 <?php } ?>
-                <form ,method='get' action="manageCourses.php">
+                <form method='get' action="HOD-manageCourses.php">
                     <div class="row" id="submitDiv">
                         <input class="manageBtn" type="submit" value="Cancel" name="Cancel" />
                     </div>
