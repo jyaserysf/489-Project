@@ -10,7 +10,7 @@
 
 ## Students
 1 - Username: 202007602   Password: abc123 <br>
-2 - Username: 202010691   Password: xyz123 <br>
+2 - Username: 202010691   Password: jYasser2002 <br>
 3 - Username: 202002622   Password: 202002622 <br>
 3 - Username: 202002920   Password: 202002920 <br>
 
