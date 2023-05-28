@@ -292,7 +292,9 @@ var_dump($_POST);
                                             }
                                         }
                                         else{
+
                                             //pop up
+
                                             $enrolled=false;
                                         }
                                     }else{
@@ -347,8 +349,9 @@ var_dump($_POST);
 
                     <?php    echo "select course section before adding";
                     }elseif(isset($_POST['addcourse'])){
-                        // popup-> must select course
-                        echo "select course section before adding";
+                        // popup-> must select course?>
+                        <script>swal("select a  course !", "you  didn't select any course !", "error");</script>
+                     <?php   echo "select course section before adding";
                         unset($_POST);
                     } 
                     

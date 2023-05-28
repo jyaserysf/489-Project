@@ -19,7 +19,8 @@ require('Database/connection.php');
    JOIN course_sections
    ON semester.ID = course_sections.semesterID JOIN courses ON course_sections.courseID = 
   courses.ID JOIN instructors ON course_sections.instructorID = instructors.ID WHERE 
-  instructors.ID = " . $_SESSION['activeUser']['ID']." AND course_sections.sectionNumber = ". $section_num ." AND NOW() BETWEEN beginDate AND endDate";//." AND courses.courseCode = ". $course_Code;
+  instructors.ID = " . $_SESSION['activeUser']['ID']." AND course_sections.sectionNumber = ". $section_num ." AND NOW() BETWEEN beginDate AND endDate";//." AND courses.courseCode = ". $course_Code;  
+  // we need to insert data for dr taher for  this semester  
 $semesterResult = $db->query($semesterQuery);
     }
 //  $TheCourse= $db->prepare ("SELECT * FROM course_sections WHERE semesterID=? AND instructorID=? ORDER BY courseID");
@@ -71,7 +72,7 @@ console.log(Sections);
     <title>Course Grading</title>
     <link rel="stylesheet" href="generalstyling.css">
     <link rel="stylesheet" href="courseGrading.css">
-    <link rel="stylesheet" href="css/GPAcalc.css">
+   <link rel="stylesheet" href="css/GPAcalc.css">
     
 </head>
 <body>
@@ -195,6 +196,7 @@ console.log(Sections);
          ?>
 
          <script>swal("student Grades !", "student Grades has been updated!", "success");</script>
+         <?php // stolean  from fatimas group  non function :reusability ?>
     
 
 
