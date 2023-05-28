@@ -7,22 +7,6 @@ if(!isset($_SESSION['activeUser'])){
     exit();
 }
 
-try {
-    require('Database/connection.php');
-    // course options sql statement
-    $sql = "SELECT courses.courseCode, courses.courseName
-            FROM courses
-            JOIN course_sections
-            ON courses.ID = course_sections.courseID 
-            WHERE course_sections.courseID IS NOT NULL 
-            GROUP BY courses.courseCode
-            ORDER BY courses.ID";
-    $rs = $db->query($sql);
-
-    $db = null;
-} catch (PDOException $e) {
-    die($e->getMessage());
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,7 +14,7 @@ try {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Manage Courses</title>
     
     <link rel="stylesheet" href="generalstyling.css">
 
@@ -73,24 +57,6 @@ try {
         }
     </style>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-        const buttons = document.querySelectorAll('button');
-        const divs = document.querySelectorAll('.content');
-
-        buttons.forEach((button) => {
-            button.addEventListener('click', function () {
-            const targetDivId = this.id.replace('btn', 'div');
-            const targetDiv = document.getElementById(targetDivId);
-
-            divs.forEach((div) => {
-                div.classList.toggle('hidden', div !== targetDiv);
-            });
-            });
-        });
-        });
-    </script>   
-
 </head>
 <body>
     <div class="wrapper">
@@ -101,9 +67,9 @@ try {
             <div class="title" >
                 <h1>Manage Courses</h1> 
             </div>
-            
             <div class="container">
-                <form method='get'>
+                <form method='get' action='HOD-updateCourse.php'>
+
                     <div class="row">
                         <h3>Select course to manage</h3>
                     </div>
@@ -115,40 +81,53 @@ try {
                         <div class="col-75">
                         <?php        
                             // <select>
-                            echo "<select class='input-field' name='courseID' >";
-                            echo "<option disabled selected>Select Course</option>";
-                            
-                            // loop through and display SemesterYear(s) and SemesterNumbers
-                            foreach($rs as $option) {
-                                // Get the ID of the selected semester
-                            $courseID = $option['ID'];
-                            echo "<option value='$courseID'> ". $option['courseCode'] . " | " . $option['courseName'] . "</option>";
+                            try {
+                                require('Database/connection.php');
+                                        $depSQL = $db->prepare("SELECT * FROM departments WHERE departmentHead=?");
+                                        $depSQL->execute(array($_SESSION['activeUser']['ID']));
+                                        $dep = $depSQL->fetch();
+                                        $depID = $dep['ID'];
+                                        $coursesInSemSQL = $db->prepare("SELECT * FROM courses WHERE courseDepartment=? ORDER BY courseCode");
+                                        $coursesInSemSQL->execute(array($depID));
+                                        echo "<select class='input-field' name='courseID' >";
+                                        echo "<option disabled ";
+                                        if(!isset($_GET['CourseID'])) 
+                                            echo "selected";
+                                        echo ">Select Course</option>";
+                                        $rs = $coursesInSemSQL->fetchAll();
+                                        foreach($rs as $option) {
+                                            $courseID = $option['ID'];
+                                            echo "<option value='$courseID'";
+                                            if(isset($_GET['courseID']) && $courseID == $_GET['courseID'])
+                                                echo "selected";
+                                            echo "> ". $option['courseCode'] . "  " . $option['courseName'] . "</option>";
+                                        }
+                                        echo "</select>";
+                                        $db=null;
                             }
-
-                            echo "</select>";
+                            catch(PDOException $e) {
+                                die("Error: " . $e->getMessage());
+                            }
                         ?>
                         </div>
                     </div>
-                </form>
-                
-                <div class="row">
-                    <div class="row-flex">
-                        <button id="btn1" class="manageBtn">Show div 1</button>
-                        <button id="btn2" class="manageBtn">Show div 2</button>
-                        <button id="btn3" class="manageBtn">Show div 3</button>
-                    </div>
-                </div> 
-            </div>
-            <h1></h1>
-            
-            <div id="div1" class="content hidden">Div 1 content</div>
-            <div id="div2" class="content hidden">Div 2 content</div>
-            <div id="div3" class="content hidden">Div 3 content</div>
 
+                    <div class="row" id="submitDiv">
+                        <input class="manageBtn" type="submit" value="Manage Course" />
+                    </div>
+
+                </form>
+
+                <form method="get" action="HOD-createCourse.php">
+                    <div class="row" id="submitDiv">
+                        <input class="manageBtn" type="submit" value="Add Course" />
+                    </div>
+                </form>
+
+            </div>
         </div>
     </div>
 
-    
     <!-- Javascript file -->
     <script src="js/sidenav.js"></>
 </body>
