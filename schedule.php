@@ -37,6 +37,36 @@
         margin: 0;
         padding-bottom: 0.5rem ;
       }
+
+      /* General styles for all devices */
+      .scheduleTable {
+        width: 100%;
+        table-layout: fixed;
+      }
+
+      /* Tablet view */
+      @media only screen and (min-width: 768px) and (max-width: 1023px) {
+        .timeCol {
+          font-size: 0.75rem;
+          padding: 0.25rem;
+        }
+        
+        .section-button {
+          font-size: 0.5rem;
+        }
+      }
+
+      /* Mobile view */
+      @media only screen and (max-width: 767px) {
+        .timeCol {
+          font-size: 0.6rem;
+          padding: 0.25rem;
+        }
+        
+        .section-button {
+          font-size: 0.4rem;
+        }
+      }
     
     </style>
   </head>

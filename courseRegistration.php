@@ -70,9 +70,6 @@ var_dump($_POST);
             });
         });
 
-        
-        
-        
     </script>
     
 </head>
@@ -127,13 +124,16 @@ var_dump($_POST);
                 try{
                      if($row){
                             // need to calculate credit hours, add cgpa maybe?
-                        echo "<div class=''>Student Name: ".$row['fullName']." </div>
+                            
+                        echo "<div class='upper-container'>
+                            <div class=''>Student Name: ".$row['fullName']." </div>
                             <div class=''>Major: ".$row['name']."</div>
                             <div class=''>Credit Hours:".$row['creditsPassed']."</div>";
                             if ($sem){
                                 $currentY=$sem['year'];
                                 $nextY=$currentY + 1;
                                 echo "<div class=''>Semester: ".$currentY."/".$nextY."</div>";
+                                echo "</div>";
                             }
                         }
                         
@@ -183,8 +183,8 @@ var_dump($_POST);
                     </div>
                 <div id="course-manage">
                     <div class="container" id="c-info"> 
-                        <div class="st-info"> 
-                            <div class="st-info-lb"><label> Instructor Name:</label></div> 
+                        <div class="st-info">  
+                            <div class="st-info-lb"><label> Instructor Name: </label></div> 
                             <div class="st-info-lb"><label>Lecture Timing: </label></div>
                             <div class="st-info-lb"><label>Available Seats: </label></div>
                             <div class="st-info-lb"><label>Pre-requisite: </label></div>
@@ -192,7 +192,7 @@ var_dump($_POST);
                         </div>
                         <div class="st-info" id="conflict">
                             <div class="st-info-lb"><label>Lecture Conflict: </label></div>
-                            <div class="st-info-lb"><label>Final Conflict:</label></div>
+                            <div class="st-info-lb"><label>Final Conflict: </label></div>
                         </div>
                     </div>
                     <div class="container" id="course-toolb">

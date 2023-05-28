@@ -14,8 +14,6 @@ h2{
 
 
 
-  
-
 .select{
     padding: 5px ;
     color: rgba(0, 0, 0, 0.6);
@@ -117,4 +115,68 @@ button{
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+}
+
+@media only screen and (max-width: 768px) {
+    #course-manage {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #c-info {
+        width: 100%;
+        flex-direction: column;
+        align-items: left;
+    }
+
+    .st-info {
+        min-width: auto;
+    }
+
+    #course-toolb {
+        width: 100%;
+        margin-top: 20px;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    #c-info {
+        flex-direction: column;
+        align-items: left;
+    }
+
+    .st-info {
+        min-width: auto;
+        margin-bottom: 20px;
+    }
+
+    #course-toolb {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #course-toolb button {
+        margin-bottom: 10px;
+    }
+}
+
+.upper-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    margin-top: 0.8rem;
+}
+
+.upper-container div {
+    margin-bottom: 10px;
+    margin-right: 2rem;
+}
+
+@media only screen and (max-width: 768px) {
+    .upper-container {
+        flex-direction: column;
+        align-items: left;
+    }
 }
