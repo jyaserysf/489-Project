@@ -1,7 +1,7 @@
 <?php
     try{
         require('Database/connection.php');
-        $sectionID = $_GET['sectionID'];
+        $sectionID = $_POST['sectionID'];
         $stmt = $db->prepare("SELECT * FROM enrollments WHERE sectionID=?");
         $stmt->execute(array($sectionID));
         $numOfEnrollemnts = $stmt->rowCount();
@@ -16,7 +16,7 @@
             $stmt2->execute(array($sectionID));
         }
         $db = null;
-        header('location: HOD-manageCourses.php');
+        header('location: manageSemesters.php');
     }
     catch(PDOException $e){
         die($e->getMessage());

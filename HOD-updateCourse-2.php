@@ -3,6 +3,8 @@
         require('Database/connection.php');
         $stmt = $db->prepare("UPDATE courses SET courseCode=?, courseName=?, creditHours=?, preRequisites=? WHERE ID=?");
 
+        if(!isset($_POST['courseCode']) || !isset($_POST['courseName']) || !isset($_POST['creditHours']) || !isset($_POST['courseID']))
+            die("Enter All Course Information");
         $courseCode = $_POST['courseCode'];
         $courseName = $_POST['courseName'];
         $creditHours = $_POST['creditHours'];
@@ -20,7 +22,7 @@
             die ("Invalid Course Name");
         if(!preg_match($creditHoursPattern, $creditHours))
             die ("Invalid Credit Hours");
-        if(!preg_match($preRequisitesPattern, $preRequisites))
+        if($preRequisites != "" && !preg_match($preRequisitesPattern, $preRequisites))
             die ("Invalid PreRequisites");
 
         $stmt->execute(array($courseCode, $courseName, $creditHours, $preRequisites, $courseID));
