@@ -9,11 +9,8 @@ if(!isset($_SESSION['activeUser'])){
 
     try{
         require('Database/connection.php');
-        $Courses = "SELECT DISTINCT * FROM `enrollments`JOIN students ON enrollments.studentID=students.ID 
-        JOIN courses  
-        JOIN course_sections on courses.ID=course_sections.courseID
-      JOIN semester
-        WHERE students.ID =".  $_SESSION['activeUser']['ID']." AND NOW() BETWEEN beginDate AND endDate";
+        $Courses = " SELECT DISTINCT enrollments.*, courses.courseCode, courses.courseName FROM `enrollments`JOIN students ON enrollments.studentID=students.ID JOIN course_sections on enrollments.sectionID=course_sections.ID join courses on course_sections.courseID=courses.ID JOIN semester on course_sections.semesterID=semester.ID WHERE students.ID =".  $_SESSION['activeUser']['ID']." AND NOW() BETWEEN beginDate AND endDate";
+       
          $ViewC = $db->query($Courses);
       
          
@@ -61,15 +58,17 @@ if(!isset($_SESSION['activeUser'])){
 
 <?php
 // echo $_SESSION['activeUser']['ID'];
-foreach($ViewC as $display){?>
-<tr>
-<td> <?php echo $display['courseCode']?> </td>
-<td> <?php echo $display['courseName']?> </td>
-<td> <?php echo $display['absence']?> </td>
+foreach($ViewC as $display){
+    if($display['absence']>=1){?>
+        <tr>
+        <td> <?php echo $display['courseCode']?> </td>
+        <td> <?php echo $display['courseName']?> </td>
+        <td> <?php echo $display['absence']?> </td>
 
-<?php $P=$display['absence']/30;$P  ?>    
-<td <?php if($display['absence']>=5)echo'style="background-color: red"'?>><?php echo number_format($P*100,2) ."%";  ?></td>
-<?php }?> 
+        <?php $P=$display['absence']/30;$P  ?>    
+        <td <?php if($display['absence']>=5)echo'style="background-color: red"'?>><?php echo number_format($P*100,2) ."%";  ?></td>
+    <?php }
+}?> 
 
 
 </tr>
