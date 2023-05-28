@@ -9,6 +9,15 @@ if(!isset($_SESSION['activeUser'])){
 
     try{
         require('Database/connection.php');
+        $Courses = "SELECT DISTINCT * FROM `enrollments`JOIN students ON enrollments.studentID=students.ID 
+        JOIN courses  
+        JOIN course_sections on courses.ID=course_sections.courseID
+      JOIN semester
+        WHERE students.ID =".  $_SESSION['activeUser']['ID']." AND NOW() BETWEEN beginDate AND endDate";
+         $ViewC = $db->query($Courses);
+      
+         
+        
     }
     catch(PDOException $e){
         die($e->getMessage());
@@ -21,7 +30,7 @@ if(!isset($_SESSION['activeUser'])){
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    
+    <link rel="stylesheet" href="css/Attendance_instractor.css">
     <link rel="stylesheet" href="generalstyling.css">
     
 </head>
@@ -36,15 +45,37 @@ if(!isset($_SESSION['activeUser'])){
             </div>
             <div class="attend-table">
                 <table>
-                    <tr> 
-                        <th>Course Code</th><th>Course Name</th><th>Absence No.</th> <th>Absence %</th> <th>Excused Absence No.</th> <th>Excused Absence %</th> <th>Warning No.</th> 
-                    </tr>
-                    <?php 
-                        // add rows for every absence, get from  enrollments table after instructor has assigned an absence
-                        echo '<tr>
-                                <td> </td>
-                        </tr>';
-                    ?>
+             <tr>
+                        <th>Course Code</th>
+                       
+                     
+                        <th>Course Name</th>
+                       
+              
+                        <th>Absence No.</th> 
+                    
+                   
+                 
+                        <th>Absence %</th> 
+ </tr>     
+
+<?php
+// echo $_SESSION['activeUser']['ID'];
+foreach($ViewC as $display){?>
+<tr>
+<td> <?php echo $display['courseCode']?> </td>
+<td> <?php echo $display['courseName']?> </td>
+<td> <?php echo $display['absence']?> </td>
+
+<?php $P=$display['absence']/30;$P  ?>    
+<td <?php if($display['absence']>=5)echo'style="background-color: red"'?>><?php echo number_format($P*100,2) ."%";  ?></td>
+<?php }?> 
+
+
+</tr>
+</td>
+                 
+
                 </table>
             </div>
             
@@ -53,3 +84,15 @@ if(!isset($_SESSION['activeUser'])){
        <!-- Javascript file -->
        <script src="js/sidenav.js"></script>
 </body>
+<style>
+       td{
+            text-align: center;
+        }
+        table{
+            margin-left: 10%;
+            
+        }
+        h1{
+            text-align: center;
+        }
+</style>

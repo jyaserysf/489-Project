@@ -17,7 +17,7 @@ try {
    JOIN course_sections
    ON semester.ID = course_sections.semesterID JOIN enrollments ON students.ID=enrollments.studentID JOIN courses ON course_sections.courseID = 
   courses.ID JOIN instructors ON course_sections.instructorID = instructors.ID WHERE 
-  instructors.ID = " . $_SESSION['activeUser']['ID'] . " AND course_sections.sectionNumber = " . $section_num;//." AND NOW() BETWEEN beginDate AND endDate" ;
+  instructors.ID = " . $_SESSION['activeUser']['ID'] . " AND course_sections.sectionNumber = " . $section_num." AND NOW() BETWEEN beginDate AND endDate" ;
             // we need to insert data for dr taher for  this semester  
             //." AND courses.courseCode = ". $course_Code;
             $semesterResult = $db->query($semesterQuery);
