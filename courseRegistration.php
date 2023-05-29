@@ -7,7 +7,7 @@ session_start();
         exit();
     }
 
-var_dump($_POST);
+//var_dump($_POST);
 
 // page should only be accessed betweeen modifyStart and end (use js popup and date), i can use the semester id from modifyStart and end
 ?>
@@ -147,7 +147,7 @@ var_dump($_POST);
             ?>
             </div>
             <div class="3 " id="course-section">
-                <form method="post" > 
+                <form method="post" id='form'> 
                      <div class="select-cs" id="select-container">
                       <?php
                         try{ 
@@ -341,6 +341,11 @@ var_dump($_POST);
                         $selectedSecInfo=$_POST['selectedSection'];
                         $selectedSecDetails=explode(' | ',$selectedSecInfo);
                         $error='error';
+
+
+                        
+
+
                         if(count($enrollsectSemALL)<=3){
                             $error='lessthan3';
                             popup($error);
@@ -406,6 +411,33 @@ var_dump($_POST);
     </div>
     <!-- Javascript file -->
     <script src="js/sidenav.js"></script>
+    <script>
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     const dropCourseButton = document.getElementById('dropS');
+        //     const enrollmentsForm = document.getElementById('form');
+
+        //     dropCourseButton.addEventListener('click', function(event) {
+        //         event.preventDefault();
+
+        //         swal({
+        //         title: 'Are you sure?',
+        //         text: "You won't be able to revert this!",
+        //         icon: 'warning',
+        //         buttons: true,
+        //         dangerMode: true,
+        //         confirmButtonColor: '#3085d6',
+        //         cancelButtonColor: '#d33',
+        //         confirmButtonText: 'Yes, delete it!'
+        //     }).then((willDelete) => {
+        //         if (willDelete) {
+        //         enrollmentsForm.submit();
+        //         }
+        //     });
+        //     });
+        // });
+
+
+</script>
    
 </body>
 
