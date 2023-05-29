@@ -313,7 +313,7 @@ session_start();
                     }elseif(isset($_POST['addcourse'])&& isset($_POST['selectC'])){
                         //popup -> must select course section ?>
 
-                     <script>swal("Please select a course section.", "You need to select a course section before you can add it. Please choose a course section and try again.", "error");</script>
+                     <script>swal("Please select a section", "You need to select a course section before you can add it. Please choose a section and try again.", "error");</script>
 
                     <?php    // echo "select course section before adding";
                     }elseif(isset($_POST['addcourse'])){
