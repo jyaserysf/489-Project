@@ -51,19 +51,6 @@
     <title>Profile</title>
     
     <link rel="stylesheet" href="generalstyling.css">
-
-    <style>
-        .flex-c {
-            display: flex;
-            flex-direction: row;
-        }
-
-        @media screen and (max-width: 600px) {
-            .flex-c {
-                display: block;
-            }
-        }
-    </style>
     
 </head>
 <body>
