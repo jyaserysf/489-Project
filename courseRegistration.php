@@ -242,22 +242,26 @@ session_start();
                                 
                                 if(count($enrollsectSemALL)<7){  
                                     if($selectedSecDetails[6]>=1){
-                                        if( $finalConf['num'] <1 || $lectureConf['num']<1){
-                                            while($passedCourses=$prevEnrolled_sections->fetch()){
+                                        if( $finalConf['num'] <1 ){
+                                            if($lectureConf['num']<1){
+                                                while($passedCourses=$prevEnrolled_sections->fetch()){
                                                 $preReq= explode(',',$preReqs);
                                                 //print_r($preReq);
                                                 for($i=0; $i<count($preReq); $i++){
-                                                    if($passedCourses['courseCode']==$preReq[$i] && $passedCourses['grade']!='null'){
+                                                    if($passedCourses['courseCode']==$preReq[$i]){
                                                         $preReqC++;}   
-                                                }     
+                                                    }     
+                                                }
+                                            }else{
+                                                $enrolled=false;
                                             }
                                         }
                                         else{
-
+                                            $enrolled=false;
                                             //pop up
                                             ?>
-                                            <script>swal("Conflict detected.", "There's a conflict with another section. Please Choose a different section", "error");</script>
-                                            <?php $enrolled=false;
+                                            <script>swal("Conflict error !", "You have a conflict with another section !", "error");</script>
+                                            <?php 
                                         }
                                     }else{
                                         //pop up
