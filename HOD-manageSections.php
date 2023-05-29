@@ -29,8 +29,8 @@ if(isset($_POST['submit']))
         }
 
         .manageBtn {
-            width: 10rem;
-            height: 4rem;
+            width: 10.5rem;
+            height: 40px;
             background-color:rgba(0, 0, 0, 0.8);
             color: #fff;
             border: none;
@@ -41,7 +41,7 @@ if(isset($_POST['submit']))
             border-radius: 5px;
             font-size: 1rem;
             transition: 0.3s;
-            margin: 0 10px 0 10px;
+            margin: 2rem 1rem 0 0;
         }
 
         .manageBtn:hover {
@@ -116,6 +116,7 @@ if(isset($_POST['submit']))
                     <input type="hidden" name="semesterID" value="<?php echo $_POST['semesterID']; ?>">
                     <input type="hidden" name="courseID" value="<?php echo $_POST['courseID']; ?>">
 
+                    <div class="flex-c">
                     <div class="row" id="submitDiv">
                         <input class="manageBtn" type="submit" value="Edit Section" />
                     </div>
@@ -125,6 +126,7 @@ if(isset($_POST['submit']))
                 <form method="post">
                     <div class="row" id="submitDiv">
                         <input class="manageBtn" type="submit" name="submit" value="Cancel" />
+                    </div>
                     </div>
                 </form>
 
