@@ -341,7 +341,7 @@ session_start();
                         
                         if(count($enrollsectSemALL)<=3){
                             // echo "you cannot have less than 3 courses ";
-                            ?> <script>swal("Unable to proceed.", "Minimum of 3 courses required.", "error");</script> <?php
+                            ?> <script>swal("Unable to proceed", "Minimum of 3 courses required.", "error");</script> <?php
 
                         }else{
                             $deleteEnroll->bindParam(':sID', $selectedSecDetails[7]);
@@ -380,7 +380,7 @@ session_start();
                 <div  id='display-sched'>
                                         <div class='container' id='sched'>
                                             <?php 
-                                            require('schedule.php');
+                                            //require('schedule.php');
                                             
 
                                             yourSched($enrollsectSemALL);

@@ -154,13 +154,16 @@ if(!isset($_SESSION['activeUser'])){
 
                                             $check=false;
                                             //pop up?>
-                                            <script>swal("Conflict error !", "You have a conflict with another section !", "error");</script>
-                                            <?php echo 'conflict error';
+                                            <script>swal("Conflict detected!", "You have a conflict with another section.", "error");</script>
+                                            <?php // echo 'conflict error';
                                             
                                         }
                                     }else{
-                                        echo 'no seats';
+                                        // echo 'no seats';
                                         //pop up
+                                        ?>
+                                        <script>swal("Course is full", "There are no available seats for this section. Choose another section.", "error");</script>
+                                        <?php
                                         $check=false;
                                     }
                                     //echo $preReqC;
@@ -189,13 +192,15 @@ if(!isset($_SESSION['activeUser'])){
                                         $updateAvailbSeats->bindParam(':secID',$oldSID);
                                         $updateAvailbSeats->execute();
                                         //$updateAvailbSeats->execute(array($oldSect['availableSeats'],$oldSID));
-                                        echo "<h5>switched seat successfully! </h5>
-                                        ";
+                                        ?>
+                                        <script>swal("Seats swap successful!", "Two course seats have been swapped.", "success");</script>
+                                        <?php
+                                        // echo "<h5>switched seat successfully! </h5>";
                                         unset($_GET);
                                     }
                                     else{
                                         ?>
-                                        <script>swal("Swap error !", "This section cannot be swapped !", "error");</script>
+                                        <script>swal("Failed to swap seats", "Unable to complete the swap.", "error");</script>
                                         <?php
                                             //echo "<h5>course has not been switched </h5>";
                                          unset($_GET);
@@ -204,6 +209,7 @@ if(!isset($_SESSION['activeUser'])){
 
                             }elseif(empty($_GET['selectSwC']) || empty($_GET['selectToSwC'])){
                                 echo "<h5> select a section to switch with </h5>";
+                               
                             }
                        
                         //echo "<h5>switched seat successfully! </h5>";
