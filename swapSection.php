@@ -6,7 +6,7 @@ if(!isset($_SESSION['activeUser'])){
     exit();
 }
 
-    var_dump($_POST);
+    //var_dump($_POST);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,6 +31,7 @@ if(!isset($_SESSION['activeUser'])){
             <?php 
 
             require('courseRegSQL.php');
+            require('schedule.php');
             
             $switchSectionEnroll=$db->prepare("UPDATE  enrollments set sectionID=? where ID=? ");
                     $sql_coursesSec = "SELECT courses.*, course_sections.* FROM courses JOIN program_courses ON courses.ID = program_courses.courseID JOIN programs ON program_courses.programID = programs.PID JOIN course_sections on course_sections.ID = courses.ID WHERE programs.PID=".$row['PID']." and course_sections.semesterID=".$semm['ID'];
@@ -130,13 +131,14 @@ if(!isset($_SESSION['activeUser'])){
                                 $finalConflictrec=$db->query(" SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE course_sections.finalDate=".$newSect['finalDate']." AND  course_sections.semesterID=".$semm['ID']." AND enrollments.studentID=$stID");
                             
                                 $finalConf=$finalConflictrec->fetch();
+                                $error='swap';
                                 $check=true;
                                 $preReqC=0;
                                 $preReq= explode(',',$preReqs);
                                 //print_r($preReq);
                                 //check for seats, preReqs and conflicts again 
                                     if($newSect['availableSeats']>=1){
-                                        if( $finalConf['num'] <1 || $lectureSTime['num']!=1){
+                                        if( $finalConf['num'] <1 ){
                                             if($lectureConf['num']<1){
                                                 while($passedCourses=$prevEnrolled_sections->fetch()){
                                                 for($i=0; $i<count($preReq); $i++){
@@ -146,26 +148,35 @@ if(!isset($_SESSION['activeUser'])){
                                                     }     
                                                 }
                                             }else{
-                                                $check=false;
+                                                if($lectureSTime['num']!=1){
+                                                    $check=true;
+                                                }else{
+                                                    $check=false;
+                                                    $error='lect';
+                                                }
+                                                
                                             }
                                             
                                         }
                                         else{
 
                                             $check=false;
+                                            $error='final';
                                             //pop up?>
                                             <script>swal("Conflict detected!", "You have a conflict with another section.", "error");</script>
                                             <?php // echo 'conflict error';
                                             
                                         }
                                     }else{
-                                        // echo 'no seats';
+                                        
                                         //pop up
+                                        $check=false;
+                                        $error='seat';
                                         ?>
+                                        
                                         <script>swal("Course is full", "There are no available seats for this section. Choose another section.", "error");</script>
                                         <?php
-                                        $check=false;
-                                    }
+                                        }
                                     //echo $preReqC;
                                     //echo $check;
 
@@ -193,22 +204,26 @@ if(!isset($_SESSION['activeUser'])){
                                         $updateAvailbSeats->execute();
                                         //$updateAvailbSeats->execute(array($oldSect['availableSeats'],$oldSID));
                                         ?>
-                                        <script>swal("Seats swap successful!", "Two course seats have been swapped.", "success");</script>
+                                        <script>//swal("Seats swap successful!", "Two course seats have been swapped.", "success");</script>
                                         <?php
                                         // echo "<h5>switched seat successfully! </h5>";
+                                        $error='swapped';
+                                        popup($error);
                                         unset($_GET);
                                     }
                                     else{
                                         ?>
-                                        <script>swal("Failed to swap seats", "Unable to complete the swap.", "error");</script>
+                                        <script>//swal("Failed to swap seats", "Unable to complete the swap.", "error");</script>
                                         <?php
                                             //echo "<h5>course has not been switched </h5>";
-                                         unset($_GET);
+                                           
+                                            popup($error);
+                                            unset($_GET);
                                     }
                                 
 
                             }elseif(empty($_GET['selectSwC']) || empty($_GET['selectToSwC'])){
-                                echo "<h5> select a section to switch with </h5>";
+                                //echo "<h5> select a section to switch with </h5>";
                                
                             }
                        
@@ -219,7 +234,7 @@ if(!isset($_SESSION['activeUser'])){
             <div  id='display-sched'>
                 <div class='container' id='sched'>
                     <?php 
-                    require('schedule.php');
+                    //require('schedule.php');
                     yourSched($enrollsectSemALL);?>
          </div>
         </div>
