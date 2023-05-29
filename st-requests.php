@@ -17,7 +17,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Requests</title>
-    
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <link rel="stylesheet" href="generalstyling.css">
     <style>
         /*
@@ -108,6 +108,13 @@
         </div>
             
             <?php
+                if(isset($_GET['selectReportSubmit']) && !isset($_GET['reportID'])) {
+                    //pop up
+                    ?>
+                    <script>swal("Select a report type", "You must select a report type before continue.", "error");</script>
+                    <?php
+                }
+
                 if(isset($_GET['selectReportSubmit']) && isset($_GET['reportID'])) {
 
                     $reportID = $_GET['reportID'];
