@@ -247,7 +247,7 @@ session_start();
                                                 $preReq= explode(',',$preReqs);
                                                 //print_r($preReq);
                                                 for($i=0; $i<count($preReq); $i++){
-                                                    if($passedCourses['courseCode']==$preReq[$i]){
+                                                    if($passedCourses['courseCode']==$preReq[$i] && $passedCourses['grade']!='null'){
                                                         $preReqC++;}   
                                                 }     
                                             }
@@ -381,8 +381,10 @@ session_start();
 
                                             ?>
                                         </div>
-                
-            </div>
+                </div>
+                <div id='payment'>
+                    <button class='submitBtn' id='pay' onclick="window.location.href='https://services.bahrain.bh/wps/portal/!ut/p/a1/jZBNj4JADIZ_iweutA6gs94qJnwaYgwR57IZEgQMAhlQ_Pkit012WXtr8zzp24KABEQtH2Uu-7KpZfXuxeqbc8deMs58DCJEovhAfkjM4cYInEfA4sx2gxGIDNNCMoPDNo5cAyP8zLcdcs11iIgmZ-jttu5u_bVH9Faf-fhH0b_7j1LBCcSEzV0xAXMxJ2Amhw8ir5p0-umZ6tTgOQiVXTKVKf2uxnHR92230VDDYRj0VBZKlrWeFhr-phRN10Pyk4T2FsfJ07ta1SMkWixeN0TjPQ!!/dl5/d5/L2dBISEvZ0FBIS9nQSEh/'" >Pay</button>
+                </div>
        
 
             

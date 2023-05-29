@@ -117,6 +117,17 @@ button{
     justify-content: space-around;
 }
 
+#pay{
+    margin: 0;
+}
+
+#payment {
+    margin: 30px;
+    min-height: 60px;
+    display: flex;
+    justify-content: center;
+}
+
 @media only screen and (max-width: 768px) {
     #course-manage {
         flex-direction: column;
