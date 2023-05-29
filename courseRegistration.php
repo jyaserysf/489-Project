@@ -361,7 +361,7 @@ session_start();
                     }elseif(isset($_POST['dropcourse'])){
                         // popup-> must select course
                         ?> <script>swal("No course selected", "Select a course to drop.", "error");</script> <?php
-                        // echo "select course before dropping";
+                        
                         unset($_POST);
                     } 
 
