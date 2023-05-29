@@ -18,6 +18,36 @@ if(!isset($_SESSION['activeUser'])){
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <link rel="stylesheet" href="generalstyling.css">
     
+    <style>
+        select {
+            padding: 5px ;
+            color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(236, 232, 221, 0.7);
+            border-color: rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin-bottom: 2rem;
+        }
+
+        .submitBtn {
+            width: 6.5rem;
+            height: 40px;
+            background-color:rgba(0, 0, 0, 0.75);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            /*finger*/
+            cursor: pointer;
+            float: right;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: 0.3s;
+            margin: 0 1rem 0 0;
+        }
+
+        .submitBtn:hover {
+            background-color: #A0BCC2;
+        }
+    </style>
 </head>
 <body>
     <div class="wrapper">
@@ -89,9 +119,13 @@ if(!isset($_SESSION['activeUser'])){
                                 }  
                                 echo"</select>
                                 </div>
-                                <div>
-                                <a href='courseRegistration.php'> <button id='close-popup'>Back</button></a> 
-                                <button type='submit' id='sW' name='swapSections'>Swap</button>
+                                <div class='flex-c'>
+                                <div class='row' id='submitDiv'>
+                                <a href='courseRegistration.php'> <button class='submitBtn' id='close-popup'>Back</button></a>
+                                </div>
+                                <div class='row' id='submitDiv'> 
+                                <button class='submitBtn' type='submit' id='sW' name='swapSections'>Swap</button>
+                                </div>
                                 </div>
                             </form>
                             </div>";
