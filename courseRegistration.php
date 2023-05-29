@@ -260,13 +260,13 @@ session_start();
                                             $enrolled=false;
                                             //pop up
                                             ?>
-                                            <script>swal("Conflict error !", "You have a conflict with another section !", "error");</script>
+                                            <script>swal("Conflict detected!", "You have a conflict with another section.", "error");</script>
                                             <?php 
                                         }
                                     }else{
                                         //pop up
                                         ?>
-                                        <script>swal("Course is full", "There are no available seats for this section. Choose another section", "error");</script>
+                                        <script>swal("Course is full", "There are no available seats for this section. Choose another section.", "error");</script>
                                         <?php
                                         $enrolled=false;
                                     }
@@ -344,7 +344,7 @@ session_start();
                         
                         if(count($enrollsectSemALL)<=3){
                             // echo "you cannot have less than 3 courses ";
-                            ?> <script>swal("Unable to proceed.", "Minimum of 3 courses required.", "error");</script> <?php
+                            ?> <script>swal("Unable to proceed", "Minimum of 3 courses required.", "error");</script> <?php
 
                         }else{
                             $deleteEnroll->bindParam(':sID', $selectedSecDetails[7]);
