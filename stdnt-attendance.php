@@ -37,7 +37,7 @@ if(!isset($_SESSION['activeUser'])){
             <?php include 'sidenav/student-sidenav.php'; ?>
         </div>
         <div class="pagecontent-wrapper" id="main">
-            <div class="title" >
+            <div class="title">
                 <h1> Course Attendance </h1> 
             </div>
             <div class="attend-table">

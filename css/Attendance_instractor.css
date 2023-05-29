@@ -133,17 +133,19 @@ div.content {
   margin: 0;
   display: flex;
   justify-content: center;
- 
 }
 
 html {
   background-color: #FEFBE7;
 }
 /*-----------------------------------------*/
-body
- {
+body {
     line-height: 1.6;
     margin: 2em;
+}
+
+.title h1{
+  text-align: left;
 }
 
 th {
@@ -212,3 +214,5 @@ color: black;
 .selection{
 display: flex;
 }
+
+
