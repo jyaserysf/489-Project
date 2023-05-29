@@ -25,11 +25,47 @@ if(!isset($_SESSION['activeUser'])){
         </div>
         <div class="pagecontent-wrapper" id="main">
         <div class="title" >
-                <h1>Welcome Instructor Name</h1> 
+        <?php
+                try {
+                    require('Database/connection.php');
+                    $ID = $_SESSION['activeUser']['ID'];
+                    if($_SESSION['activeUser']['role'] == "admin")
+                        $sql = $db->prepare("SELECT * FROM admins WHERE ID=?");
+                    elseif($_SESSION['activeUser']['role'] == "student")
+                        $sql = $db->prepare("SELECT * FROM students WHERE ID=?");
+                    else
+                        $sql = $db->prepare("SELECT * FROM instructors WHERE ID=?");
+                    $sql->execute(array($_SESSION['activeUser']['ID']));
+                    $db=null;
+
+
+                }
+                catch(PDOException $e) {
+                    die($e->getMessage());
+                } ?>
+
+                <?php if($row = $sql->fetch(PDO::FETCH_ASSOC)) { ?>
+                <h1>Welcome <?php echo $row['fullName'];?></h1> 
+                <?php } ?> 
             </div>
             <div class="instr-sched">
                 <div class="semester-no">
-                    Your semester number Schedule
+                <?php
+                    try {
+                        require('Database/connection.php');
+                        $db->beginTransaction();
+                        //$currentTime=date('Y-m-d');
+                        $semesterInfo="SELECT* from semester where now() BETWEEN semester.beginDate and semester.endDate";
+                        $semester =$db->query($semesterInfo);
+                        $semm=$semester->fetch();
+
+                        
+                        echo "<h4 style='color: rgba(0, 0, 0, 0.45); font-weight: 600;'> Your Semester ".$semm['number'].", ".$semm['year']." Schedule: </h4>";
+                    } catch (PDOException $e) {
+                        $db->rollBack();
+                        die("Error: " . $e->getMessage());
+                    }
+                    ?>
                 </div>
                 <div class="sched">
                     <?php 

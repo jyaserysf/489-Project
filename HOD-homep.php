@@ -64,7 +64,7 @@ if(!isset($_SESSION['activeUser'])){
                         $semm=$semester->fetch();
 
                         
-                        echo "<h4> Your Semester ".$semm['number'].", ".$semm['year']." Schedule: </h4>";
+                        echo "<h4 style='color: rgba(0, 0, 0, 0.45); font-weight: 600;'> Your Semester ".$semm['number'].", ".$semm['year']." Schedule: </h4>";
                     } catch (PDOException $e) {
                         $db->rollBack();
                         die("Error: " . $e->getMessage());
