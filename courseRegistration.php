@@ -212,7 +212,7 @@ session_start();
                     //print_r($enrollsectSemALL);
 
                     require('courseRegSQL.php');
-                    
+                    require('schedule.php');
                     $db->beginTransaction();
                     // ************************* ADD COURSE ***************************
 
@@ -235,7 +235,7 @@ session_start();
                         $finalConflictrec=$db->query(" SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE course_sections.finalDate=$selectedSecDetails[8] AND  course_sections.semesterID=".$semm['ID']." AND enrollments.studentID=$stID");
                     
                         $finalConf=$finalConflictrec->fetch();
-                        
+                        $error='error';
                         $enrolled=true;
                         $preReqC=0; 
                                 // Check if enrolled sections are 6 or less, then check if there are available seats, then check for conflicts, then check prerequisites       
@@ -254,27 +254,25 @@ session_start();
                                                 }
                                             }else{
                                                 $enrolled=false;
+                                                $error='lect';
                                             }
                                         }
                                         else{
                                             $enrolled=false;
+                                            $error='final';
                                             //pop up
-                                            ?>
-                                            <script>swal("Conflict error !", "You have a conflict with another section !", "error");</script>
-                                            <?php 
+                                            
                                         }
                                     }else{
+                                        $error='seat';
                                         //pop up
-                                        ?>
-                                        <script>swal("Course is full", "There are no available seats for this section. Choose another section", "error");</script>
-                                        <?php
+                                        
                                         $enrolled=false;
                                     }
                                 }else{
                                     //pop up
-                                    ?>
-                                    <script>swal("Unable to add course", "You have reached the maximum limit of six courses. Remove a course before adding a new one.", "error");</script>
-                                    <?php
+                                    $error='course';
+                                    
                                     $enrolled=false;
                                 }
 
@@ -303,13 +301,12 @@ session_start();
                                     $updateAvailbSeats->bindParam(':secID',$selectedSecDetails[7]);
                                     $updateAvailbSeats->execute();
                                     //$updateAvailbSeats->execute(array($selectedSecDetails[6], $selectedSecDetails[7]));
-                                    // echo "<h5>added seat successfully! </h5>";
-                                    ?> <script>swal("Registration was successful!", "You are now registered for this course.", "success");</script> <?php
+                                    $error='added';
+                                    popup($error);
                                 }
                                 else{
-                                    ?> <script>swal("Course failed to add", "Looks like the course was not added. Check the details and try again.", "error");</script> <?php
-                                    //echo "<h5>course has not been added </h5>";
-                                     
+                                    
+                                    popup($error);
                                 }
 
                                 unset($_POST);

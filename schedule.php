@@ -273,6 +273,29 @@ function yourInstrSched($arr){
 
 
 
+function popup($parr){
+  switch($parr){
+    case 'lect':
+       ?> <script>swal("Conflict error !", "You have a lecture conflict with another section !", "error");</script><?php
+       break;
+    case 'final':
+      ?> <script>swal("Conflict error !", "You have a final conflict with another section !", "error");</script><?php
+      break;
+    case 'seat':
+        ?> <script>swal("Course is full", "There are no available seats for this section. Choose another section", "error");</script> <?php
+        break;
+    case 'course':
+          ?> <script>swal("Unable to add course", "You have reached the maximum limit of six courses. Remove a course before adding a new one.", "error");</script> <?php
+          break;
+    case 'added':
+          ?> <script> swal("Registration was successful!", "You are now registered for this course.", "success"); </script> <?php
+          break;
+    case 'error':
+      ?> <script> swal("Course failed to add", "Looks like the course was not added. Check the details and try again.", "error"); </script> <?php
+      break;
+  }
+}
+
 
 
     // registering logic

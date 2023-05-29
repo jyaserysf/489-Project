@@ -36,6 +36,11 @@
                 <img id='icon' src='icons/tray.svg' alt=''>
                 <a href='HOD-manageCourses.php'>Manage Courses</a>
             </div>
+
+            <div class='sideElement'>
+                <img id='icon' src='icons/tray.svg' alt=''>
+                <a href='manageSemester.php'>Manage Semester</a>
+            </div>
             ";
         }elseif($_SESSION['activeUser']['role'] == "Instructor"){
             echo "
