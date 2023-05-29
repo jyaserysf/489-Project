@@ -63,7 +63,9 @@ if(!isset($_SESSION['activeUser'])){
                         $semester =$db->query($semesterInfo);
                         $semm=$semester->fetch();
 
-                        
+                        $currentSections=$db->prepare('SELECT * from course_sections JOIN courses on course_sections.courseID=courses.ID WHERE semesterID=? and instructorID=?');
+                        $currentSections->execute(array($semm['ID'], $_SESSION['activeUser']['ID']));     
+
                         echo "<h4 style='color: rgba(0, 0, 0, 0.45); font-weight: 600;'> Your Semester ".$semm['number'].", ".$semm['year']." Schedule: </h4>";
                     } catch (PDOException $e) {
                         $db->rollBack();
@@ -73,8 +75,10 @@ if(!isset($_SESSION['activeUser'])){
                 </div>
                 <div class="sched">
                     <?php 
+                     $currentSched=$currentSections->fetchAll();
+
                     require('schedule.php');
-                    yourSched();?>
+                    yourInstrSched($currentSched);?>
                 </div>
             </div>
             
