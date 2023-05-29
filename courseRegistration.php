@@ -300,7 +300,7 @@ session_start();
                                     $updateAvailbSeats->execute();
                                     //$updateAvailbSeats->execute(array($selectedSecDetails[6], $selectedSecDetails[7]));
                                     // echo "<h5>added seat successfully! </h5>";
-                                    ?> <script>swal("Success!", "You have successfully registered for this course.", "success");</script> <?php
+                                    ?> <script>swal("Success!", "You have been successfully registered for this course.", "success");</script> <?php
                                 }
                                 else{
                                     ?> <script>swal("Adding Error!", "Looks like the course was not added successfully.", "error");</script> <?php
