@@ -290,8 +290,14 @@ function popup($parr){
     case 'added':
           ?> <script> swal("Registration was successful!", "You are now registered for this course.", "success"); </script> <?php
           break;
+    case 'swap':
+            ?> <script> swal("Course failed to add", "Looks like the course was not added. Check the details and try again.", "error"); </script> <?php
+            break;
+    case 'swapped':
+            ?> <script>swal("Seats swap successful!", "Two course seats have been swapped.", "success"); </script> <?php
+            break;
     case 'error':
-      ?> <script> swal("Course failed to add", "Looks like the course was not added. Check the details and try again.", "error"); </script> <?php
+      ?> <script> swal("Failed to swap seats", "Unable to complete the swap.", "error"); </script> <?php
       break;
   }
 }
