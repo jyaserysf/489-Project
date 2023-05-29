@@ -8,7 +8,7 @@ session_start();
     }
 
 //var_dump($_POST);
-//print_r( $_SESSION['activeUser']) ;
+
 // page should only be accessed betweeen modifyStart and end (use js popup and date), i can use the semester id from modifyStart and end
 ?>
 <!DOCTYPE html>
@@ -156,14 +156,14 @@ session_start();
                                 // display courses offered this SEM that have NOT been already enrolled
                                 while ($courses=$programCourses->fetch(PDO::FETCH_ASSOC)) {
                                     $enrolled=false;
-                                    //echo " courses: ".$courses['ID'];
+                                    
                                     $prevEnrolled_sections->execute(); 
                                     while($passedCourses=$prevEnrolled_sections->fetch(PDO::FETCH_ASSOC)){
                                             if ($courses['ID'] == $passedCourses['courseID'] ){
                                                 $enrolled=true;
                                                 break;
                                             }
-                                        //echo $passedCourses['courseID'];
+                                       
                                     } 
                                     if (!$enrolled){
                                         echo "<option  value='".$courses['ID']."'>".$courses['courseCode']." | ".$courses['courseName']."</option>  ";
@@ -197,7 +197,7 @@ session_start();
                     </div>
                     <div class="container" id="course-toolb">
                         <div> <button id="addS" name="addcourse" type="submit"> <i class="fa-regular fa-plus" ></i> </button> </div>
-                        <div> <button id="switchS" name="switchsection" ><i class="fa-solid fa-rotate" ></i> </button> </div>
+                        <div> <a href='swapSection.php' id="switchS"> <i class="fa-solid fa-rotate" ></i>  </a> </div>
                         <div> <button id="dropS" name="dropcourse" type="submit"><i class="fa-solid fa-trash"  ></i> </button> </div>
                     </div>
                 </form>
@@ -208,40 +208,12 @@ session_start();
             <?php 
 
                 try{
-                    $stID=$_SESSION['activeUser']['ID'];
                     
-                    $ID = $_SESSION['activeUser']['username'];
-                    $db->beginTransaction();
-                    $currentTime=date('Y-m-d');
-                    $semesterInfo="SELECT* from semester where now() BETWEEN semester.modifyStart and semester.modifyEnd";
-                    $semester =$db->query($semesterInfo);
-                    $semm=$semester->fetch();
-
-                    $stInfo = "SELECT students.*, programs.name, programs.year, programs.departmentID, programs.PID FROM students JOIN programs ON students.studyProgram=programs.PID where students.studentID=$ID ";
-                    $studentRec = $db->query($stInfo);
-                    $row=$studentRec->fetch();
-
-                    $prevenrolled_sectionsrec="SELECT course_sections.*, enrollments.grade, enrollments.paid, enrollments.studentID, courses.courseCode from course_sections Join enrollments on course_sections.ID = enrollments.sectionID join courses on courses.ID=course_sections.courseID where enrollments.studentID=".$row['ID'];
-                    $prevEnrolled_sections=$db->query($prevenrolled_sectionsrec);
-                    $passedCourses=$prevEnrolled_sections->fetch();
-
-                    $sql_stEnrollID="SELECT students.ID from students where studentID=$ID";
-                                $stEnrollIDrec=$db->query($sql_stEnrollID);
-                                $stEnrollID=$stEnrollIDrec->fetch();
-                                
-
-                    $enrolledSectionsthisSem=$db->prepare("SELECT enrollments.* , course_sections.*, semester.* from enrollments join course_sections on enrollments.sectionID=course_sections.ID join semester on course_sections.semesterID=semester.ID where semester.ID=:sID and enrollments.studentID=:stID");
-                    $enrolledSectionsthisSem->bindParam(':sID', $semm['ID']);
-                    $enrolledSectionsthisSem->bindParam(':stID', $stID);
-                    $enrolledSectionsthisSem->execute();
-                    
-                    $enrollsectSemALL=$enrolledSectionsthisSem->fetchAll(PDO::FETCH_ASSOC);
-                    $checkCourse=$db->prepare("SELECT * FROM courses where ID=:courID");
                     //print_r($enrollsectSemALL);
 
+                    require('courseRegSQL.php');
                     
-                    
-                    $updateAvailbSeats=$db->prepare("UPDATE course_sections set availableSeats=:seats where ID=:secID ");
+                    $db->beginTransaction();
                     // ************************* ADD COURSE ***************************
 
                      if(isset($_POST['addcourse'])&& isset($_POST['selectC']) && isset($_POST['selectedSection']) && !empty($_POST['selectedSection'])){
@@ -257,7 +229,6 @@ session_start();
                         $preReqs=$checkThisCourse['preRequisites'];
 
                         $lectureConflictsrec=$db->query("SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE startTime<='$selectedSecDetails[5]' AND endTime>='$selectedSecDetails[4]' AND days='$selectedSecDetails[1]' AND semesterID=".$semm['ID']." and enrollments.studentID=$stID");
-                        
                         
                         $lectureConf=$lectureConflictsrec->fetch();
 
@@ -351,161 +322,7 @@ session_start();
                     } 
                     
 
-                    // ************************* SWITCH COURSE ***************************
-                    $switchSectionEnroll=$db->prepare("UPDATE  enrollments set sectionID=? where ID=? ");
-                    $sql_coursesSec = "SELECT courses.*, course_sections.* FROM courses JOIN program_courses ON courses.ID = program_courses.courseID JOIN programs ON program_courses.programID = programs.PID JOIN course_sections on course_sections.ID = courses.ID WHERE programs.PID=".$row['PID']." and course_sections.semesterID=".$semm['ID'];
-                    $programCoursesSec=$db->query($sql_coursesSec);
-
-                    $sectionInf=$db->prepare("SELECT course_sections.*, courses.preRequisites, courses.courseCode FROM course_sections join courses on course_sections.courseID=courses.ID where course_sections.ID=?");
-                
-                    if(isset($_POST['switchsection'])){
-
-                       
-                        echo "
-                            <div class='container' id='popup'>
-                            
-                            ";
-                                    // $selectedSecInfo=$_POST['selectedSection'];
-                                    // $selectedSecDetails=explode(' | ',$selectedSecInfo);
-
-                                echo" 
-                                <form method='get'> 
-                                <div> <label>Section: </label>
-                                
-                                   <select name='selectSwC'>";
-
-                                    foreach($enrollsectSemALL as $section){
-                                        $sectionInf->execute(array($section['sectionID']));
-                                        $currSec=$sectionInf->fetch();
-                                        echo"   <option selected value=".$section['sectionID']."> ".$currSec['courseCode']." | ".$section['sectionNumber']." </option>";
-                                    }
-                                    
-                            echo"   </select> 
-                                </div>
-                                <div> <label>Section To Swap: </label>
-                                <select name='selectToSwC'>
-                                <option hidden disabled selected value> Select a course and section </option>";
-                                while ($courses=$programCoursesSec->fetch(PDO::FETCH_ASSOC)) {
-                                    $enrolled=false;
-                                    $prevEnrolled_sections->execute(); 
-                                    while($passedCourses=$prevEnrolled_sections->fetch(PDO::FETCH_ASSOC)){
-                                            if ($courses['ID'] == $passedCourses['courseID'] ){
-                                                
-                                                // get section number from course id for this SEMESTER
-                                                $enrolled=true;
-                                                break;
-                                            }
-                                    } 
-                                    if (!$enrolled){
-                                        $sql_currentSections="SELECT * FROM course_sections join courses on course_sections.courseID=courses.ID WHERE courseID=".$courses['ID']." and semesterID=".$semm['ID'];
-                                        $currentSectionsrec=$db->query($sql_currentSections);
-                                        $currentSections=$currentSectionsrec->fetch(PDO::FETCH_ASSOC);
-                                        if($currentSections){
-                                            echo "<option  value='".$currentSections['ID']."'>".$currentSections['courseCode']." | ".$currentSections['sectionNumber']."</option>  ";
-                                        echo $currentSections['ID'];}
-                                        
-                                    } 
-                                }  
-                                echo"</select>
-                                </div>
-                                <div>
-                                <button id='close-popup'>Cancel</button> 
-                                <button type='submit' id='sW' name='swapSections'>Swap</button>
-                                </div>
-                            </form>
-                            </div>";
-                        
-
-                            if(isset($_GET['selectSwC']) && isset($_GET['selectToSwC']) ){
-                                $oldSID=$_GET['selectSwC'];
-                                $newSID=$_GET['selectToSwC'];
-                                
-                                
-                                $enrollID=$db->prepare("SELECT ID from enrollments where sectionID=? and studentID=?");
-                                $enrollID->execute(array($oldSID, $stID));
-                                $eID=$enrollID->fetch();
-
-                                $sectionInf->execute(array($newSID));
-                                $newSect=$sectionInf->fetch();
-                                
-                                $preReqs=$newSect['preRequisites'];
-                                $lectureConflictsrec=$db->query("SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE startTime='".$newSect['startTime']."' AND endTime='".$newSect['endTime']."' AND days='".$newSect['days']."' AND semesterID=".$semm['ID']." and enrollments.studentID=$stID");
-                             
-                                $lectureConf=$lectureConflictsrec->fetch();
-
-                                $finalConflictrec=$db->query(" SELECT enrollments.ID, enrollments.sectionID, COUNT(*) as num FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE course_sections.finalDate=".$newSect['finalDate']." AND  course_sections.semesterID=".$semm['ID']." AND enrollments.studentID=$stID");
-                            
-                                $finalConf=$finalConflictrec->fetch();
-                                $check=true;
-                                $preReqC=0;
-                                $preReq= explode(',',$preReqs);
-                                //print_r($preReq);
-                                //check for seats, preReqs and conflicts again 
-                                    if($newSect['availableSeats']>=1){
-                                        if( $finalConf['num'] <1 || $lectureConf['num']!=1){
-                                            while($passedCourses=$prevEnrolled_sections->fetch()){
-                                                for($i=0; $i<count($preReq); $i++){
-                                                    if($passedCourses['courseCode']==$preReq[$i]){
-                                                        $preReqC++;
-                                                    }   
-                                                }     
-                                            }
-                                        }
-                                        else{
-
-                                            $check=false;
-                                            //pop up?>
-                                            <script>swal("Conflict error !", "You have a conflict with another section !", "error");</script>
-                                            <?php echo 'conflict error';
-                                            
-                                        }
-                                    }else{
-                                        echo 'no seats';
-                                        //pop up
-                                        $check=false;
-                                    }
-                                    //echo $preReqC;
-                                    //echo $check;
-
-                                    if($check && count($preReq)>=$preReqC){
-                                    
-                                        $switchSectionEnroll->execute(array($newSID, $eID['ID']));
-                                        $newSect['availableSeats']=$newSect['availableSeats']-1; 
-                                        $updateAvailbSeats->bindParam(':seats',$newSect['availableSeats']);
-                                        $updateAvailbSeats->bindParam(':secID',$newSID);
-                                        $updateAvailbSeats->execute();
-
-                                        //$updateAvailbSeats->execute(array($newSect['availableSeats'], $newSID));
-                                        $sectionInf->execute(array($oldSID));
-                                        $oldSect=$sectionInf->fetch();
-                                        $oldSect['availableSeats']=$oldSect['availableSeats']+1;
-                                       
-                                        $updateAvailbSeats->bindParam(':seats',$oldSect['availableSeats']);
-                                        $updateAvailbSeats->bindParam(':secID',$oldSID);
-                                        $updateAvailbSeats->execute();
-                                        //$updateAvailbSeats->execute(array($oldSect['availableSeats'],$oldSID));
-                                        echo "<h5>switched seat successfully! </h5>
-                                        ";
-                                        unset($_GET);
-                                    }
-                                    else{
-                                        ?>
-                                        <script>swal("Swap error !", "This section cannot be swapped !", "error");</script>
-                                        <?php
-                                            //echo "<h5>course has not been switched </h5>";
-                                         unset($_GET);
-                                    }
-                                
-
-                            }elseif(empty($_GET['selectSwC']) || empty($_GET['selectToSwC'])){
-                                echo "<h5> select a section to switch with </h5>";
-                            }
-                       
-                        //echo "<h5>switched seat successfully! </h5>";
-                        
-                        unset($_POST);
                     
-                    }
                    
                     // ************************* DROP COURSE ***************************
                     
@@ -573,32 +390,7 @@ session_start();
     </div>
     <!-- Javascript file -->
     <script src="js/sidenav.js"></script>
-    <script>
-
-
-        // Get references to button and pop up elements
-       var openButton = document.getElementById('switchS');
-     
-        var popup = document.getElementById('popup');
-        
-        var closeButton = document.getElementById('close-popup');
-
-        // Add an event listener to open button to show the pop up
-        
-        // openButton.addEventListener('click', function() {
-        // //event.preventDefault();
-        // popup.style.display = 'block';
-        // });
-
-
-        Add an event listener to the close button to hide the pop up
-        closeButton.addEventListener('click', function() {
-        popup.style.display = 'none';
-        });
-
-
-
-    </script>
+   
 </body>
 
 
