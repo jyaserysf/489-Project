@@ -27,8 +27,8 @@ if(!isset($_SESSION['activeUser'])){
         }
 
         .manageBtn {
-            width: 10rem;
-            height: 4rem;
+            width: 10.5rem;
+            height: 40px;
             background-color:rgba(0, 0, 0, 0.8);
             color: #fff;
             border: none;
@@ -39,7 +39,7 @@ if(!isset($_SESSION['activeUser'])){
             border-radius: 5px;
             font-size: 1rem;
             transition: 0.3s;
-            margin: 0 10px 0 10px;
+            margin: 2rem 1rem 0 0;
         }
 
         .manageBtn:hover {
@@ -47,7 +47,7 @@ if(!isset($_SESSION['activeUser'])){
         }
 
         .hidden {
-        display: none;
+            display: none;
         }
 
         .content {
@@ -55,6 +55,7 @@ if(!isset($_SESSION['activeUser'])){
             background-color: #f4f1de /* rgba(236, 232, 221, 0.7)*/;
             padding: 20px;
         }
+
     </style>
 
 </head>
@@ -112,6 +113,7 @@ if(!isset($_SESSION['activeUser'])){
                         </div>
                     </div>
 
+                    <div class="flex-c">
                     <div class="row" id="submitDiv">
                         <input class="manageBtn" type="submit" value="Manage Course" />
                     </div>
@@ -121,6 +123,7 @@ if(!isset($_SESSION['activeUser'])){
                 <form method="get" action="HOD-createCourse.php">
                     <div class="row" id="submitDiv">
                         <input class="manageBtn" type="submit" value="Add Course" />
+                    </div>
                     </div>
                 </form>
 
