@@ -85,13 +85,7 @@ foreach($ViewC as $display){
 </body>
 <style>
        td{
-            text-align: center;
+          text-align: center;
         }
-        table{
-            margin-left: 10%;
-            
-        }
-        h1{
-            text-align: center;
-        }
+      
 </style>
