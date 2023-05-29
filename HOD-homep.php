@@ -54,7 +54,22 @@ if(!isset($_SESSION['activeUser'])){
             </div>
             <div class="instr-sched">
                 <div class="semester-no">
-                    Your semester number Schedule
+                    <?php
+                    try {
+                        require('Database/connection.php');
+                        $db->beginTransaction();
+                        //$currentTime=date('Y-m-d');
+                        $semesterInfo="SELECT* from semester where now() BETWEEN semester.beginDate and semester.endDate";
+                        $semester =$db->query($semesterInfo);
+                        $semm=$semester->fetch();
+
+                        
+                        echo "<h4> Your Semester ".$semm['number'].", ".$semm['year']." Schedule: </h4>";
+                    } catch (PDOException $e) {
+                        $db->rollBack();
+                        die("Error: " . $e->getMessage());
+                    }
+                    ?>
                 </div>
                 <div class="sched">
                     <?php 
