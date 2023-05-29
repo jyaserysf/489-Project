@@ -1,6 +1,14 @@
 <?php
 session_start();
 
+if (!isset($_SESSION['login'])) {
+    $_SESSION['login'] = 0; 
+}
+
+if($_SESSION['login'] >= 4) {
+    die("<h4 style='text-align: center; color='blue';'>Surpassed Allowed Login Attempts</h4>");
+}
+
 if (isset($_SESSION['activeUser'])) {
     $role = $_SESSION['activeUser']['role'];
     header("location: $role-homep.php");
@@ -72,7 +80,7 @@ elseif (isset($_POST['submit'])){
             else {
                 echo "Invalid Password";
                 $db=null;
-                die();
+                $_SESSION['login'] += 1;
             }
         }
         else {
@@ -102,7 +110,7 @@ elseif (isset($_POST['submit'])){
                 else {
                     echo "Invalid Password";
                     $db=null;
-                    die();
+                    $_SESSION['login'] += 1;
                 }
             }
             else {
@@ -123,13 +131,13 @@ elseif (isset($_POST['submit'])){
                     else {
                         echo "Invalid Password";
                         $db=null;
-                        die();
+                        $_SESSION['login'] += 1;
                     }
                 }
                 else {
                     echo "Invalid Username";
                     $db=null;
-                    die();
+                    $_SESSION['login'] += 1;
                 }
             }
         }
