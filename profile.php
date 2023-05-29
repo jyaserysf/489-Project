@@ -51,6 +51,19 @@
     <title>Profile</title>
     
     <link rel="stylesheet" href="generalstyling.css">
+
+    <style>
+        .flex-c {
+            display: flex;
+            flex-direction: row;
+        }
+
+        @media screen and (max-width: 600px) {
+            .flex-c {
+                display: block;
+            }
+        }
+    </style>
     
 </head>
 <body>
@@ -159,6 +172,7 @@
                         </div>
                     </div>
                     
+                <div class="flex-c">    
                     <div class="row" id="submitDiv">
                         <input class="submitBtn" type="submit" value="Update Profile" name="updateProfileSubmit" />
                     </div>
@@ -166,7 +180,8 @@
                 <?php } ?>
                 <form action="changepassword.php" method="post">
                 <div class="row" id="submitDiv">
-                    <input class="submitBtn" type="submit" value="Change Pass" name="changePasswordSubmit" />
+                    <input class="submitBtn" type="submit" value="Change Password" name="changePasswordSubmit" />
+                </div>
                 </div>
                 </form>
                 

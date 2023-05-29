@@ -125,7 +125,7 @@ console.log(Sections);
                 </div>
             </form>
 
-            <div class="student-list lg-mx-4 my-4" style="background-color: #FDF7CF" style="width:85%">
+            <div class="student-list lg-mx-4 my-4" style="background-color: #F9EBC8" style="width:85%">
                 <table class="table table-borderless">
                     <thead>
                         <tr> 
