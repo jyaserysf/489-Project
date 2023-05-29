@@ -244,8 +244,9 @@ if(!isset($_SESSION['activeUser'])){
                                     }
                                 
 
-                            }elseif(empty($_GET['selectSwC']) || empty($_GET['selectToSwC'])){
+                            }elseif(isset($_POST['swapSections']) && empty($_POST['selectToSwC'])){
                                 //echo "<h5> select a section to switch with </h5>";
+                                ?> <script>swal("Choose section", "First, select a section to swap with", "error");</script> <?php
                                
                             }
                        

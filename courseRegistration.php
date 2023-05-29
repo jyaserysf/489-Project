@@ -7,7 +7,7 @@ session_start();
         exit();
     }
 
-//var_dump($_POST);
+var_dump($_POST);
 
 // page should only be accessed betweeen modifyStart and end (use js popup and date), i can use the semester id from modifyStart and end
 ?>
@@ -17,13 +17,15 @@ session_start();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    
+    
     <title>Course Registration</title><link rel="stylesheet" href="css/courseReg.css">
     <script src="https://kit.fontawesome.com/8f65530edf.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="generalstyling.css">
     
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#selectcourse').on('change',function(){
@@ -333,15 +335,17 @@ session_start();
 
                     // $updateAvailbSeats=$db->prepare("UPDATE course_sections set availableSeats=? where sectionID=? ");
                                 
-                    if(isset($_POST['dropcourse'])&&  isset($_POST['selectedSection'])){
+                    if(isset($_POST['dropcourse'])&&  isset($_POST['selectedSection']) && !empty($_POST['selectedSection'])){
                         
                        
                         $selectedSecInfo=$_POST['selectedSection'];
                         $selectedSecDetails=explode(' | ',$selectedSecInfo);
-                        
+                        $error='error';
                         if(count($enrollsectSemALL)<=3){
+                            $error='lessthan3';
+                            popup($error);
                             // echo "you cannot have less than 3 courses ";
-                            ?> <script>swal("Unable to proceed", "Minimum of 3 courses required.", "error");</script> <?php
+                            ?> <script>//swal("Unable to proceed", "Minimum of 3 courses required.", "error");</script> <?php
 
                         }else{
                             $deleteEnroll->bindParam(':sID', $selectedSecDetails[7]);
@@ -354,13 +358,17 @@ session_start();
                             $updateAvailbSeats->execute();
                             //$updateAvailbSeats->execute(array($selectedSecDetails[6],$selectedSecDetails[7]));
                             // echo "<h5>removed seat successfully! </h5>";
-                            ?> <script>swal("Seat successfully removed!", "The seat has been removed from the student schedule", "success");</script> <?php
+                            $error='removed';
+                            popup($error);
+                           
                         };
 
                         unset($_POST);
                     }elseif(isset($_POST['dropcourse'])){
                         // popup-> must select course
-                        ?> <script>swal("No course selected", "Select a course to drop.", "error");</script> <?php
+                        popup('drop');
+                        
+                        
                         
                         unset($_POST);
                     } 

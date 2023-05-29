@@ -299,6 +299,15 @@ function popup($parr){
     case 'error':
       ?> <script> swal("Failed to swap seats", "Unable to complete the swap.", "error"); </script> <?php
       break;
+    case 'lessthan3':
+        ?> <script>swal("Unable to proceed", "Minimum of 3 courses required.", "error"); </script> <?php
+        break;
+    case 'drop':
+          ?> <script> swal("No course selected", "Select a course to drop.", "error"); </script> <?php
+          break;
+    case 'removed':
+          ?> <script> swal("Seat successfully removed!", "The seat has been removed from the student schedule", "success"); </script> <?php
+          break;
   }
 }
 
