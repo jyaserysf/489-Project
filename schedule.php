@@ -276,10 +276,10 @@ function yourInstrSched($arr){
 function popup($parr){
   switch($parr){
     case 'lect':
-       ?> <script>swal("Conflict error !", "You have a lecture conflict with another section !", "error");</script><?php
+       ?> <script>swal("Conflict detected!", "You have a lecture conflict with another section.", "error");</script><?php
        break;
     case 'final':
-      ?> <script>swal("Conflict error !", "You have a final conflict with another section !", "error");</script><?php
+      ?> <script>swal("Conflict detected!", "You have a final conflict with another section.", "error");</script><?php
       break;
     case 'seat':
         ?> <script>swal("Course is full", "There are no available seats for this section. Choose another section", "error");</script> <?php

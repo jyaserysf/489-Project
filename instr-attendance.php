@@ -72,7 +72,36 @@ try {
         #update {
             margin-left: 25%;
         }
+
+        
+        select, button {
+            padding: 5px ;
+            color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(236, 232, 221, 0.7);
+            border-color: rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin-bottom: 2rem;
+        }
+
+        .submitBtn {
+            width: 10.5rem;
+            height: 40px;
+            background-color:rgba(0, 0, 0, 0.8);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            /*finger*/
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .submitBtn:hover {
+            background-color: #A0BCC2;
+        }
     </style>
+
 
 </head>
 
@@ -175,7 +204,7 @@ try {
                                        
                                      </tbody>
                                     </table>  
-                                         <input type='submit' name='submit' id="sbt">  
+                                         <input class="submitBtn" type='submit' name='submit' id="sbt">  
                                     <?php  } ?>        
                                         </form>    
                                          <?php   
