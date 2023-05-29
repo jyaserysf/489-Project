@@ -9,6 +9,9 @@ if(!isset($_SESSION['activeUser'])){
 if(isset($_POST['submit']))
     header('location: manageSemesters.php');
 
+if(!isset($_POST['sectionID']) || $_POST['sectionID'] == "")
+    header('location: manageSemesters.php');
+
 if(isset($_POST['sectionID'])) {
     $sectionID = $_POST['sectionID'];
     try{
@@ -96,7 +99,7 @@ if(isset($_POST['sectionID'])) {
                     ?>
 
                     
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-25">
                             <label for="Course Code">Start Time</label>
                         </div>
@@ -105,13 +108,37 @@ if(isset($_POST['sectionID'])) {
                                 class="input-field"
                                 type="time"
                                 name="startTime"
-                                value="<?php echo $row['startTime'];?>"
+                                value="<?php //echo $row['startTime'];?>"
                                 autocomplete="off"
                                 required
                             >
                         </div>
-                    </div>
+                    </div> -->
 
+                    <div class='row'>
+                        <div class='col-25'>
+                            <label for='startTime'>Start Time</label>
+                        </div>
+                        <div class='col-75'>
+                            <select class='input-field' name='startTime'>
+                                <?php 
+                                    $times = ["08", "09", "10", "11", "12", "13", "14"];
+                                    foreach($times as $time) {
+                                ?>       
+                                <option value=' <?php echo $time; ?> :00:00'
+                                <?php
+                                    if("$time:00:00" == $row['startTime'])
+                                        echo "selected"; 
+                                ?>
+                                > <?php echo $time; ?>:00</option>
+                                <?php
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div> 
+
+                    <!-- <p id="end-time"></p>               
                     <div class="row">
                         <div class="col-25">
                             <label for="Course Code">End Time</label>
@@ -119,14 +146,15 @@ if(isset($_POST['sectionID'])) {
                         <div class="col-75">
                             <input 
                                 class="input-field"
-                                type="time"
+                                type="text"
+                                id=""
                                 name="endTime"
-                                value="<?php echo $row['endTime'];?>"
+                                value=""
                                 autocomplete="off"
-                                required
+                                disabled
                             >
                         </div>
-                    </div>
+                    </div> -->
                     
                     <div class='row'>
                         <div class='col-25'>

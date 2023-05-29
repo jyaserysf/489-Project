@@ -7,8 +7,11 @@ if(!isset($_SESSION['activeUser'])){
     exit();
 }
 
+if(isset($_POST['submitCancel']))
+    header('location: manageSemesters.php');
+
 if(!isset($_POST['semesterID']) || !isset($_POST['courseID']) || $_POST['courseID']=="")
-    die("Please Select A Course");
+    header('location: manageSemesters.php');
 
 try{
     require('Database/connection.php');
@@ -87,37 +90,25 @@ catch(PDOException $e){
             <div class="title" >
                 <h1>Add Section</h1> 
             </div>
-            <div class="container">
-                <form method="post" action="HOD-addSection-2.php">
-                    <div class='row'>
-                    <div class='col-25'>
-                        <label for='startTime'>Start Time</label>
-                    </div>
-                    <div class='col-75'>
-                        <input 
-                            class='input-field'
-                            name='startTime'
-                            type='time'
-                            autocomplete='off'
-                            required
-                        />
-                    </div>
+            <form method='post' action='HOD-addSection-2.php'>
+            <div class='row'>
+                <div class='col-25'>
+                    <label for='startTime'>Start Time</label>
                 </div>
-
-                <div class='row'>
-                    <div class='col-25'>
-                        <label for='endTime'>End Time</label>
-                    </div>
-                    <div class='col-75'>
-                        <input 
-                            class='input-field'
-                            name='endTime'
-                            type='time'
-                            autocomplete='off'
-                            required
-                        />
-                    </div>
+                <div class='col-75'>
+                    <select class='input-field' name='startTime'>
+                        <?php 
+                            $times = ["08", "09", "10", "11", "12", "13", "14"];
+                            foreach($times as $time) {
+                        ?>       
+                        <option value=' <?php echo $time; ?> :00:00'
+                        > <?php echo $time; ?>:00</option>
+                        <?php
+                            }
+                        ?>
+                    </select>
                 </div>
+            </div>
 
                 <div class='row'>
                     <div class='col-25'>
@@ -141,6 +132,8 @@ catch(PDOException $e){
                             class="input-field"
                             type="text"
                             maxlength="10"
+                            min="040"
+                            max="2060"
                             name="room"
                             autocomplete="off"
                             required
@@ -153,15 +146,15 @@ catch(PDOException $e){
                         <label for='Room'>Number of Seats</label>
                     </div>
                     <div class='col-75'>
-                        <input 
-                            class="input-field"
-                            type="number"
-                            min="25"
-                            max="35"
-                            name="seats"
-                            autocomplete="off"
-                            required
-                        >
+                    <select class='input-field' name='seats'>
+                        <?php 
+                        for($i=25; $i<=35; $i++) {
+                        ?>       
+                        <option value=' <?php echo $i; ?> '> <?php echo $i; ?> </option>
+                        <?php
+                            }
+                        ?>
+                        </select>
                     </div>
                 </div>
 
@@ -226,6 +219,12 @@ catch(PDOException $e){
                         <input class="manageBtn" type="submit" name="submit" value="Add Section" />
                 </div>
 
+            </form>
+
+            <form method="post">
+                    <div class="row" id="submitDiv">
+                        <input class="manageBtn" type="submit" name="submitCancel" value="Cancel" />
+                    </div>
             </form>
 
         </div>

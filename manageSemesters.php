@@ -108,7 +108,7 @@ if(!isset($_SESSION['activeUser'])){
                         </div>
                     </div>
                     <div class="row" id="submitDiv">
-                        <input class="manageBtn" type="submit" value="Select Semester" />
+                        <input class="manageBtn" type="submit" value="Select Semester" name="submitSemester"/>
                     </div>
                 </div> 
                 </form>
