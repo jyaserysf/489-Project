@@ -16,9 +16,7 @@
 
         try {
             require('Database/connection.php');
-            if($_SESSION['activeUser']['role'] == "admin")
-                $sql = $db->prepare("UPDATE admins SET phoneNumber=? WHERE ID=?");
-            elseif($_SESSION['activeUser']['role'] == "student")
+            if($_SESSION['activeUser']['role'] == "student")
                 $sql = $db->prepare("UPDATE students SET phoneNumber=? WHERE ID=?");
             else
                 $sql = $db->prepare("UPDATE instructors SET phoneNumber=? WHERE ID=?");
@@ -33,9 +31,7 @@
     try{
         require('Database/connection.php');
         $ID = $_SESSION['activeUser']['ID'];
-        if($_SESSION['activeUser']['role'] == "admin")
-            $sql = $db->prepare("SELECT * FROM admins WHERE ID=?");
-        elseif($_SESSION['activeUser']['role'] == "student")
+        if($_SESSION['activeUser']['role'] == "student")
             $sql = $db->prepare("SELECT * FROM students WHERE ID=?");
         else
             $sql = $db->prepare("SELECT * FROM instructors WHERE ID=?");
@@ -61,11 +57,12 @@
     <div class="wrapper">
         <div class="sidebar-wrapper">
             <?php 
-            if($_SESSION['activeUser']['role'] == "instructor")
+            if($_SESSION['activeUser']['role'] == "Instructor" || $_SESSION['activeUser']['role'] == "HOD")
                 $sidenav = "instr";
             else   
                 $sidenav = "student";
-            include 'sidenav/' . $sidenav . '-sidenav.php'; 
+
+            include('sidenav/' . $sidenav . '-sidenav.php');
             ?>
         </div>
         <div class="pagecontent-wrapper" id="main">

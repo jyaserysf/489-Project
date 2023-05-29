@@ -89,7 +89,7 @@
     <div class="wrapper">
         <div class="sidebar-wrapper">
             <?php 
-            if($_SESSION['activeUser']['role'] == "instructor")
+            if($_SESSION['activeUser']['role'] == "Instructor" || $_SESSION['activeUser']['role'] == "HOD")
                 $sidenav = "instr";
             else   
                 $sidenav = "student";
