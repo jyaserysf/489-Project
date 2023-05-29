@@ -29,7 +29,28 @@ if(!isset($_SESSION['activeUser'])){
         </div>
         <div class="pagecontent-wrapper" id="main">
         <div class="title" >
-                <h1>Welcome Instructor Name</h1> 
+            <?php
+                try {
+                    require('Database/connection.php');
+                    $ID = $_SESSION['activeUser']['ID'];
+                    if($_SESSION['activeUser']['role'] == "admin")
+                        $sql = $db->prepare("SELECT * FROM admins WHERE ID=?");
+                    elseif($_SESSION['activeUser']['role'] == "student")
+                        $sql = $db->prepare("SELECT * FROM students WHERE ID=?");
+                    else
+                        $sql = $db->prepare("SELECT * FROM instructors WHERE ID=?");
+                    $sql->execute(array($_SESSION['activeUser']['ID']));
+                    $db=null;
+
+
+                }
+                catch(PDOException $e) {
+                    die($e->getMessage());
+                } ?>
+
+                <?php if($row = $sql->fetch(PDO::FETCH_ASSOC)) { ?>
+                <h1>Welcome <?php echo $row['fullName'];?></h1> 
+                <?php } ?>
             </div>
             <div class="instr-sched">
                 <div class="semester-no">
