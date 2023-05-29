@@ -111,7 +111,7 @@
                 if(isset($_GET['selectReportSubmit']) && !isset($_GET['reportID'])) {
                     //pop up
                     ?>
-                    <script>swal("Select a report type", "You must select a report type before continuing.", "error");</script>
+                    <script>swal("No report type selected", "Choose a report type to continue.", "error");</script>
                     <?php
                 }
 
