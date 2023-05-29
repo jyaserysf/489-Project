@@ -256,18 +256,21 @@ session_start();
 
                                             //pop up
                                             ?>
-                                            <script>swal("Conflict error !", "You have a conflict with another section !", "error");</script>
+                                            <script>swal("Conflict Error!", "Oops! There's a conflict with another section. Please Choose a different section", "error");</script>
                                             <?php $enrolled=false;
                                         }
                                     }else{
                                         //pop up
                                         ?>
-                                        <script>swal("Seats error !", "There are no available seats !", "error");</script>
+                                        <script>swal("Seats Error!", "There are no available seats for this course.", "error");</script>
                                         <?php
                                         $enrolled=false;
                                     }
                                 }else{
                                     //pop up
+                                    ?>
+                                    <script>swal("Error!", "You have reached the maximum number of (6) courses that you can add. Please remove a course before adding another one.", "error");</script>
+                                    <?php
                                     $enrolled=false;
                                 }
 
@@ -296,12 +299,11 @@ session_start();
                                     $updateAvailbSeats->bindParam(':secID',$selectedSecDetails[7]);
                                     $updateAvailbSeats->execute();
                                     //$updateAvailbSeats->execute(array($selectedSecDetails[6], $selectedSecDetails[7]));
-                                    echo "<h5>added seat successfully! </h5>
-                                    ";
-                                    
+                                    // echo "<h5>added seat successfully! </h5>";
+                                    ?> <script>swal("Success!", "You have successfully registered for this course.", "success");</script> <?php
                                 }
                                 else{
-                                    ?> <script>swal("Adding error !", "You cannot add this course !", "error");</script> <?php
+                                    ?> <script>swal("Adding Error!", "Looks like the course was not added successfully.", "error");</script> <?php
                                     //echo "<h5>course has not been added </h5>";
                                      
                                 }
@@ -311,13 +313,13 @@ session_start();
                     }elseif(isset($_POST['addcourse'])&& isset($_POST['selectC'])){
                         //popup -> must select course section ?>
 
-                     <script>swal("select a section!", "you didint select any section !", "error");</script>
+                     <script>swal("Please select a course section.", "You need to select a course section before you can add it. Please choose a course section and try again.", "error");</script>
 
-                    <?php    echo "select course section before adding";
+                    <?php    // echo "select course section before adding";
                     }elseif(isset($_POST['addcourse'])){
                         // popup-> must select course?>
-                        <script>swal("select a  course !", "you  didn't select any course !", "error");</script>
-                     <?php   echo "select course section before adding";
+                        <script>swal("Please select a course", "You need to select a course before you can add it. Please choose a course and try again.", "error");</script>
+                     <?php   // echo "select course section before adding";
                         unset($_POST);
                     } 
                     
@@ -337,7 +339,8 @@ session_start();
                         $selectedSecDetails=explode(' | ',$selectedSecInfo);
                         
                         if(count($enrollsectSemALL)<=3){
-                            echo "you cannot have less than 3 courses ";
+                            // echo "you cannot have less than 3 courses ";
+                            ?> <script>swal("Error!", "You need to select at least 3 courses to continue. Please add more courses before continue.", "error");</script> <?php
 
                         }else{
                             $deleteEnroll->bindParam(':sID', $selectedSecDetails[7]);
@@ -349,13 +352,15 @@ session_start();
                             $updateAvailbSeats->bindParam(':secID',$selectedSecDetails[7]);
                             $updateAvailbSeats->execute();
                             //$updateAvailbSeats->execute(array($selectedSecDetails[6],$selectedSecDetails[7]));
-                            echo "<h5>removed seat successfully! </h5>";
+                            // echo "<h5>removed seat successfully! </h5>";
+                            ?> <script>swal("Success!", "You have successfully removed the seat.", "success");</script> <?php
                         };
 
                         unset($_POST);
                     }elseif(isset($_POST['dropcourse'])){
                         // popup-> must select course
-                        echo "select course before dropping";
+                        ?> <script>swal("Please select a course", "You must select a course before you can continue to drop it.", "error");</script> <?php
+                        // echo "select course before dropping";
                         unset($_POST);
                     } 
 
