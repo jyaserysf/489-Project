@@ -136,14 +136,19 @@ if(!isset($_SESSION['activeUser'])){
                                 //print_r($preReq);
                                 //check for seats, preReqs and conflicts again 
                                     if($newSect['availableSeats']>=1){
-                                        if( $finalConf['num'] <1 || $lectureSTime['num']!=1 || $lectureConf['num']){
-                                            while($passedCourses=$prevEnrolled_sections->fetch()){
+                                        if( $finalConf['num'] <1 || $lectureSTime['num']!=1){
+                                            if($lectureConf['num']<1){
+                                                while($passedCourses=$prevEnrolled_sections->fetch()){
                                                 for($i=0; $i<count($preReq); $i++){
                                                     if($passedCourses['courseCode']==$preReq[$i]){
                                                         $preReqC++;
-                                                    }   
-                                                }     
+                                                        }   
+                                                    }     
+                                                }
+                                            }else{
+                                                $check=false;
                                             }
+                                            
                                         }
                                         else{
 
