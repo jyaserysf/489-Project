@@ -98,7 +98,7 @@
 
             //$days=['1'=>'U', '2'=>'M', '3'=>'T','4'=>'W','5'=>'H'];
             $daysOfWeek = array('U', 'M', 'T', 'W', 'H');
-            //print_r($arr);
+            print_r($arr);
             foreach($arr as $enrollSect){
               $checkCourse->execute(array($enrollSect['courseID']));
               //echo $enrollSect['courseID'];

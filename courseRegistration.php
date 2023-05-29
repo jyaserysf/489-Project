@@ -402,7 +402,7 @@ session_start();
                                         $currentSections=$currentSectionsrec->fetch(PDO::FETCH_ASSOC);
                                         if($currentSections){
                                             echo "<option  value='".$currentSections['ID']."'>".$currentSections['courseCode']." | ".$currentSections['sectionNumber']."</option>  ";
-                                        }
+                                        echo $currentSections['ID'];}
                                         
                                     } 
                                 }  
@@ -438,7 +438,8 @@ session_start();
                                 $finalConf=$finalConflictrec->fetch();
                                 $check=true;
                                 $preReqC=0;
-                                $preReq= explode(',',$preReqs);print_r($preReq);
+                                $preReq= explode(',',$preReqs);
+                                //print_r($preReq);
                                 //check for seats, preReqs and conflicts again 
                                     if($newSect['availableSeats']>=1){
                                         if( $finalConf['num'] <1 || $lectureConf['num']!=1){
@@ -463,7 +464,7 @@ session_start();
                                         //pop up
                                         $check=false;
                                     }
-                                    echo $preReqC;
+                                    //echo $preReqC;
                                     //echo $check;
 
                                     if($check && count($preReq)>=$preReqC){
@@ -485,13 +486,14 @@ session_start();
                                         //$updateAvailbSeats->execute(array($oldSect['availableSeats'],$oldSID));
                                         echo "<h5>switched seat successfully! </h5>
                                         ";
+                                        unset($_GET);
                                     }
                                     else{
                                         ?>
                                         <script>swal("Swap error !", "This section cannot be swapped !", "error");</script>
                                         <?php
                                             //echo "<h5>course has not been switched </h5>";
-                                         
+                                         unset($_GET);
                                     }
                                 
 
@@ -500,7 +502,7 @@ session_start();
                             }
                        
                         //echo "<h5>switched seat successfully! </h5>";
-                        unset($_GET);
+                        
                         unset($_POST);
                     
                     }
