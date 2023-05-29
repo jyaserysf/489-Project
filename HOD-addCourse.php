@@ -9,6 +9,9 @@ if(!isset($_SESSION['activeUser'])){
 if(!isset($_POST['semesterID']))
     header('location: HOD-manageSemesters.php');
 
+if(isset($_POST['submitCancel']))
+    header('location: manageSemesters.php');
+
 $semesterID = $_POST['semesterID'];
 
 ?>
@@ -112,6 +115,13 @@ $semesterID = $_POST['semesterID'];
                     </div>
 
                 </form>
+
+                <form method="post">
+                    <div class="row" id="submitDiv">
+                        <input class="manageBtn" type="submit" name="submitCancel" value="Cancel" />
+                    </div>
+                </form>
+
             </div>
         </div>
     </div>

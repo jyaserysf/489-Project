@@ -8,6 +8,9 @@ if(!isset($_SESSION['activeUser'])){
 
 if(isset($_POST['submit']))
     header('location: manageSemesters.php');
+
+if(!isset($_POST['semesterID']) || $_POST['semesterID'] == "")
+    header('location: manageSemesters.php');
 ?>
 
 <!DOCTYPE html>

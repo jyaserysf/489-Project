@@ -5,10 +5,20 @@
     VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $sectionNumber = $_POST['secNumber'];
     $startTime = $_POST['startTime'];
-    $endTime = $_POST['endTime'];
+    $endTime = substr($startTime,0,3) . ":50:00";
+    if($_POST['days'] != "UTH" && $_POST['days'] != "MW")
+        die("Please Select Valid Days");
+
     $days = $_POST['days'];
+
     $room = $_POST['room'];
+    if(!preg_match('/$(0[1-9]{2}|[12]0[1-9]{2})^/', $room))
+        die("Please Write A Valid Room number");
+
     $availableSeats = $_POST['seats'];
+    if($_POST['instructorID'] == "" || $_POST['instructorID'] < 0)
+        die("Please Select A Valid instructor");
+
     $instructorID = $_POST['instructorID'];
 
     $finalDate = $_POST['finalDate'];
