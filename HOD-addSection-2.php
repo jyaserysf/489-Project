@@ -12,7 +12,7 @@
     $days = $_POST['days'];
 
     $room = $_POST['room'];
-    if(!preg_match('/$(0[1-9][0-9]|[12]0[1-9][0-9])^/', $room))
+    if(!preg_match('/^(0[1-9][0-9]|[12]0[1-9][0-9])$/', $room))
         die("Please Write A Valid Room number");
 
     $availableSeats = $_POST['seats'];
