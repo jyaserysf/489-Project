@@ -51,19 +51,19 @@ catch(PDOException $e){
         }
 
         .manageBtn {
-            width: 10rem;
-            height: 4rem;
+            width: 10.5rem;
+            height: 40px;
             background-color:rgba(0, 0, 0, 0.8);
             color: #fff;
             border: none;
             padding: 12px 20px;
             /*finger*/
             cursor: pointer;
-            float: right;
+            float: left;
             border-radius: 5px;
             font-size: 1rem;
             transition: 0.3s;
-            margin: 0 10px 0 10px;
+            margin: 2rem 1rem 0 0;
         }
 
         .manageBtn:hover {
@@ -215,6 +215,7 @@ catch(PDOException $e){
                 <input type="hidden" name="semesterID" value="<?php echo $_POST['semesterID'] ?>">  
                 <input type="hidden" name="courseID" value="<?php echo $_POST['courseID'] ?>"> 
 
+                <div class="flex-c">
                 <div class="row" id="submitDiv">
                         <input class="manageBtn" type="submit" name="submit" value="Add Section" />
                 </div>
@@ -222,9 +223,10 @@ catch(PDOException $e){
             </form>
 
             <form method="post">
-                    <div class="row" id="submitDiv">
-                        <input class="manageBtn" type="submit" name="submitCancel" value="Cancel" />
-                    </div>
+                <div class="row" id="submitDiv">
+                    <input class="manageBtn" type="submit" name="submitCancel" value="Cancel" />
+                </div>
+                </div>
             </form>
 
         </div>
