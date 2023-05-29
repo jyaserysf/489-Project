@@ -1,3 +1,23 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a course</title>
+    
+    <link rel="stylesheet" href="generalstyling.css">
+
+    
+</head>
+
+
+
+
+
+
 <?php 
 
     session_start();
@@ -12,7 +32,7 @@
             require('Database/connection.php');
             $depSQL = $db->prepare("SELECT * FROM departments WHERE departmentHead=?");
             $depSQL->execute(array($_SESSION['activeUser']['ID']));
-            $db=null;
+            
         }
         catch(PDOException $e) {
             die($e->getMessage());
@@ -32,15 +52,39 @@
         $creditHoursPattern = "/^[2-4]{1}$/";
         $preRequisitesPattern = "/^[A-Z]{3,5}[0-9]{1,3}(,[A-Z]{3,5}[0-9]{1,3})*$/";
 
-        if(!preg_match($courseCodePattern, $courseCode))
-            die ("Invalid Course ID");
-        if(!preg_match($courseNamePattern, $courseName))
-            die ("Invalid Course Name");
-        if(!preg_match($creditHoursPattern, $creditHours))
-            die ("Invalid Credit Hours");
-        if($preRequisites != "" && !preg_match($preRequisitesPattern, $preRequisites))
-            die ("Invalid PreRequisites");
+    
 
+        if(!preg_match($courseCodePattern, $courseCode)){   
+          
+          
+          ?>
+             <script>swal("error !", " Invalid Course ID !", "error");</script>
+       <?php }
+           // die ("Invalid Course ID");
+        if(!preg_match($courseNamePattern, $courseName))
+
+        {?>
+            <script>swal("error !", " Invalid Course Name !", "error");</script>
+      <?php }
+
+            //die ("Invalid Course Name");
+        if(!preg_match($creditHoursPattern, $creditHours))
+
+        {
+            ?>
+               <script>swal("error !", " Invalid Credit Hours !", "error");</script>
+         <?php }
+
+           // die ("Invalid Credit Hours");
+        if($preRequisites != "" && !preg_match($preRequisitesPattern, $preRequisites))
+
+        {
+            ?>
+               <script>swal("error !", " Invalid PreRequisites!", "error");</script>
+         <?php }
+
+            //die ("Invalid PreRequisites");
+        
         try {
             // Begin transaction
             require('Database/connection.php');
@@ -62,7 +106,7 @@
         // close the connection
         $db = null;
         header('location: HOD-manageCourses.php');
-        die();
+       
         } 
         catch (PDOException $e) {
             die("Error: " . $e->getMessage());
@@ -70,18 +114,7 @@
     }
 
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create a course</title>
-    
-    <link rel="stylesheet" href="generalstyling.css">
 
-    
-</head>
 <body>
     <div class="wrapper">
         <div class="sidebar-wrapper">

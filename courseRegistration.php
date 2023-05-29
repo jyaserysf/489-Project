@@ -266,14 +266,14 @@ session_start();
                         $finalConf=$finalConflictrec->fetch();
                         
                         $enrolled=true;
-                        $preReqC=0; 
+                        $preReqC=0; $preReq= explode(',',$preReqs);
                                 // Check if enrolled sections are 6 or less, then check if there are available seats, then check for conflicts, then check prerequisites       
                                 
                                 if(count($enrollsectSemALL)<7){  
                                     if($selectedSecDetails[6]>=1){
                                         if( $finalConf['num'] <1 || $lectureConf['num']<1){
                                             while($passedCourses=$prevEnrolled_sections->fetch()){
-                                                $preReq= explode(',',$preReqs);
+                                                
                                                 //print_r($preReq);
                                                 for($i=0; $i<count($preReq); $i++){
                                                     if($passedCourses['courseCode']==$preReq[$i]){
@@ -325,8 +325,12 @@ session_start();
                                     $updateAvailbSeats->bindParam(':secID',$selectedSecDetails[7]);
                                     $updateAvailbSeats->execute();
                                     //$updateAvailbSeats->execute(array($selectedSecDetails[6], $selectedSecDetails[7]));
-                                    echo "<h5>added seat successfully! </h5>
-                                    ";
+
+                                    ?>
+                                    <script>swal(" course added  !", "the course has been added !", "success");</script>
+                                    <?php
+                                   // echo "<h5>added seat successfully! </h5>
+                                   
                                     
                                 }
                                 else{
@@ -518,7 +522,8 @@ session_start();
                         $selectedSecDetails=explode(' | ',$selectedSecInfo);
                         
                         if(count($enrollsectSemALL)<=3){
-                            echo "you cannot have less than 3 courses ";
+                            ?> <script>swal("", "You cannot have less than 3 courses !", "error");</script> <?php
+                            //echo "you cannot have less than 3 courses ";
 
                         }else{
                             $deleteEnroll->bindParam(':sID', $selectedSecDetails[7]);
@@ -589,7 +594,7 @@ session_start();
         // });
 
 
-        Add an event listener to the close button to hide the pop up
+        //Add an event listener to the close button to hide the pop up
         closeButton.addEventListener('click', function() {
         popup.style.display = 'none';
         });
