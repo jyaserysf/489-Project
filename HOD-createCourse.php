@@ -28,7 +28,7 @@
 
         // Regular Expressions to validate
         $courseCodePattern = "/^[A-Z]{3,5}[0-9]{1,3}$/";
-        $courseNamePattern = "/^[A-Z]{1}[a-z]+(\s{1}[A-Z]{1}[a-z]+)*[1-9]?$/";
+        $courseNamePattern = "/^[A-Z]{1}[a-z]+(\s{1}[A-Z]{1}[a-z]+)*\s[1-9]?$/";
         $creditHoursPattern = "/^[2-4]{1}$/";
         $preRequisitesPattern = "/^[A-Z]{3,5}[0-9]{1,3}(,[A-Z]{3,5}[0-9]{1,3})*$/";
 
