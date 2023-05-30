@@ -308,6 +308,10 @@ function popup($parr){
     case 'removed':
           ?> <script> swal("Seat successfully removed!", "The seat has been removed from the student schedule", "success"); </script> <?php
           break;
+    case 'notadd':
+            ?> <script> swal("Prerequisite Conflict", "You have not passed the course's prerequisites", "error"); </script> <?php
+            break;
+    
   }
 }
 

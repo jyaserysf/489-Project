@@ -250,7 +250,7 @@ session_start();
                                                 $preReq= explode(',',$preReqs);
                                                 //print_r($preReq);
                                                 for($i=0; $i<count($preReq); $i++){
-                                                    if($passedCourses['courseCode']==$preReq[$i]){
+                                                    if($passedCourses['courseCode']==$preReq[$i] && $passedCourses['grade']!=NULL){
                                                         $preReqC++;}   
                                                     }     
                                                 }
@@ -294,7 +294,7 @@ session_start();
                                 
                                 
 
-                                if($enrolled && count($preReq)>=$preReqC){
+                                if($enrolled && count($preReq)==$preReqC){
                                     // insert section in enrollments and decrease available seats
                                     $addSectionEnroll->execute();
                                     $selectedSecDetails[6]=$selectedSecDetails[6]-1;
@@ -308,7 +308,7 @@ session_start();
                                 }
                                 else{
                                     
-                                    popup($error);
+                                    popup('notadd');
                                 }
 
                                 unset($_POST);
