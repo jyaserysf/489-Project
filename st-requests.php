@@ -235,10 +235,16 @@
                                                 $creditsIndo->execute(array($section['courseID']));
                                                 if($course = $creditsIndo->fetch())
                                                     $credits = $course['creditHours'];
-                                                $sum += $gradesW[$enroll['grade']] * $credits;
-                                                $sumCredits += $credits;
+                                                if($enroll['grade']){
+                                                    $sum += $gradesW[$enroll['grade']] * $credits;
+                                                    $sumCredits += $credits;
+                                                }
+                                                
                                             }
-                                        echo $sum/$sumCredits;
+                                            if($sumCredits!=0){
+                                                echo $sum/$sumCredits;
+                                            }
+                                        
                                         }
                                     }
                                     $db=null;
@@ -278,8 +284,11 @@
                                                 $creditsIndo->execute(array($section['courseID']));
                                                 if($course = $creditsIndo->fetch())
                                                     $credits = $course['creditHours'];
-                                                $sum += $gradesW[$enroll['grade']] * $credits;
+                                                if($enroll['grade']!=NULL){
+                                                    $sum += $gradesW[$enroll['grade']] * $credits;
                                                 $sumCredits += $credits;
+                                                }
+                                                
                                             }
                                         }
                                     }
@@ -387,11 +396,19 @@
                                             $sectionSQL = $db->prepare("SELECT * FROM course_sections WHERE semesterID=? AND courseID=?");
                                             $sectionSQL->execute(array($semester, $course));
                                             $secInfo = $sectionSQL->fetch();
-                                            $enrollSQL = $db->prepare("SELECT * FROM enrollments WHERE studentID=? AND sectionID=?");
+                                            $enrollSQL = $db->prepare("SELECT * FROM enrollments join course_sections on enrollments.sectionID=course_sections.ID WHERE studentID=? AND sectionID=?");
                                             $enrollSQL->execute(array($_SESSION['activeUser']['ID'], $secInfo['ID']));
                                             $enrollInfo = $enrollSQL->fetch();
+
+                                            $registerSec=$db->prepare('SELECT enrollments.*, course_sections.* FROM `enrollments`join course_sections on enrollments.sectionID=course_sections.ID JOIN semester on semester.ID=course_sections.semesterID WHERE NOW() BETWEEN semester.modifyStart and semester.modifyEnd and enrollments.studentID=?;');
+                                            $registerSec->execute(array($_SESSION['activeUser']['ID']));
+                                            $rSec=$registerSec-> fetch();
+
                                             if($enrollInfo['grade'] != NULL)
                                                 echo $enrollInfo['grade'];
+                                            elseif($enrollInfo['semesterID']==$rSec['semesterID']){
+                                                echo "Registeration Period";
+                                            }
                                             else
                                                 echo "Current Semester";
                                             echo "</td>";
