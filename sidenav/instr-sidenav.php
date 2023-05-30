@@ -39,7 +39,7 @@
 
             <div class='sideElement'>
                 <img id='icon' src='icons/tray.svg' alt=''>
-                <a href='manageSemester.php'>Manage Semester</a>
+                <a href='manageSemesters.php'>Manage Semester</a>
             </div>
             ";
         }elseif($_SESSION['activeUser']['role'] == "Instructor"){
