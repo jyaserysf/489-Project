@@ -2,6 +2,7 @@
 
     // New report types are to be entered here as key(report type)=>value(report identifier) pair.
     $reportTypes = ["Academic Transcript"=>"1"];
+    require('gradesfunc.php');
 
     session_start();
     if(!isset($_SESSION['activeUser'])){
@@ -210,7 +211,41 @@
                             </div>
                             <div class="col-75">
                             <?php        
-                            echo $stuInfo['GPA'];
+                                try {
+                                    require('Database/connection.php');
+                                    $lastSemester = $db->prepare("SELECT ID
+                                    FROM semester
+                                    WHERE beginDate < (SELECT beginDate FROM semester WHERE endDate >= CURDATE() LIMIT 1)
+                                    AND endDate < CURDATE()
+                                    ORDER BY endDate DESC
+                                    LIMIT 1;
+                                    ");
+                                    $lastSemester->execute();
+                                    $sum = 0;
+                                    $sumCredits = 0;
+                                    if($semesterID = $lastSemester->fetch()) {
+                                        $courses = $db->prepare("SELECT * FROM course_sections WHERE semesterID=?");
+                                        $courses->execute(array($semesterID['ID']));
+                                        $sectionsID = $courses->fetchAll();
+                                        foreach($sectionsID as $section) {
+                                            $enrollment = $db->prepare("SELECT * FROM enrollments WHERE studentID=? AND sectionID=?");
+                                            $enrollment->execute(array($_SESSION['activeUser']['ID'], $section['ID']));
+                                            if($enroll = $enrollment->fetch()) {
+                                                $creditsIndo = $db->prepare("SELECT * FROM courses WHERE ID=?");
+                                                $creditsIndo->execute(array($section['courseID']));
+                                                if($course = $creditsIndo->fetch())
+                                                    $credits = $course['creditHours'];
+                                                $sum += $gradesW[$enroll['grade']] * $credits;
+                                                $sumCredits += $credits;
+                                            }
+                                        echo $sum/$sumCredits;
+                                        }
+                                    }
+                                    $db=null;
+                                }
+                                catch(PDOException $e) {
+                                    die("Error: " . $e->getMessage());
+                                }
                             ?>
                             </div>
                         </div>
@@ -221,7 +256,39 @@
                             </div>
                             <div class="col-75">
                             <?php        
-                            echo $stuInfo['CGPA'];
+                                 try {
+                                    require('Database/connection.php');
+                                    $lastSemesters = $db->prepare("SELECT ID
+                                    FROM semester
+                                    WHERE beginDate < (SELECT beginDate FROM semester WHERE beginDate >= CURDATE() LIMIT 1)
+                                    ORDER BY beginDate DESC
+                                    ");
+                                    $lastSemesters->execute();
+                                    $sum = 0;
+                                    $sumCredits = 0;
+                                    while($semesterID = $lastSemesters->fetch()) {
+                                        $courses = $db->prepare("SELECT * FROM course_sections WHERE semesterID=?");
+                                        $courses->execute(array($semesterID['ID']));
+                                        $sectionsID = $courses->fetchAll();
+                                        foreach($sectionsID as $section) {
+                                            $enrollment = $db->prepare("SELECT * FROM enrollments WHERE studentID=? AND sectionID=?");
+                                            $enrollment->execute(array($_SESSION['activeUser']['ID'], $section['ID']));
+                                            if($enroll = $enrollment->fetch()) {
+                                                $creditsIndo = $db->prepare("SELECT * FROM courses WHERE ID=?");
+                                                $creditsIndo->execute(array($section['courseID']));
+                                                if($course = $creditsIndo->fetch())
+                                                    $credits = $course['creditHours'];
+                                                $sum += $gradesW[$enroll['grade']] * $credits;
+                                                $sumCredits += $credits;
+                                            }
+                                        }
+                                    }
+                                    echo $sum/$sumCredits;
+                                    $db=null;
+                                }
+                                catch(PDOException $e) {
+                                    die("Error: " . $e->getMessage());
+                                }
                             ?>
                             </div>
                         </div>
