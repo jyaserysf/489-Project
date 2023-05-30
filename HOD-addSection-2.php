@@ -22,6 +22,12 @@
     $instructorID = $_POST['instructorID'];
 
     $finalDate = $_POST['finalDate'];
+    $checkTime = $db->prepare("SELECT * FROM semester WHERE ID=?");
+    $checkTime->execute(array($_POST['semesterID']));
+    $semInfo = $checkTime->fetch();
+    if($finalDate < $semInfo['beginDate'] || $finalDate > $semInfo['endDate'])
+        die("Please Select A Time Between The Semester Begin And End Date");
+
     $semesterID = $_POST['semesterID'];
     $courseID = $_POST['courseID'];
     
