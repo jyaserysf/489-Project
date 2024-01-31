@@ -1,6 +1,5 @@
 # 489-Project
-### add all your work here 
-### use the template when creating pages
+University Course Registration System 
 
 ## Color palette
 light green: '#DAE5D0'   pale yellow: '#FEFBE7'  turquoise: '#A0BCC2'  beige: '#F9EBC8'
